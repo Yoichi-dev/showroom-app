@@ -6,8 +6,8 @@ export default {
   ssr: false,
   target: 'static',
   head: {
-    titleTemplate: '%s | Watch Log',
-    title: 'Watch Log',
+    titleTemplate: '%s | Point History',
+    title: 'Point History',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -25,7 +25,6 @@ export default {
   css: [
   ],
   plugins: [
-    { src: '~/plugins/localStorage.js', ssr: false }
   ],
   components: true,
   buildModules: [
@@ -34,8 +33,8 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    ['@nuxtjs/moment', ['ja']],
     '@nuxtjs/dotenv',
+    ['@nuxtjs/moment', ['ja']],
   ],
   axios: {},
   pwa: {
@@ -51,7 +50,6 @@ export default {
   },
   env: {
     API_URL: process.env.API_URL,
-    API_SUB_URL: process.env.API_SUB_URL
   },
   vuetify: {
     theme: {
