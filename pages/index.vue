@@ -151,6 +151,8 @@ export default {
         this.roomId = this.$store.state.roomid;
       }
     }, 0);
+    // サブAPIの起動
+    axios.get(process.env.API_SUB_URL);
   },
   methods: {
     async checkLive() {
@@ -205,18 +207,18 @@ export default {
     },
     socketSetting(bcsvrKey) {
       // 接続
-      this.socket = new WebSocket(process.env.SR_SOCKET);
+      this.socket = new WebSocket("wss://online.showroom-live.com");
       // 接続確認
       this.socket.onopen = (e) => {
-        console.log("コネクションを開始しました");
         this.socket.send(`SUB\t${bcsvrKey}`);
       };
       // エラー発生時
       this.socket.onerror = (error) => {
-        alert("エラーが発生しました\nページをリロードしてください");
+        alert("エラーが発生しました\nページをリロードします");
         this.socket.close();
-        // clearInterval(this.checkPing);
+        clearInterval(this.checkPing);
         location.reload();
+        return;
       };
       // 疎通確認
       this.checkPing = setInterval(() => {
@@ -227,12 +229,11 @@ export default {
       this.socket.onmessage = (data) => {
         // 死活監視
         if (data.data === "ACK\tshowroom") {
-          console.log("死活監視OK");
           return;
         }
         // エラー
         if (data.data === "ERR") {
-          alert("エラーが発生しました\nページをリロードしてください");
+          alert("エラーが発生しました\nページをリロードします");
           this.socket.close();
           clearInterval(this.checkPing);
           location.reload();
@@ -260,7 +261,6 @@ export default {
     commentProcess(commentObj) {
       // 自動投稿空白対策
       if (commentObj.cm === undefined) {
-        console.log("自動投稿対策");
         return;
       }
       // 全角数字を半角に変換
@@ -439,7 +439,7 @@ export default {
     update() {
       // 視聴者・フォロワー
       axios
-        .get(`${process.env.API_URL}/api/users/${this.roomId}`)
+        .get(`${process.env.API_SUB_URL}/api/users/${this.roomId}`)
         .then((response) => {
           // フォロワー
           this.infoData[1].num = response.data.follower_num;
@@ -450,15 +450,13 @@ export default {
         });
       // ライブランキング
       axios
-        .get(`${process.env.API_URL}/api/live/ranking/${this.roomId}`)
+        .get(`${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`)
         .then((response) => {
           this.rankingList = response.data.stage_user_list;
         });
     },
     deleteData() {
-      let result = window.confirm(
-        "初期化しますか？\nルーム情報とお気に入り・ブロックリストが削除されます"
-      );
+      let result = window.confirm("初期化しますか？\nルーム情報が削除されます");
       if (result) {
         this.$store.commit("setRoomid", null);
         location.reload();
