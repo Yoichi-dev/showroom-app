@@ -75,11 +75,6 @@ export default {
           content: this.eventInfo.event_name + "のイベント情報",
         },
         {
-          hid: "twitter:creator",
-          property: "twitter:creator",
-          content: "@yoichiro_sub",
-        },
-        {
           hid: "og:title",
           property: "og:title",
           content: this.eventInfo.event_name + "のイベント情報",
@@ -95,11 +90,6 @@ export default {
           content: this.eventInfo.image
             .replace("_s.png", "_l.png")
             .replace("_s.jpeg", "_l.jpeg"),
-        },
-        {
-          hid: "twitter:card",
-          property: "twitter:card",
-          content: "summary_large_image",
         },
       ],
     };

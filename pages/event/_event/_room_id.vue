@@ -81,11 +81,6 @@ export default {
           content: this.userInfo.room_name + "の配信情報",
         },
         {
-          hid: "twitter:creator",
-          property: "twitter:creator",
-          content: "@yoichiro_sub",
-        },
-        {
           hid: "og:title",
           property: "og:title",
           content: this.userInfo.room_name,
@@ -101,11 +96,6 @@ export default {
           content: this.userInfo.image
             .replace("_m.png", "_l.png")
             .replace("_m.jpeg", "_l.jpeg"),
-        },
-        {
-          hid: "twitter:card",
-          property: "twitter:card",
-          content: "summary_large_image",
         },
       ],
     };
