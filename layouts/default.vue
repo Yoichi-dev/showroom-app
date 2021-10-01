@@ -68,11 +68,11 @@ export default {
           title: "開催済イベント",
           to: "/end",
         },
-        {
-          icon: "mdi-tools",
-          title: "配信補助ツール",
-          to: "/tools",
-        },
+        // {
+        //   icon: "mdi-tools",
+        //   title: "配信補助ツール",
+        //   to: "/tools",
+        // },
       ],
       miniVariant: false,
       title: "Point History",
