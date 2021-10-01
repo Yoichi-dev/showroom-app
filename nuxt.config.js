@@ -12,7 +12,7 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'SHOWROOM配信のログを確認することができます' },
-      { hid: 'og:title', property: 'og:title', content: 'Point History' },
+      { hid: 'og:title', property: 'og:title', content: 'Watch Log' },
       { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
       { hid: 'og:image', property: 'og:image', content: 'https://watch-log.showroom-app.com/og.png' },
       { hid: 'twitter:creator', property: 'twitter:creator', content: '@yoichiro_sub' },
