@@ -47,7 +47,7 @@ export default {
   },
   env: {
     API_URL: process.env.API_URL,
-    SR_SOCKET: process.env.SR_SOCKET
+    API_SUB_URL: process.env.API_SUB_URL
   },
   vuetify: {
     theme: {
