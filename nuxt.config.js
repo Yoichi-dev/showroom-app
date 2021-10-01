@@ -12,9 +12,9 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'SHOWROOM配信のログを確認することができます' },
-      { hid: 'og:title', property: 'og:title', content: 'Watch Log' },
+      { hid: 'og:title', property: 'og:title', content: 'Watch Log | 配信中のコメント・ギフト確認ツール' },
       { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-      { hid: 'og:image', property: 'og:image', content: 'https://watch-log.showroom-app.com/og.png' },
+      { hid: 'og:image', property: 'og:image', content: 'https://watch-log.showroom-app.com/og.png?20211001' },
       { hid: 'twitter:creator', property: 'twitter:creator', content: '@yoichiro_sub' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
