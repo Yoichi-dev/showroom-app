@@ -14,7 +14,7 @@ export default {
       { hid: 'description', name: 'description', content: 'SHOWROOMイベントのポイント遷移が確認できる個人制作Webアプリになります' },
       { hid: 'og:title', property: 'og:title', content: 'Point History' },
       { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
-      { hid: 'og:image', property: 'og:image', content: '/og.png' },
+      { hid: 'og:image', property: 'og:image', content: 'https://point-history.showroom-app.com/og.png' },
       { hid: 'twitter:creator', property: 'twitter:creator', content: '@yoichiro_sub' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
