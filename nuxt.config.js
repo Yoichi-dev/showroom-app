@@ -6,11 +6,16 @@ export default {
   ssr: false,
   target: 'static',
   head: {
-    titleTemplate: '%s | Point History',
-    title: 'Point History',
+    titleTemplate: '%s | Watch Log',
+    title: 'Watch Log',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'description', name: 'description', content: 'SHOWROOMイベントのポイント遷移が確認できる個人制作Webアプリになります' },
+      { hid: 'og:title', property: 'og:title', content: 'Point History' },
+      { hid: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
+      { hid: 'og:image', property: 'og:image', content: '/og.png' },
+      { hid: 'twitter:creator', property: 'twitter:creator', content: '@yoichiro_sub' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
@@ -20,6 +25,7 @@ export default {
   css: [
   ],
   plugins: [
+    { src: '~/plugins/localStorage.js', ssr: false }
   ],
   components: true,
   buildModules: [
@@ -28,8 +34,8 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    '@nuxtjs/dotenv',
     ['@nuxtjs/moment', ['ja']],
+    '@nuxtjs/dotenv',
   ],
   axios: {},
   pwa: {
@@ -45,6 +51,7 @@ export default {
   },
   env: {
     API_URL: process.env.API_URL,
+    API_SUB_URL: process.env.API_SUB_URL
   },
   vuetify: {
     theme: {

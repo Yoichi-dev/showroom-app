@@ -16,40 +16,6 @@ export default {
   head() {
     return {
       title: "HOME",
-      meta: [
-        {
-          hid: "description",
-          name: "description",
-          content:
-            "SHOWROOMイベントのポイント遷移が確認できる個人制作Webアプリになります",
-        },
-        {
-          hid: "twitter:creator",
-          property: "twitter:creator",
-          content: "@yoichiro_sub",
-        },
-        {
-          hid: "og:title",
-          property: "og:title",
-          content: "Point History",
-        },
-        {
-          hid: "og:description",
-          property: "og:description",
-          content:
-            "SHOWROOMイベントのポイント遷移が確認できる個人制作Webアプリになります",
-        },
-        {
-          hid: "og:image",
-          property: "og:image",
-          content: require("@/assets/img/top.png"),
-        },
-        {
-          hid: "twitter:card",
-          property: "twitter:card",
-          content: "summary_large_image",
-        },
-      ],
     };
   },
 };
