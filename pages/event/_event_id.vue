@@ -63,6 +63,83 @@ export default {
       allPointData: {},
       allFollowerData: {},
       allRankData: {},
+      graphColoer: [
+        {
+          r: 189,
+          g: 183,
+          b: 107,
+        },
+        {
+          r: 192,
+          g: 192,
+          b: 192,
+        },
+        {
+          r: 128,
+          g: 0,
+          b: 0,
+        },
+        {
+          r: 128,
+          g: 128,
+          b: 0,
+        },
+        {
+          r: 255,
+          g: 0,
+          b: 255,
+        },
+        {
+          r: 0,
+          g: 255,
+          b: 255,
+        },
+        {
+          r: 0,
+          g: 255,
+          b: 0,
+        },
+        {
+          r: 255,
+          g: 0,
+          b: 0,
+        },
+        {
+          r: 128,
+          g: 128,
+          b: 128,
+        },
+        {
+          r: 0,
+          g: 0,
+          b: 255,
+        },
+        {
+          r: 0,
+          g: 128,
+          b: 0,
+        },
+        {
+          r: 128,
+          g: 0,
+          b: 128,
+        },
+        {
+          r: 0,
+          g: 0,
+          b: 0,
+        },
+        {
+          r: 0,
+          g: 0,
+          b: 128,
+        },
+        {
+          r: 0,
+          g: 128,
+          b: 128,
+        },
+      ],
     };
   },
   head() {
@@ -159,8 +236,12 @@ export default {
         );
         // グラフの色
         let color = { r: 0, g: 0, b: 0 };
-        for (let c in color) {
-          color[c] = Math.floor(Math.random() * 256);
+        if (this.graphColoer.length > i) {
+          color = this.graphColoer[i];
+        } else {
+          for (let c in color) {
+            color[c] = Math.floor(Math.random() * 256);
+          }
         }
         // 今日のチャート
         this.todayChart(
