@@ -115,6 +115,8 @@ export default {
     };
   },
   mounted() {
+    // Twitter Cardのキャッシュが更新されるまでの暫定処理
+    window.history.replaceState(null, null, window.location.pathname);
     switch (this.$vuetify.breakpoint.name) {
       case "xs":
         this.styleSetting.giftSize = "30vh";
