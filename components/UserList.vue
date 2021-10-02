@@ -8,6 +8,7 @@
             <template v-slot:default>
               <tbody>
                 <tr v-for="user in userList" :key="user.room_id">
+                  <td>{{ user.juni }}位</td>
                   <td>{{ user.room_name }}</td>
                   <td>
                     <v-btn

@@ -163,11 +163,26 @@ export default {
           color[c] = Math.floor(Math.random() * 256);
         }
         // 今日のチャート
-        this.todayChart(this.userList[i].room_name, todayData, color, i);
+        this.todayChart(
+          `【${this.userList[i].juni}位】${this.userList[i].room_name}`,
+          todayData,
+          color,
+          i
+        );
         // 日別のチャート
-        this.dayChart(this.userList[i].room_name, userData, color, i);
+        this.dayChart(
+          `【${this.userList[i].juni}位】${this.userList[i].room_name}`,
+          userData,
+          color,
+          i
+        );
         // 全期間のチャート
-        this.allChart(this.userList[i].room_name, userData, color, i);
+        this.allChart(
+          `【${this.userList[i].juni}位】${this.userList[i].room_name}`,
+          userData,
+          color,
+          i
+        );
       }
     },
     todayChart(room_name, todayData, color, index) {
