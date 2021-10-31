@@ -9,6 +9,16 @@
         初期化
       </v-btn>
     </v-row>
+    <v-row justify="center" align="center" v-if="logFlg">
+      <v-btn
+        class="ma-2"
+        outlined
+        color="green"
+        @click="$router.push('/history')"
+      >
+        過去のログを確認
+      </v-btn>
+    </v-row>
     <!-- 基本情報 -->
     <info :infoData="infoData" />
     <v-row>
@@ -107,6 +117,8 @@ export default {
         giftSize: "",
         rankingSize: "",
       },
+      logFlg: false,
+      logList: [],
     };
   },
   head() {
@@ -115,8 +127,6 @@ export default {
     };
   },
   mounted() {
-    // Twitter Cardのキャッシュが更新されるまでの暫定処理
-    window.history.replaceState(null, null, window.location.pathname);
     switch (this.$vuetify.breakpoint.name) {
       case "xs":
         this.styleSetting.giftSize = "30vh";
@@ -152,12 +162,31 @@ export default {
         this.fulldialog = false;
         this.roomId = this.$store.state.roomid;
       }
+      if (this.$store.state.streaminglog != null) {
+        this.logFlg = true;
+        this.logList = this.$store.state.streaminglog;
+        if (
+          this.$route.query.id != undefined &&
+          0 <= this.$route.query.id &&
+          this.$route.query.id <= this.logList.length
+        ) {
+          this.commentList = this.logList[this.$route.query.id].comment;
+          this.freeGiftList = this.logList[this.$route.query.id].free;
+          this.preGiftList = this.logList[this.$route.query.id].pre;
+          this.countList = this.logList[this.$route.query.id].count;
+          this.rankingList = this.logList[this.$route.query.id].ranking;
+          this.infoData = this.logList[this.$route.query.id].info;
+        }
+      }
     }, 0);
     // サブAPIの起動
     axios.get(process.env.API_SUB_URL);
   },
   methods: {
     async checkLive() {
+      window.history.replaceState(null, null, window.location.pathname);
+      // 初期化
+      this.clearData();
       // 配信しているか確認
       let responseData = await this.getApi(
         `${process.env.API_URL}/api/users/${this.roomId}`
@@ -256,7 +285,21 @@ export default {
         } else if (Object.keys(getJson).length === 4 && getJson.t == 101) {
           this.socket.close();
           clearInterval(this.checkPing);
-          alert("配信が終了しました");
+          let result = confirm(
+            "配信が終了しました\n\n今回の配信ログを見返せるように保存しますか？"
+          );
+          if (result) {
+            this.logList.push({
+              day: Math.floor(new Date().getTime() / 1000),
+              comment: this.commentList,
+              free: this.freeGiftList,
+              pre: this.preGiftList,
+              count: this.countList,
+              ranking: this.rankingList,
+              info: this.infoData,
+            });
+            this.$store.commit("setStreaminglog", this.logList);
+          }
         }
       };
     },
@@ -458,11 +501,43 @@ export default {
         });
     },
     deleteData() {
-      let result = window.confirm("初期化しますか？\nルーム情報が削除されます");
+      let result = window.confirm(
+        "初期化しますか？\nルーム情報、今までのログが削除されます"
+      );
       if (result) {
         this.$store.commit("setRoomid", null);
+        this.$store.commit("setStreaminglog", null);
         location.reload();
       }
+    },
+    clearData() {
+      this.commentList = [];
+      this.freeGiftList = [];
+      this.preGiftList = [];
+      this.countList = [];
+      this.rankingList = [];
+      this.infoData = [
+        {
+          title: "獲得ポイント",
+          num: 0,
+          icon: "mdi-file-powerpoint-box-outline",
+        },
+        {
+          title: "現在のフォロワー数",
+          num: 0,
+          icon: "mdi-account-multiple-plus",
+        },
+        {
+          title: "来場者数",
+          num: 0,
+          icon: "mdi-account-group",
+        },
+        {
+          title: "配信開始時間",
+          liveStartDate: "",
+          icon: "mdi-clock-outline",
+        },
+      ];
     },
   },
 };

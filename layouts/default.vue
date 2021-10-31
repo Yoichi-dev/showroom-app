@@ -1,7 +1,11 @@
 <template>
   <v-app dark>
     <v-app-bar flat dense app>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title
+        style="cursor: pointer"
+        @click="$router.push('/')"
+        v-text="title"
+      />
     </v-app-bar>
     <v-main>
       <v-container>
