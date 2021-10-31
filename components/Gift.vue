@@ -36,7 +36,7 @@
                       />
                     </td>
                     <td>{{ gift.name }}</td>
-                    <td style="width: 100px">
+                    <td style="width: 130px">
                       <img
                         alt=""
                         width="25px"
