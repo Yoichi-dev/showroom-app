@@ -119,6 +119,7 @@ export default {
       },
       logFlg: false,
       logList: [],
+      premiumFlg: false,
     };
   },
   head() {
@@ -197,8 +198,41 @@ export default {
         !responseData.data.is_onlive ||
         responseData.data.premium_room_type === 1
       ) {
-        alert("配信停止中です");
-        return;
+        if (responseData.data.premium_room_type === 1) {
+          console.log("プレミアム配信中です");
+          await axios
+            .get(`${process.env.API_URL}/api/users/onlive/${this.roomId}`)
+            .then((response) => {
+              if (response.data.length != undefined) {
+                if (response.data) {
+                  if (Object.keys(response.data[0]).length === 0) {
+                    alert(
+                      "プレミアム配信中です\nコメント取得に時間がかかりますしばらくしてからもう一度接続ボタンを押してください"
+                    );
+                    return;
+                  } else {
+                    this.streamData = response.data[0];
+                    this.premiumFlg = true;
+                  }
+                } else {
+                  alert(
+                    "プレミアム配信中です\nコメント取得に時間がかかりますしばらくしてからもう一度接続ボタンを押してください"
+                  );
+                  return;
+                }
+              }
+            });
+          if (!this.premiumFlg) {
+            return;
+          } else {
+            alert(
+              "現在プレミアム配信では累計ポイント・ランキングなど一部データが取得できません\nご了承ください"
+            );
+          }
+        } else {
+          alert("配信停止中です");
+          return;
+        }
       }
       // ボタン非表示
       this.showBtn = false;
@@ -209,29 +243,35 @@ export default {
       this.infoData[2].num = responseData.data.view_num;
       // フォロワー
       this.infoData[1].num = responseData.data.follower_num;
-      // テロップ取得
-      let responseTelop = await this.getApi(
-        `${process.env.API_URL}/api/live/telop/${this.roomId}`
-      );
-      this.telop = responseTelop.data.telop;
-      // ライブランキング取得
-      let responseRanking = await this.getApi(
-        `${process.env.API_URL}/api/live/ranking/${this.roomId}`
-      );
-      this.rankingList = responseRanking.data.stage_user_list;
-      // 使えるギフトリスト取得
-      let responseUseGift = await this.getApi(
-        `${process.env.API_URL}/api/live/giftlist/${this.roomId}`
-      );
-      this.useGiftList = responseUseGift.data.normal;
-      // 配信情報取得
-      let responseLiveData = await this.getApi(
-        `${process.env.API_URL}/api/users/live/${this.roomId}`
-      );
-      this.streamData = responseLiveData.data;
-      this.title = responseLiveData.data.room_name;
-      // 接続
-      this.socketSetting(responseLiveData.data.bcsvr_key);
+
+      if (!this.premiumFlg) {
+        // 使えるギフトリスト取得
+        let responseUseGift = await this.getApi(
+          `${process.env.API_URL}/api/live/giftlist/${this.roomId}`
+        );
+        this.useGiftList = responseUseGift.data.normal;
+        // ライブランキング取得
+        let responseRanking = await this.getApi(
+          `${process.env.API_URL}/api/live/ranking/${this.roomId}`
+        );
+        this.rankingList = responseRanking.data.stage_user_list;
+        // テロップ取得
+        let responseTelop = await this.getApi(
+          `${process.env.API_URL}/api/live/telop/${this.roomId}`
+        );
+        this.telop = responseTelop.data.telop;
+        // 配信情報取得
+        let responseLiveData = await this.getApi(
+          `${process.env.API_URL}/api/users/live/${this.roomId}`
+        );
+        this.streamData = responseLiveData.data;
+        this.title = responseLiveData.data.room_name;
+        // 接続
+        this.socketSetting(responseLiveData.data.bcsvr_key);
+      } else {
+        // 接続
+        this.socketSetting(this.streamData.bcsvr_key);
+      }
     },
     getApi(url) {
       return axios.get(url);
@@ -493,12 +533,14 @@ export default {
             this.infoData[2].num = response.data.view_num;
           }
         });
-      // ライブランキング
-      axios
-        .get(`${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`)
-        .then((response) => {
-          this.rankingList = response.data.stage_user_list;
-        });
+      if (!this.premiumFlg) {
+        // ライブランキング
+        axios
+          .get(`${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`)
+          .then((response) => {
+            this.rankingList = response.data.stage_user_list;
+          });
+      }
     },
     deleteData() {
       let result = window.confirm(
