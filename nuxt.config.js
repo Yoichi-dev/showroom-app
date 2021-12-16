@@ -53,6 +53,8 @@ export default {
   },
   env: {
     API_URL: process.env.API_URL,
+    MICROCMS_URL: process.env.MICROCMS_URL,
+    MICROCMS_KEY: process.env.MICROCMS_KEY,
   },
   vuetify: {
     theme: {
