@@ -43,7 +43,7 @@
                 </div>
                 <div class="mt-3">
                   <div class="form-group">
-                    <label for="minecraftId">Minecraft ID</label>
+                    <label for="minecraftId">Minecraft ID (ユーザ名)</label>
                     <div class="input-group mb-4">
                       <div class="input-group-prepend">
                         <span class="input-group-text"
