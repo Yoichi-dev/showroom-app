@@ -1,6 +1,14 @@
 <template>
   <v-app dark>
-    <h1>申し訳ございません、サーバーが停止中 又はエラーが発生しました。</h1>
+    <h1>申し訳ございません、サーバーが停止です。</h1>
+    <h3>一部サーバー側のIP制限でアクセス出来ない人がいます</h3>
+    <h3>
+      申し訳ございませんが一度<a
+        href="https://my-api.work:61808/?error=pointhistory"
+        target="_blank"
+        >こちら</a
+      >にアクセスしてもらえますでしょうか？
+    </h3>
   </v-app>
 </template>
 
