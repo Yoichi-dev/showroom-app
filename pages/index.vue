@@ -421,6 +421,18 @@ export default {
       }
     },
     addComment(commentObj) {
+      // てむルームに来る荒らし対策
+      if (
+        this.roomId == "382233" &&
+        (commentObj.cm.match(/「いらすとや」/) ||
+          commentObj.cm.match(/🤬/) ||
+          commentObj.cm.match(/💢/) ||
+          commentObj.cm.match(/し、ね/) ||
+          commentObj.cm.match(/シ、ネ/) ||
+          commentObj.cm.match(/ブ、ス/))
+      ) {
+        return;
+      }
       this.commentList.unshift({
         id: commentObj.u,
         name: commentObj.ac,
