@@ -7,7 +7,7 @@
             <div class="card bg-primary shadow-soft border-light p-4">
               <div class="card-header text-center pb-0">
                 <h2 class="mb-0 h5">Minecraft Server 利用申請</h2>
-                <h2 class="mb-0 h6">Java版</h2>
+                <h2 class="mb-0 h6">Java版・BE（統合）版</h2>
               </div>
               <div class="card-body">
                 <div
@@ -18,11 +18,12 @@
                   "
                 >
                   <span class="font-weight-normal">
-                    本サーバーはホワイトリスト方式です。事前にホワイトリストに登録する必要があるのでこちらより申請してください。（申請後約30分前後で接続できるようになります）
+                    本サーバーは基本誰でも遊ぶことができます。配信者向けワールドに入るには事前にホワイトリストに登録する必要があるのでこちらより申請してください。（申請後約30分前後で接続できるようになります）
                   </span>
                 </div>
                 <div class="row justify-content-center mt-5">
                   <div class="col-12">
+                    <label for="minecraftId">Java版</label>
                     <div
                       class="
                         alert alert-info alert-dismissible
@@ -37,6 +38,27 @@
                       ></span>
                       <span class="alert-inner--text">
                         {{ ip }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center mt-5">
+                  <div class="col-12">
+                    <label for="minecraftId">BE（統合）版</label>
+                    <div
+                      class="
+                        alert alert-info alert-dismissible
+                        shadow-soft
+                        fade
+                        show
+                      "
+                      role="alert"
+                    >
+                      <span class="alert-inner--icon"
+                        ><span class="fas fa-server"></span
+                      ></span>
+                      <span class="alert-inner--text">
+                        minecraft.showroom-app.com:4477
                       </span>
                     </div>
                   </div>
