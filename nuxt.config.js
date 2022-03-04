@@ -1,4 +1,5 @@
 import pkg from "./package.json";
+require('dotenv').config()
 
 export default {
   ssr: false,
@@ -49,6 +50,12 @@ export default {
   },
   generate: {
     fallback: true
+  },
+  env: {
+    API_URL: process.env.API_URL,
+    API_SUB_URL: process.env.API_SUB_URL,
+    CTF_SPACE_ID: process.env.CTF_SPACE_ID,
+    CTF_CDA_ACCESS_TOKEN: process.env.CTF_CDA_ACCESS_TOKEN,
   },
   build: {},
 }
