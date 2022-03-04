@@ -11,14 +11,6 @@
         />
       </div>
       <div class="uk-width-expand@s">
-        <!-- <button
-          class="
-            uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom
-          "
-          @click="$router.push('/onlive')"
-        >
-          ルームに接続
-        </button> -->
         <table class="uk-table uk-table-divider">
           <caption>
             {{
@@ -140,7 +132,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import client from '~/plugins/contentful'
-// window.localStorage.clear();
+
 export default {
   name: 'IndexPage',
   beforeRouteLeave(to, from, next) {
