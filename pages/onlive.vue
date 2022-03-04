@@ -245,18 +245,18 @@ export default {
       })
       if (!isNaN(numberFormat) && Number(numberFormat) <= 50) {
         // カウント
-        this.addCount(commentObj)
+        this.addCount(commentObj, Number(numberFormat))
       } else {
         // コメント
         this.addComment(commentObj)
       }
     },
-    addCount(countObj) {
+    addCount(countObj, formatNumber) {
       // 既に存在するか確認
       if (this.countList.some((e) => e.id === countObj.u)) {
         for (const i in this.countList) {
           if (this.countList[i].id === countObj.u) {
-            this.countList[i].num = countObj.cm
+            this.countList[i].num = formatNumber
             this.countList[i].name = countObj.ac
             this.countList[i].avatar = countObj.av
           }
@@ -276,7 +276,7 @@ export default {
         this.countList.unshift({
           id: countObj.u,
           name: countObj.ac,
-          num: countObj.cm,
+          num: formatNumber,
           flg: countObj.ua,
           avatar: countObj.av,
           pointFlg: false,
