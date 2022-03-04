@@ -2,6 +2,13 @@
   <div class="mt-1">
     <search :fulldialog.sync="fulldialog" />
     <v-row justify="center" align="center" v-if="showBtn">
+      Watch Log 次期β版テスター募集中。詳しくは
+      <a href="https://twitter.com/yoichiro_sub" target="_blank">
+        @yoichiro_sub
+      </a>
+      のDM又はDiscordまで
+    </v-row>
+    <v-row justify="center" align="center" v-if="showBtn">
       <v-btn class="ma-2" outlined color="indigo" @click="checkLive()">
         ルームに接続
       </v-btn>
