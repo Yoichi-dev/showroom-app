@@ -188,12 +188,6 @@ export default {
               this.$router.push('/onlive')
             } else {
               this.connectSocket()
-              // 花火？
-              //               MSG e46cc4:UPM3YHEE {created_at: 1646107911, c: 1, p: 71430, t: 5}
-              // c: 1
-              // created_at: 1646107911
-              // p: 71430
-              // t: 5
             }
           })
           .catch((e) => {
