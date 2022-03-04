@@ -1,0 +1,67 @@
+<template>
+  <div>
+    <div id="comment" class="uk-card uk-card-default scrollbar">
+      <table class="uk-table uk-table-small uk-table-hover uk-table-divider">
+        <thead>
+          <tr>
+            <th colspan="2">{{ telop }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item, index) in comment"
+            :key="index"
+            :class="
+              item.flg == 2
+                ? 'pointer first-look'
+                : item.id == developerId
+                ? 'pointer developer'
+                : 'pointer'
+            "
+          >
+            <td @click="getListener(item.id)">
+              <img
+                width="25"
+                height="25"
+                :src="
+                  'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
+                  item.avatar +
+                  '.png?v=85'
+                "
+              />&ensp;{{
+                item.name.length > 15 ? item.name.slice(0, 15) + '…' : item.name
+              }}
+            </td>
+            <td>{{ item.comment }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'CommentConponent',
+  props: {
+    comment: {
+      type: Array,
+      required: true,
+    },
+    telop: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      developerId: '3699368',
+    }
+  },
+  methods: {
+    getListener(id) {
+      this.$emit('parentMethod', id)
+    },
+  },
+}
+</script>

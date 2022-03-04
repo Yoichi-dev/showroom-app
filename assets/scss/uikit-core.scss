@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css?family=Exo+2");
+
+$global-link-color: #00c9b7;
+$global-margin: 10px;
+$global-medium-margin: 20px;
+$global-large-margin: 30px;
+$global-xlarge-margin: 50px;
+$width-medium-width: 250px;
+$global-border: #e3e3e3;
+$global-link-hover-color: #37459c;
+$base-link-hover-text-decoration: none;
+$global-primary-background: $global-link-color;
+$global-secondary-background: #515151 !default;
+$navbar-nav-item-height: 50px;
+$nav-default-item-active-color: #fff;
+
+@import "node_modules/uikit/src/scss/variables-theme.scss";
+@import "node_modules/uikit/src/scss/mixins-theme.scss";
+
+@import "node_modules/uikit/src/scss/uikit-theme.scss";
