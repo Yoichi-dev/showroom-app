@@ -458,16 +458,16 @@ export default {
     },
     async update() {
       // インフォメーション
-      await this.getApi(`${process.env.API_URL}/api/users/${this.roomId}`).then(
-        (response) => {
-          this.startView = this.roomData === null ? 0 : this.roomData.view_num
-          this.roomData = response.data
-        }
-      )
+      await this.getApi(
+        `${process.env.API_SUB_URL}/api/users/${this.roomId}`
+      ).then((response) => {
+        this.startView = this.roomData === null ? 0 : this.roomData.view_num
+        this.roomData = response.data
+      })
       // ランキング取得
       if (!this.premiumFlg) {
         await this.getApi(
-          `${process.env.API_URL}/api/live/ranking-point/${this.roomData.room_url_key}`
+          `${process.env.API_SUB_URL}/api/live/ranking-point/${this.roomData.room_url_key}`
         ).then((response) => {
           this.rankingList = response.data
         })
