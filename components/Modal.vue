@@ -48,7 +48,7 @@
                 <div v-else>開発者をブロックすることできません</div>
                 <hr />
                 <h3 v-if="modal.account_id === adminId" class="uk-card-title">
-                  WatchLogの開発中です
+                  WatchLogの開発者です
                 </h3>
                 <p
                   v-for="(text, index) in modal.description.split('\n')"
