@@ -1,6 +1,14 @@
 <template>
   <div class="mt-1">
     <search :fulldialog.sync="fulldialog" />
+    <v-row class="mt-5 px-3" justify="center" v-if="showBtn">
+      <v-alert outlined type="warning" prominent border="left">
+        <div>
+          3/16 3:00～8:30の間でサーバエラーが出ていましたが解消しました<br />
+          こちらのアプリをメインで使っている人はお知らせ通知など色々実装されたβ版を使って頂けると嬉しいです
+        </div>
+      </v-alert>
+    </v-row>
     <v-row justify="center" align="center" v-if="showBtn">
       Watch Log 次期β版テスター募集中。詳しくは
       <a href="https://twitter.com/yoichiro_sub" target="_blank">
