@@ -66,9 +66,8 @@ export default {
       searchFlg: false,
     }
   },
-  mounted() {},
   methods: {
-    search() {
+    async search() {
       if (this.searchText.length === 0) {
         return
       }
@@ -83,13 +82,41 @@ export default {
       this.searchFlg = true
       this.inputText = '検索中...'
 
-      axios
+      let apiFlg = true
+
+      await axios
         .get(`${process.env.API_URL}/api/live/search?keyword=${keyword}`)
         .then((response) => {
           this.searchList = response.data
           if (response.data.length === 0) {
             alert('検索結果がありません\n条件を変えて検索してください')
           }
+        })
+        .catch((e) => {
+          apiFlg = false
+        })
+        .finally(() => {
+          this.searchFlg = false
+          this.inputText = '検索'
+        })
+
+      if (!apiFlg) {
+        this.subApiSearch(keyword)
+      }
+    },
+    async subApiSearch(keyword) {
+      this.searchFlg = true
+      this.inputText = '検索中...'
+
+      await axios
+        .get(`${process.env.API_SUB_URL}/api/live/search?keyword=${keyword}`)
+        .then((response) => {
+          this.searchList = response.data
+          if (response.data.length === 0) {
+            alert('検索結果がありません\n条件を変えて検索してください')
+          }
+          // IPの関係でメインAPIが使えない人用
+          this.$store.commit('setApiFlg', false)
         })
         .catch((e) => {
           alert('エラーが発生しました')

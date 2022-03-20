@@ -3,6 +3,7 @@ export const strict = false
 export const state = () => ({
     roomid: null,
     url: null,
+    apiFlg: true,
     streaminglog: null,
 })
 
@@ -15,5 +16,8 @@ export const mutations = {
     },
     setStreaminglog(state, log) {
         state.streaminglog = log
+    },
+    setApiFlg(state, apiFlg) {
+        state.apiFlg = apiFlg
     },
 }

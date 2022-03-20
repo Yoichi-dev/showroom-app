@@ -99,6 +99,7 @@ export default {
   },
   data() {
     return {
+      api: null,
       socket: null,
       ws: 'wss://online.showroom-live.com',
       roomId: null,
@@ -128,6 +129,15 @@ export default {
       streaminglog: [],
     }
   },
+  created() {
+    setTimeout(() => {
+      if (this.$store.state.apiFlg) {
+        this.api = process.env.API_URL
+      } else {
+        this.api = process.env.API_SUB_URL
+      }
+    }, 0)
+  },
   mounted() {
     setTimeout(() => {
       if (this.$store.state.roomid === null) {
@@ -135,7 +145,7 @@ export default {
       } else {
         this.roomId = this.$store.state.roomid
         // 使えるギフトリスト取得
-        this.getApi(`${process.env.API_URL}/api/live/giftlist/${this.roomId}`)
+        this.getApi(`${this.api}/api/live/giftlist/${this.roomId}`)
           .then((res) => {
             this.useGiftList = res.data.normal
           })
@@ -154,7 +164,7 @@ export default {
     async connectRoom() {
       // 配信情報取得
       const responseLiveData = await this.getApi(
-        `${process.env.API_URL}/api/users/live/${this.roomId}`
+        `${this.api}/api/users/live/${this.roomId}`
       )
       if (responseLiveData.data.live_status === 2) {
         this.streamData = responseLiveData.data
@@ -481,14 +491,12 @@ export default {
     },
     getListener(id) {
       this.listenerData = {}
-      axios
-        .get(`${process.env.API_URL}/api/live/listener/${id}`)
-        .then((response) => {
-          this.listenerData = response.data
-          this.listenerData.account_id = id
-          this.listenerData.block = this.blockUser.includes(id)
-          document.getElementById('open').click()
-        })
+      axios.get(`${this.api}/api/live/listener/${id}`).then((response) => {
+        this.listenerData = response.data
+        this.listenerData.account_id = id
+        this.listenerData.block = this.blockUser.includes(id)
+        document.getElementById('open').click()
+      })
     },
     blockCheck(id) {
       return this.blockUser.includes(id)

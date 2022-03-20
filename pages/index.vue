@@ -151,6 +151,7 @@ export default {
   },
   data() {
     return {
+      api: null,
       socket: null,
       ws: 'wss://online.showroom-live.com',
       roomId: null,
@@ -164,6 +165,11 @@ export default {
   },
   created() {
     setTimeout(() => {
+      if (this.$store.state.apiFlg) {
+        this.api = process.env.API_URL
+      } else {
+        this.api = process.env.API_SUB_URL
+      }
       if (this.$store.state.roomid === null) {
         this.$router.push('/search')
         return
@@ -181,7 +187,7 @@ export default {
     setTimeout(() => {
       if (this.$store.state.url != null) {
         this.url = this.$store.state.url
-        this.getApi(`${process.env.API_URL}/api/live/broadcast${this.url}`)
+        this.getApi(`${this.api}/api/live/broadcast${this.url}`)
           .then((res) => {
             this.broadcastKey = res.data
             if (res.data.split(':').length === 2) {
@@ -251,7 +257,7 @@ export default {
     },
     getRoomData() {
       // 配信情報取得
-      this.getApi(`${process.env.API_URL}/api/users/${this.roomId}`)
+      this.getApi(`${this.api}/api/users/${this.roomId}`)
         .then((res) => {
           this.roomData = res.data
           this.getEventData()
@@ -266,7 +272,7 @@ export default {
       }
       // イベント情報取得
       // TODO:DBにアクセスして登録されていたら集計サイトURL表示
-      this.getApi(`${process.env.API_URL}/api/users/event/${this.roomId}`)
+      this.getApi(`${this.api}/api/users/event/${this.roomId}`)
         .then((res) => {
           this.eventData = res.data
         })
@@ -299,6 +305,3 @@ export default {
   },
 }
 </script>
-
-<style>
-</style>

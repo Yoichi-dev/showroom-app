@@ -77,6 +77,7 @@ export default {
   name: 'HistoryPage',
   data() {
     return {
+      api: null,
       telop: '',
       useGiftList: [],
       rankingList: [],
@@ -96,6 +97,15 @@ export default {
       blockUser: [],
       streaminglog: [],
     }
+  },
+  created() {
+    setTimeout(() => {
+      if (this.$store.state.apiFlg) {
+        this.api = process.env.API_URL
+      } else {
+        this.api = process.env.API_SUB_URL
+      }
+    }, 0)
   },
   mounted() {
     setTimeout(() => {
@@ -143,14 +153,12 @@ export default {
     },
     getListener(id) {
       this.listenerData = {}
-      axios
-        .get(`${process.env.API_URL}/api/live/listener/${id}`)
-        .then((response) => {
-          this.listenerData = response.data
-          this.listenerData.account_id = id
-          this.listenerData.block = this.blockUser.includes(id)
-          document.getElementById('open').click()
-        })
+      axios.get(`${this.api}/api/live/listener/${id}`).then((response) => {
+        this.listenerData = response.data
+        this.listenerData.account_id = id
+        this.listenerData.block = this.blockUser.includes(id)
+        document.getElementById('open').click()
+      })
     },
     blockCheck(id) {
       return this.blockUser.includes(id)
