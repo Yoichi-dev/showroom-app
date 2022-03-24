@@ -16,10 +16,12 @@
                 ? 'pointer first-look'
                 : item.id == developerId
                 ? 'pointer developer'
+                : item.flg == 'FF6C1A'
+                ? 'pointer visitor'
                 : 'pointer'
             "
           >
-            <td @click="getListener(item.id)">
+            <td v-if="item.flg != 'FF6C1A'" @click="getListener(item.id)">
               <img
                 width="25"
                 height="25"
@@ -32,7 +34,14 @@
                 item.name.length > 15 ? item.name.slice(0, 15) + '…' : item.name
               }}
             </td>
-            <td>{{ item.comment }}</td>
+            <td v-if="item.flg != 'FF6C1A'">{{ item.comment }}</td>
+            <td
+              v-if="item.flg == 'FF6C1A'"
+              colspan="2"
+              @click="getListener(item.id)"
+            >
+              {{ item.comment }}
+            </td>
           </tr>
         </tbody>
       </table>

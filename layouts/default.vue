@@ -45,6 +45,10 @@ export default {
   background-color: aliceblue;
 }
 
+.visitor {
+  background-color: rgba(172, 172, 172, 0.199);
+}
+
 .developer {
   background-color: lavender;
 }

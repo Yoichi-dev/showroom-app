@@ -235,6 +235,9 @@ export default {
         } else if (Object.keys(getJson).length === 5) {
           // テロップ
           this.telopProcess(getJson)
+        } else if (Object.keys(getJson).length === 7) {
+          // 訪問通知
+          this.visitProcess(getJson)
         } else if (Object.keys(getJson).length === 4 && getJson.t === 101) {
           this.end()
         }
@@ -452,6 +455,15 @@ export default {
       if (socketTelop.telop != null) {
         this.telop = socketTelop.telop
       }
+    },
+    visitProcess(visitObj) {
+      this.commentList.unshift({
+        id: visitObj.u,
+        name: '',
+        comment: visitObj.m,
+        flg: visitObj.c,
+        avatar: '',
+      })
     },
     setTimer(startTime) {
       this.timer = setInterval(() => {
