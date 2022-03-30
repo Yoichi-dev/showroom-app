@@ -238,7 +238,7 @@ export default {
         } else if (Object.keys(getJson).length === 8) {
           // 訪問通知
           this.visitProcess(getJson)
-        } else if (Object.keys(getJson).length === 5 && getJson.t === 101) {
+        } else if (Object.keys(getJson).length === 4 && getJson.t === 101) {
           this.end()
         }
       }
