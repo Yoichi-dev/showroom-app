@@ -4,8 +4,9 @@
     <v-row class="mt-5 px-3" justify="center" v-if="showBtn">
       <v-alert outlined type="warning" prominent border="left">
         <div>
-          3/16 3:00～8:30の間でサーバエラーが出ていましたが解消しました<br />
-          こちらのアプリをメインで使っている人はお知らせ通知など色々実装されたβ版を使って頂けると嬉しいです
+          3/30
+          SRの仕様変更でコメントなど取得できない状態になっていましたが解消しました<br />
+          こちらのアプリをメインで使っている人は修正更新が早くお知らせ通知など色々実装されたβ版を使って頂けると嬉しいです
         </div>
       </v-alert>
     </v-row>
@@ -328,16 +329,16 @@ export default {
         // JSON変換
         let getJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1]);
         // 処理分岐
-        if (Object.keys(getJson).length === 9) {
+        if (Object.keys(getJson).length === 10) {
           // コメントログ
           this.commentProcess(getJson);
-        } else if (Object.keys(getJson).length === 12) {
+        } else if (Object.keys(getJson).length === 13) {
           // ギフトログ
           this.giftProcess(getJson);
-        } else if (Object.keys(getJson).length === 5) {
+        } else if (Object.keys(getJson).length === 6) {
           // テロップ
           this.telopProcess(getJson);
-        } else if (Object.keys(getJson).length === 4 && getJson.t == 101) {
+        } else if (Object.keys(getJson).length === 5 && getJson.t == 101) {
           this.socket.close();
           clearInterval(this.checkPing);
           let result = confirm(
