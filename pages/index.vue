@@ -338,7 +338,7 @@ export default {
         } else if (Object.keys(getJson).length === 6) {
           // テロップ
           this.telopProcess(getJson);
-        } else if (Object.keys(getJson).length === 5 && getJson.t == 101) {
+        } else if (Object.keys(getJson).length === 4 && getJson.t == 101) {
           this.socket.close();
           clearInterval(this.checkPing);
           let result = confirm(
