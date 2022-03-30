@@ -226,19 +226,19 @@ export default {
         const getJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1])
 
         // 処理分岐
-        if (Object.keys(getJson).length === 9) {
+        if (Object.keys(getJson).length === 10) {
           // コメントログ
           this.commentProcess(getJson)
-        } else if (Object.keys(getJson).length === 12) {
+        } else if (Object.keys(getJson).length === 13) {
           // ギフトログ
           this.giftProcess(getJson)
-        } else if (Object.keys(getJson).length === 5) {
+        } else if (Object.keys(getJson).length === 6) {
           // テロップ
           this.telopProcess(getJson)
-        } else if (Object.keys(getJson).length === 7) {
+        } else if (Object.keys(getJson).length === 8) {
           // 訪問通知
           this.visitProcess(getJson)
-        } else if (Object.keys(getJson).length === 4 && getJson.t === 101) {
+        } else if (Object.keys(getJson).length === 5 && getJson.t === 101) {
           this.end()
         }
       }
