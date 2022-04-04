@@ -235,7 +235,7 @@ export default {
         } else if (Object.keys(getJson).length === 6) {
           // テロップ
           this.telopProcess(getJson)
-        } else if (Object.keys(getJson).length === 8) {
+        } else if (Object.keys(getJson).length === 7) {
           // 訪問通知
           this.visitProcess(getJson)
         } else if (Object.keys(getJson).length === 4 && getJson.t === 101) {
