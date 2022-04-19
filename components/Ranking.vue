@@ -5,10 +5,10 @@
         <thead>
           <tr>
             <th colspan="2">配信内ランキング(100位まで)</th>
-            <th>
+            <!-- <th>
               合計
               {{ formatNum(totalPoint) }}pt
-            </th>
+            </th> -->
           </tr>
         </thead>
         <tbody>
@@ -32,7 +32,7 @@
                   : user.user.name
               }}
             </td>
-            <td>{{ formatNum(user.point) }}pt</td>
+            <!-- <td>{{ formatNum(user.point) }}pt</td> -->
           </tr>
         </tbody>
       </table>

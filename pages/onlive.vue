@@ -489,9 +489,9 @@ export default {
       // ランキング取得
       if (!this.premiumFlg) {
         await this.getApi(
-          `${process.env.API_SUB_URL}/api/live/ranking-point/${this.roomData.room_url_key}`
+          `${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`
         ).then((response) => {
-          this.rankingList = response.data
+          this.rankingList = response.data.stage_user_list
         })
       }
     },
