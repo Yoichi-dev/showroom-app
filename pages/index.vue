@@ -30,6 +30,17 @@
               <td>ランク</td>
               <td>{{ roomData.show_rank_subdivided }}</td>
             </tr>
+            <tr>
+              <td colspan="2">
+                <button
+                  class="uk-button uk-button-danger"
+                  type="button"
+                  @click="dataFormat()"
+                >
+                  初期化
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -298,6 +309,15 @@ export default {
     },
     formatTime(unixTime) {
       return moment(unixTime * 1000).format('llll')
+    },
+    dataFormat() {
+      const result = confirm(
+        'ルームデータ・配信ログを全て削除しますか？\n※削除した場合データは元に戻せません'
+      )
+      if (result) {
+        localStorage.clear()
+        location.reload()
+      }
     },
     formatNum(num) {
       if (num !== undefined) {
