@@ -7,6 +7,8 @@ const constants = {
       giftList: "/live/gift_list/",
       stageUserList: "/live/stage_user_list/",
       liveInfo: "/live/live_info/",
+      commentLog: "/live/comment_log/",
+      giftLog: "/live/gift_log/",
     },
     room: {
       profile: "/room/profile/",

@@ -173,6 +173,37 @@ export default {
         this.$router.push('/')
         return
       }
+      // コメントログを取得
+      const befotCommentLogJson = await this.getApi(
+        `${this.api}${constants.url.live.commentLog}${this.roomId}`
+      )
+      for (
+        let i = befotCommentLogJson.data.comment_log.length - 1;
+        i >= 0;
+        i--
+      ) {
+        this.commentProcess({
+          u: befotCommentLogJson.data.comment_log[i].user_id,
+          ac: befotCommentLogJson.data.comment_log[i].name,
+          cm: befotCommentLogJson.data.comment_log[i].comment,
+          ua: befotCommentLogJson.data.comment_log[i].ua,
+          av: befotCommentLogJson.data.comment_log[i].avatar_id,
+        })
+      }
+      // ギフトログを取得
+      const befotGiftLogJson = await this.getApi(
+        `${this.api}${constants.url.live.giftLog}${this.roomId}`
+      )
+      for (const befotGiftLog of befotGiftLogJson.data.gift_log) {
+        this.giftProcess({
+          u: befotGiftLog.user_id,
+          ac: befotGiftLog.name,
+          g: befotGiftLog.gift_id,
+          n: befotGiftLog.num,
+          ua: befotGiftLog.ua,
+          av: befotGiftLog.avatar_id,
+        })
+      }
       // 接続
       this.socketSetting(responseLiveData.data.bcsvr_key)
       await this.update()
