@@ -132,6 +132,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import client from '~/plugins/contentful'
+import constants from '~/constants'
 
 export default {
   name: 'IndexPage',
@@ -153,7 +154,6 @@ export default {
     return {
       api: null,
       socket: null,
-      ws: 'wss://online.showroom-live.com',
       roomId: null,
       url: null,
       broadcastKey: null,
@@ -166,9 +166,9 @@ export default {
   created() {
     setTimeout(() => {
       if (this.$store.state.apiFlg) {
-        this.api = process.env.API_URL
+        this.api = constants.url.main
       } else {
-        this.api = process.env.API_SUB_URL
+        this.api = constants.url.sub
       }
       if (this.$store.state.roomid === null) {
         this.$router.push('/search')
@@ -187,7 +187,7 @@ export default {
     setTimeout(() => {
       if (this.$store.state.url != null) {
         this.url = this.$store.state.url
-        this.getApi(`${this.api}/api/live/broadcast${this.url}`)
+        this.getApi(`${this.api}${constants.url.other.broadcast}${this.url}`)
           .then((res) => {
             this.broadcastKey = res.data
             if (res.data.split(':').length === 2) {
@@ -205,7 +205,7 @@ export default {
   methods: {
     connectSocket() {
       // 接続
-      this.socket = new WebSocket(this.ws)
+      this.socket = new WebSocket(constants.ws)
       // 接続確認
       this.socket.onopen = (e) => {
         this.socket.send(`SUB\t${this.broadcastKey}`)
@@ -257,7 +257,7 @@ export default {
     },
     getRoomData() {
       // 配信情報取得
-      this.getApi(`${this.api}/api/users/${this.roomId}`)
+      this.getApi(`${this.api}${constants.url.room.profile}${this.roomId}`)
         .then((res) => {
           this.roomData = res.data
           this.getEventData()
@@ -272,7 +272,9 @@ export default {
       }
       // イベント情報取得
       // TODO:DBにアクセスして登録されていたら集計サイトURL表示
-      this.getApi(`${this.api}/api/users/event/${this.roomId}`)
+      this.getApi(
+        `${this.api}${constants.url.room.eventAndSupport}${this.roomId}`
+      )
         .then((res) => {
           this.eventData = res.data
         })

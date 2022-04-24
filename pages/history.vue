@@ -72,6 +72,7 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import constants from '~/constants'
 
 export default {
   name: 'HistoryPage',
@@ -101,9 +102,9 @@ export default {
   created() {
     setTimeout(() => {
       if (this.$store.state.apiFlg) {
-        this.api = process.env.API_URL
+        this.api = constants.url.main
       } else {
-        this.api = process.env.API_SUB_URL
+        this.api = constants.url.sub
       }
     }, 0)
   },
@@ -153,12 +154,14 @@ export default {
     },
     getListener(id) {
       this.listenerData = {}
-      axios.get(`${this.api}/api/live/listener/${id}`).then((response) => {
-        this.listenerData = response.data
-        this.listenerData.account_id = id
-        this.listenerData.block = this.blockUser.includes(id)
-        document.getElementById('open').click()
-      })
+      axios
+        .get(`${this.api}${constants.url.user.profile}${id}`)
+        .then((response) => {
+          this.listenerData = response.data
+          this.listenerData.account_id = id
+          this.listenerData.block = this.blockUser.includes(id)
+          document.getElementById('open').click()
+        })
     },
     blockCheck(id) {
       return this.blockUser.includes(id)

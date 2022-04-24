@@ -87,6 +87,7 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import constants from '~/constants'
 
 export default {
   name: 'OnlivePage',
@@ -101,7 +102,6 @@ export default {
     return {
       api: null,
       socket: null,
-      ws: 'wss://online.showroom-live.com',
       roomId: null,
       useGiftList: [],
       rankingList: [],
@@ -132,9 +132,9 @@ export default {
   created() {
     setTimeout(() => {
       if (this.$store.state.apiFlg) {
-        this.api = process.env.API_URL
+        this.api = constants.url.main
       } else {
-        this.api = process.env.API_SUB_URL
+        this.api = constants.url.sub
       }
     }, 0)
   },
@@ -145,7 +145,7 @@ export default {
       } else {
         this.roomId = this.$store.state.roomid
         // 使えるギフトリスト取得
-        this.getApi(`${this.api}/api/live/giftlist/${this.roomId}`)
+        this.getApi(`${this.api}${constants.url.live.giftList}${this.roomId}`)
           .then((res) => {
             this.useGiftList = res.data.normal
           })
@@ -164,7 +164,7 @@ export default {
     async connectRoom() {
       // 配信情報取得
       const responseLiveData = await this.getApi(
-        `${this.api}/api/users/live/${this.roomId}`
+        `${this.api}${constants.url.live.liveInfo}${this.roomId}`
       )
       if (responseLiveData.data.live_status === 2) {
         this.streamData = responseLiveData.data
@@ -173,12 +173,9 @@ export default {
         this.$router.push('/')
         return
       }
-
       // 接続
       this.socketSetting(responseLiveData.data.bcsvr_key)
-
       await this.update()
-
       // インフォメーション取得
       const infoData = JSON.parse(JSON.stringify(this.roomData))
       this.setTimer(infoData.current_live_started_at)
@@ -194,7 +191,7 @@ export default {
     },
     socketSetting(bcsvrKey) {
       // 接続
-      this.socket = new WebSocket(this.ws)
+      this.socket = new WebSocket(constants.ws)
       // 接続確認
       this.socket.onopen = (e) => {
         this.socket.send(`SUB\t${bcsvrKey}`)
@@ -221,10 +218,8 @@ export default {
         ) {
           this.error()
         }
-
         // JSON変換
         const getJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1])
-
         // 処理分岐
         if (Object.keys(getJson).length === 10) {
           // コメントログ
@@ -232,7 +227,7 @@ export default {
         } else if (Object.keys(getJson).length === 13) {
           // ギフトログ
           this.giftProcess(getJson)
-        } else if (Object.keys(getJson).length === 6) {
+        } else if (Object.keys(getJson).length === 5) {
           // テロップ
           this.telopProcess(getJson)
         } else if (Object.keys(getJson).length === 7) {
@@ -481,7 +476,7 @@ export default {
     async update() {
       // インフォメーション
       await this.getApi(
-        `${process.env.API_SUB_URL}/api/users/${this.roomId}`
+        `${constants.url.sub}${constants.url.room.profile}${this.roomId}`
       ).then((response) => {
         this.startView = this.roomData === null ? 0 : this.roomData.view_num
         this.roomData = response.data
@@ -489,7 +484,7 @@ export default {
       // ランキング取得
       if (!this.premiumFlg) {
         await this.getApi(
-          `${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`
+          `${constants.url.sub}${constants.url.live.stageUserList}${this.roomId}`
         ).then((response) => {
           this.rankingList = response.data.stage_user_list
         })
@@ -503,12 +498,14 @@ export default {
     },
     getListener(id) {
       this.listenerData = {}
-      axios.get(`${this.api}/api/live/listener/${id}`).then((response) => {
-        this.listenerData = response.data
-        this.listenerData.account_id = id
-        this.listenerData.block = this.blockUser.includes(id)
-        document.getElementById('open').click()
-      })
+      axios
+        .get(`${this.api}${constants.url.user.profile}${id}`)
+        .then((response) => {
+          this.listenerData = response.data
+          this.listenerData.account_id = id
+          this.listenerData.block = this.blockUser.includes(id)
+          document.getElementById('open').click()
+        })
     },
     blockCheck(id) {
       return this.blockUser.includes(id)
@@ -518,8 +515,6 @@ export default {
       this.blockUser.push(id)
     },
     delBlock(id) {
-      // ブロックしたときボタンが変わらない所から
-
       // ブロックリストから削除
       this.blockUser = this.blockUser.filter((user) => user !== id)
     },

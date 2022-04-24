@@ -55,6 +55,7 @@
 
 <script>
 import axios from 'axios'
+import constants from '~/constants'
 
 export default {
   name: 'SearchPage',
@@ -85,7 +86,7 @@ export default {
       let apiFlg = true
 
       await axios
-        .get(`${process.env.API_URL}/api/live/search?keyword=${keyword}`)
+        .get(`${constants.url.main}/${constants.url.search}${keyword}`)
         .then((response) => {
           this.searchList = response.data
           if (response.data.length === 0) {
@@ -109,7 +110,7 @@ export default {
       this.inputText = '検索中...'
 
       await axios
-        .get(`${process.env.API_SUB_URL}/api/live/search?keyword=${keyword}`)
+        .get(`${constants.url.sub}/${constants.url.search}${keyword}`)
         .then((response) => {
           this.searchList = response.data
           if (response.data.length === 0) {
