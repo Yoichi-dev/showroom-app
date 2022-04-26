@@ -4,18 +4,11 @@
     <v-row class="mt-5 px-3" justify="center" v-if="showBtn">
       <v-alert outlined type="warning" prominent border="left">
         <div>
-          3/30
-          SRの仕様変更でコメントなど取得できない状態になっていましたが解消しました<br />
-          こちらのアプリをメインで使っている人は修正更新が早くお知らせ通知など色々実装されたβ版を使って頂けると嬉しいです
+          近々β版の機能が追加されます<br />
+          現バージョンと互換性が無いため保存されているログ情報を引き継ぐことができません<br />
+          消したくないログのダウンロードは早めに済ませておいてください<br />
         </div>
       </v-alert>
-    </v-row>
-    <v-row justify="center" align="center" v-if="showBtn">
-      Watch Log 次期β版テスター募集中。詳しくは
-      <a href="https://twitter.com/yoichiro_sub" target="_blank">
-        @yoichiro_sub
-      </a>
-      のDM又はDiscordまで
     </v-row>
     <v-row justify="center" align="center" v-if="showBtn">
       <v-btn class="ma-2" outlined color="indigo" @click="checkLive()">
