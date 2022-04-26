@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="ranking" class="uk-card uk-card-default scrollbar">
+    <div id="ranking" class="gift uk-card uk-card-default scrollbar">
       <table class="uk-table uk-table-small uk-table-divider">
         <thead>
           <tr>

@@ -2,6 +2,7 @@
   <main class="uk-container uk-margin-top">
     <div uk-grid>
       <div class="uk-width-auto@s">
+        <span v-if="profileImgFlg" uk-spinner="ratio: 4.5"></span>
         <img
           :data-src="roomData.image"
           class="pointer"
@@ -48,6 +49,11 @@
     <hr />
     <div v-if="eventData != null" uk-grid>
       <div class="uk-width-auto@s">
+        <span
+          v-if="eventImgFlg"
+          class="uk-margin-small-right"
+          uk-spinner="ratio: 3"
+        ></span>
         <img
           class="pointer"
           :data-src="roomData.event.image"
@@ -172,6 +178,8 @@ export default {
       eventData: null,
       streaminglog: [],
       checkPing: null,
+      profileImgFlg: true,
+      eventImgFlg: true,
     }
   },
   created() {
@@ -270,6 +278,7 @@ export default {
       // 配信情報取得
       this.getApi(`${this.api}${constants.url.room.profile}${this.roomId}`)
         .then((res) => {
+          this.profileImgFlg = false
           this.roomData = res.data
           this.getEventData()
         })
@@ -287,6 +296,7 @@ export default {
         `${this.api}${constants.url.room.eventAndSupport}${this.roomId}`
       )
         .then((res) => {
+          this.eventImgFlg = false
           this.eventData = res.data
         })
         .catch((e) => {
