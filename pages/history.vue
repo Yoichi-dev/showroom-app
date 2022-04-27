@@ -175,7 +175,7 @@ export default {
       // 使えるギフトリスト取得
       axios
         .get(
-          `${process.env.API_URL}/api/live/giftlist/${this.$store.state.roomid}`
+          `${process.env.API_SUB_URL}/api/live/giftlist/${this.$store.state.roomid}`
         )
         .then((response) => {
           this.useGiftList = response.data.normal;

@@ -199,7 +199,7 @@ export default {
       this.clearData();
       // 配信しているか確認
       let responseData = await this.getApi(
-        `${process.env.API_URL}/api/users/${this.roomId}`
+        `${process.env.API_SUB_URL}/api/users/${this.roomId}`
       );
       // Error or Onlive or Premium
       if (
@@ -210,7 +210,7 @@ export default {
         if (responseData.data.premium_room_type === 1) {
           console.log("プレミアム配信中です");
           await axios
-            .get(`${process.env.API_URL}/api/users/onlive/${this.roomId}`)
+            .get(`${process.env.API_SUB_URL}/api/users/onlive/${this.roomId}`)
             .then((response) => {
               if (response.data.length != undefined) {
                 if (response.data) {
@@ -256,22 +256,22 @@ export default {
       if (!this.premiumFlg) {
         // 使えるギフトリスト取得
         let responseUseGift = await this.getApi(
-          `${process.env.API_URL}/api/live/giftlist/${this.roomId}`
+          `${process.env.API_SUB_URL}/api/live/giftlist/${this.roomId}`
         );
         this.useGiftList = responseUseGift.data.normal;
         // ライブランキング取得
         let responseRanking = await this.getApi(
-          `${process.env.API_URL}/api/live/ranking/${this.roomId}`
+          `${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`
         );
         this.rankingList = responseRanking.data.stage_user_list;
         // テロップ取得
         let responseTelop = await this.getApi(
-          `${process.env.API_URL}/api/live/telop/${this.roomId}`
+          `${process.env.API_SUB_URL}/api/live/telop/${this.roomId}`
         );
         this.telop = responseTelop.data.telop;
         // 配信情報取得
         let responseLiveData = await this.getApi(
-          `${process.env.API_URL}/api/users/live/${this.roomId}`
+          `${process.env.API_SUB_URL}/api/users/live/${this.roomId}`
         );
         this.streamData = responseLiveData.data;
         this.title = responseLiveData.data.room_name;
