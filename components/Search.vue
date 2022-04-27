@@ -120,7 +120,7 @@ export default {
       this.btn = true;
       this.searchText = "検索中...";
       axios
-        .get(`${process.env.API_URL}/api/live/search?keyword=${keyword}`)
+        .get(`${process.env.API_SUB_URL}/api/live/search?keyword=${keyword}`)
         .then((response) => {
           // 検索結果
           this.searchList = response.data;

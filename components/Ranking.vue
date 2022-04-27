@@ -63,7 +63,7 @@ export default {
     userData(id) {
       this.listenerData = null;
       axios
-        .get(`${process.env.API_URL}/api/live/listener/${id}`)
+        .get(`${process.env.API_SUB_URL}/api/live/listener/${id}`)
         .then((response) => {
           this.listenerData = response.data;
           this.dialog = true;
