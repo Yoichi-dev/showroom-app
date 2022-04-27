@@ -1,6 +1,6 @@
 const constants = {
   url: {
-    domain: "http://192.168.11.27:3001",
+    domain: "https://yoichiro-api-v1.site:61808",
     event: {
       hold: "/events/hold",
       end: "/events/end",
