@@ -34,23 +34,24 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import constants from "~/constants";
 
 export default {
-  async asyncData({ env, params }) {
+  async asyncData({ params }) {
     let responseUserInfo = await axios.get(
-      env.API_URL + "/api/users/" + params.room_id
+      `${constants.url.domain}${constants.url.room.profile}${params.room_id}`
     );
     let userInfo = responseUserInfo.data;
     let responseEventHistory = await axios.get(
-      env.API_URL + "/api/histories/" + params.event + "/" + params.room_id
+      `${constants.url.domain}${constants.url.history.search}${params.event}/${params.room_id}`
     );
     let eventHistory = responseEventHistory.data;
     let responseAggregateData = await axios.get(
-      `${env.API_URL}/api/histories/aggregate/${params.event}`
+      `${constants.url.domain}${constants.url.history.aggregate}${params.event}`
     );
     let aggregateData = responseAggregateData.data;
     let responseEventInfo = await axios.get(
-      `${env.API_URL}/api/events/${params.event}`
+      `${constants.url.domain}${constants.url.event.info}${params.event}`
     );
     let endFlg =
       responseEventInfo.data[0].ended_at <

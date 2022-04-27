@@ -7,10 +7,11 @@
 
 <script>
 import axios from "axios";
+import constants from "~/constants";
 
 export default {
-  async asyncData({ env }) {
-    let res = await axios.get(env.API_URL + "/api/events/end");
+  async asyncData() {
+    let res = await axios.get(constants.url.domain + constants.url.event.end);
     return { eventList: res.data };
   },
   head() {
