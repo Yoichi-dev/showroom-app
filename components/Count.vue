@@ -1,92 +1,64 @@
 <template>
-  <v-row>
-    <v-dialog v-model="dialog" width="800" v-if="listenerData != null">
-      <Listener @parentMethod="closeDialog" :listenerData="listenerData" />
-    </v-dialog>
-    <v-col cols="12">
-      <v-card class="mx-auto scrollbar" :height="styleSetting" outlined>
-        <v-list-item three-line>
-          <v-list-item-content>
-            <v-simple-table dense>
-              <template v-slot:default>
-                <tbody>
-                  <tr
-                    v-for="(count, index) in countList"
-                    :key="index"
-                    @click="userData(count.id)"
-                    :class="
-                      count.flg == 2
-                        ? 'pointer blue lighten-5'
-                        : count.id == developerId
-                        ? 'pointer purple lighten-5'
-                        : 'pointer'
-                    "
-                  >
-                    <td class="pa-0" style="width: 25px">
-                      <img
-                        alt=""
-                        height="25px"
-                        width="25px"
-                        :src="
-                          'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
-                          count.avatar +
-                          '.png?v=85'
-                        "
-                        data-holder-rendered="true"
-                      />
-                    </td>
-                    <td>{{ count.name }}</td>
-                    <td style="width: 100px">{{ count.num }}</td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div
+    id="free"
+    class="
+      uk-margin-bottom uk-card uk-card-default uk-grid-row-small
+      gift
+      scrollbar
+    "
+  >
+    <table class="uk-table uk-table-small uk-table-hover uk-table-divider">
+      <tbody>
+        <tr
+          v-for="(item, index) in count"
+          :key="index"
+          :class="
+            item.flg == 2
+              ? 'pointer first-look'
+              : item.id == developerId
+              ? 'pointer developer'
+              : 'pointer'
+          "
+          @click="getListener(item.id)"
+        >
+          <td>
+            <img
+              width="25"
+              height="25"
+              :src="
+                'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
+                item.avatar +
+                '.png?v=85'
+              "
+            />&ensp;{{
+              item.name.length > 18 ? item.name.slice(0, 18) + '…' : item.name
+            }}
+          </td>
+          <td>{{ item.num }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
-  props: ["countList", "developerId", "styleSetting"],
+  name: 'CountConponent',
+  props: {
+    count: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
-      dialog: false,
-      listenerData: null,
-    };
+      developerId: '3699368',
+    }
   },
   methods: {
-    userData(id) {
-      this.listenerData = null;
-      axios
-        .get(`${process.env.API_SUB_URL}/api/live/listener/${id}`)
-        .then((response) => {
-          this.listenerData = response.data;
-          this.dialog = !this.dialog;
-          this.listenerData.account_id = id;
-        });
-    },
-    closeDialog() {
-      this.dialog = false;
+    getListener(id) {
+      this.$emit('parentMethod', id)
     },
   },
-};
+}
 </script>
-
-<style scoped>
-.pointer {
-  cursor: pointer;
-}
-
-.scrollbar {
-  overflow: scroll;
-}
-
-.scrollbar::-webkit-scrollbar {
-  display: none;
-}
-</style>

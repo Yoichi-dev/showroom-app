@@ -1,92 +1,75 @@
 <template>
-  <v-row>
-    <v-dialog v-model="dialog" width="800" v-if="listenerData != null">
-      <Listener @parentMethod="closeDialog" :listenerData="listenerData" />
-    </v-dialog>
-
-    <v-col cols="12">
-      <v-card class="mx-auto scrollbar" :height="styleSetting" outlined>
-        <v-list-item three-line>
-          <v-list-item-content>
-            <div class="text-overline mb-4">配信内ランキング(100位まで)</div>
-            <v-simple-table dense>
-              <template v-slot:default>
-                <tbody>
-                  <tr
-                    v-for="rank in rankingList"
-                    :key="rank.rank"
-                    :class="
-                      rank.flg == 2
-                        ? 'pointer blue lighten-5'
-                        : rank.user.user_id == developerId
-                        ? 'pointer purple lighten-5'
-                        : 'pointer'
-                    "
-                    @click="userData(rank.user.user_id)"
-                  >
-                    <td>{{ rank.rank }}</td>
-                    <td class="pa-0">
-                      <img
-                        alt=""
-                        height="25px"
-                        width="25px"
-                        :src="rank.user.avatar_url"
-                        data-holder-rendered="true"
-                      />
-                    </td>
-                    <td>
-                      {{ rank.user.name }}
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div>
+    <div id="ranking" class="gift uk-card uk-card-default scrollbar">
+      <table class="uk-table uk-table-small uk-table-divider">
+        <thead>
+          <tr>
+            <th colspan="2">配信内ランキング(100位まで)</th>
+            <!-- <th>
+              合計
+              {{ formatNum(totalPoint) }}pt
+            </th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="user in ranking"
+            :key="user.order_no"
+            :class="
+              user.user.flg == 2
+                ? 'pointer first-look'
+                : user.user.user_id == developerId
+                ? 'pointer developer'
+                : 'pointer'
+            "
+            @click="getListener(user.user.user_id)"
+          >
+            <td>{{ user.order_no }}</td>
+            <td>
+              <img width="25" height="25" :src="user.user.avatar_url" />&ensp;{{
+                user.user.name.length > 13
+                  ? user.user.name.slice(0, 13) + '…'
+                  : user.user.name
+              }}
+            </td>
+            <!-- <td>{{ formatNum(user.point) }}pt</td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
-  props: ["rankingList", "developerId", "styleSetting"],
+  name: 'RankingConponent',
+  props: {
+    ranking: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
-      dialog: false,
-      listenerData: null,
-    };
+      totalPoint: 0,
+      developerId: '3699368',
+    }
+  },
+  watch: {
+    ranking(data) {
+      this.totalPoint = 0
+      for (let i = 0; i < data.length; i++) {
+        this.totalPoint += data[i].point
+      }
+    },
   },
   methods: {
-    userData(id) {
-      this.listenerData = null;
-      axios
-        .get(`${process.env.API_SUB_URL}/api/live/listener/${id}`)
-        .then((response) => {
-          this.listenerData = response.data;
-          this.dialog = true;
-          this.listenerData.account_id = id;
-        });
+    formatNum(num) {
+      return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
     },
-    closeDialog() {
-      this.dialog = false;
+    getListener(id) {
+      this.$emit('parentMethod', id)
     },
   },
-};
+}
 </script>
-
-<style scoped>
-.pointer {
-  cursor: pointer;
-}
-
-.scrollbar {
-  overflow: scroll;
-}
-
-.scrollbar::-webkit-scrollbar {
-  display: none;
-}
-</style>

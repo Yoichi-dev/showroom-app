@@ -1,107 +1,77 @@
 <template>
-  <v-row>
-    <v-dialog v-model="dialog" width="800" v-if="listenerData != null">
-      <Listener @parentMethod="closeDialog" :listenerData="listenerData" />
-    </v-dialog>
-    <v-col cols="12">
-      <v-card class="mx-auto scrollbar" :height="styleSetting" outlined>
-        <v-list-item three-line>
-          <v-list-item-content>
-            <v-simple-table dense>
-              <template v-slot:default>
-                <tbody>
-                  <tr
-                    v-for="(gift, index) in gifts"
-                    :key="index"
-                    @click="userData(gift.id)"
-                    :class="
-                      gift.flg == 2
-                        ? 'pointer blue lighten-5'
-                        : gift.id == developerId
-                        ? 'pointer purple lighten-5'
-                        : 'pointer'
-                    "
-                  >
-                    <td class="pa-0" style="width: 25px">
-                      <img
-                        alt=""
-                        height="25px"
-                        width="25px"
-                        :src="
-                          'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
-                          gift.avatar +
-                          '.png?v=85'
-                        "
-                        data-holder-rendered="true"
-                      />
-                    </td>
-                    <td>{{ gift.name }}</td>
-                    <td style="width: 130px">
-                      <img
-                        alt=""
-                        width="25px"
-                        height="25px"
-                        class="img-responsive gift-img"
-                        style="float: left"
-                        :src="
-                          'https://image.showroom-cdn.com/showroom-prod/assets/img/gift/' +
-                          gift.gitId +
-                          '_s.png'
-                        "
-                        data-holder-rendered="true"
-                      />
-                      × {{ gift.num }}
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div
+    id="free"
+    class="
+      uk-margin-bottom uk-card uk-card-default uk-grid-row-small
+      gift
+      scrollbar
+    "
+  >
+    <table class="uk-table uk-table-small uk-table-hover uk-table-divider">
+      <tbody>
+        <tr
+          v-for="(item, index) in gift"
+          :key="index"
+          :class="
+            item.flg == 2
+              ? 'pointer first-look'
+              : item.id == developerId
+              ? 'pointer developer'
+              : 'pointer'
+          "
+          @click="getListener(item.id)"
+        >
+          <td>
+            <img
+              width="25"
+              height="25"
+              :src="
+                'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
+                item.avatar +
+                '.png?v=85'
+              "
+            />&ensp;{{
+              item.name.length > 18 ? item.name.slice(0, 18) + '…' : item.name
+            }}
+          </td>
+          <td style="width: 80px">
+            <img
+              width="25"
+              height="25"
+              :src="
+                'https://image.showroom-cdn.com/showroom-prod/assets/img/gift/' +
+                item.gitId +
+                '_s.png'
+              "
+            />×{{ formatNum(item.num) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
-  props: ["gifts", "developerId", "styleSetting"],
+  name: 'GiftConponent',
+  props: {
+    gift: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
-      dialog: false,
-      listenerData: null,
-    };
+      developerId: '3699368',
+    }
   },
   methods: {
-    userData(id) {
-      this.listenerData = null;
-      axios
-        .get(`${process.env.API_SUB_URL}/api/live/listener/${id}`)
-        .then((response) => {
-          this.listenerData = response.data;
-          this.dialog = true;
-          this.listenerData.account_id = id;
-        });
+    formatNum(num) {
+      return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
     },
-    closeDialog() {
-      this.dialog = false;
+    getListener(id) {
+      this.$emit('parentMethod', id)
     },
   },
-};
+}
 </script>
-
-<style scoped>
-.pointer {
-  cursor: pointer;
-}
-
-.scrollbar {
-  overflow: scroll;
-}
-
-.scrollbar::-webkit-scrollbar {
-  display: none;
-}
-</style>

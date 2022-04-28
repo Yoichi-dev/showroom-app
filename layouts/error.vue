@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  layout: "empty",
+  name: 'ErrorPage',
   props: {
     error: {
       type: Object,
@@ -21,18 +21,19 @@ export default {
   },
   data() {
     return {
-      pageNotFound: "404 Not Found",
-      otherError: "エラーが発生しました",
-    };
+      pageNotFound: '404 Not Found',
+      otherError:
+        'エラーが発生しました、この画面が出続ける場合は@TYoichiro又は@yoichiro_subまで連絡お願いします',
+    }
   },
   head() {
     const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError;
+      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
     return {
       title,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

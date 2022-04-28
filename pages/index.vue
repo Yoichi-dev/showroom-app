@@ -1,607 +1,353 @@
 <template>
-  <div class="mt-1">
-    <search :fulldialog.sync="fulldialog" />
-    <v-row class="mt-5 px-3" justify="center" v-if="showBtn">
-      <v-alert outlined type="warning" prominent border="left">
-        <div>
-          近々β版の機能が追加されます<br />
-          現バージョンと互換性が無いため保存されているログ情報を引き継ぐことができません<br />
-          消したくないログのダウンロードは早めに済ませておいてください<br />
-        </div>
-      </v-alert>
-    </v-row>
-    <v-row justify="center" align="center" v-if="showBtn">
-      <v-btn class="ma-2" outlined color="indigo" @click="checkLive()">
-        ルームに接続
-      </v-btn>
-      <v-btn class="ma-2" outlined color="red" @click="deleteData()">
-        初期化
-      </v-btn>
-    </v-row>
-    <v-row justify="center" align="center" v-if="logFlg">
-      <v-btn
-        class="ma-2"
-        outlined
-        color="green"
-        @click="$router.push('/history')"
-      >
-        過去のログを確認
-      </v-btn>
-    </v-row>
-    <!-- 基本情報 -->
-    <info :infoData="infoData" />
-    <v-row>
-      <v-col cols="12" sm="6">
-        <!-- テロップ -->
-        <Telop :telop="telop" />
-        <!-- コメント -->
-        <Comment
-          :commentList="commentList"
-          :developerId="developerId"
-          :styleSetting="styleSetting.comentSize"
+  <main class="uk-container uk-margin-top">
+    <div uk-grid>
+      <div class="uk-width-auto@s">
+        <span v-if="profileImgFlg" uk-spinner="ratio: 4.5"></span>
+        <img
+          :data-src="roomData.image"
+          class="pointer"
+          alt=""
+          uk-img
+          @click="openUrl(roomData.share_url)"
         />
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-row>
-          <v-col cols="12" lg="6">
-            <!-- 無料ギフト -->
-            <Gift
-              :gifts="freeGiftList"
-              :developerId="developerId"
-              :styleSetting="styleSetting.giftSize"
-            />
-            <!-- 有料ギフト -->
-            <Gift
-              :gifts="preGiftList"
-              :developerId="developerId"
-              :styleSetting="styleSetting.giftSize"
-            />
-            <!-- カウント -->
-            <Count
-              :countList="countList"
-              :developerId="developerId"
-              :styleSetting="styleSetting.giftSize"
-            />
-          </v-col>
-          <v-col cols="12" lg="6">
-            <!-- ランキング -->
-            <Ranking
-              :rankingList="rankingList"
-              :developerId="developerId"
-              :styleSetting="styleSetting.rankingSize"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-  </div>
+      </div>
+      <div class="uk-width-expand@s">
+        <table class="uk-table uk-table-divider">
+          <caption>
+            {{
+              roomData.room_name
+            }}
+          </caption>
+          <tbody>
+            <tr>
+              <td>フォロワー</td>
+              <td>{{ formatNum(roomData.follower_num) }}人</td>
+            </tr>
+            <tr>
+              <td>ルームレベル</td>
+              <td>{{ roomData.room_level }}</td>
+            </tr>
+            <tr>
+              <td>ランク</td>
+              <td>{{ roomData.show_rank_subdivided }}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <button
+                  class="uk-button uk-button-danger"
+                  type="button"
+                  @click="dataFormat()"
+                >
+                  初期化
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr />
+    <div v-if="eventData != null" uk-grid>
+      <div class="uk-width-auto@s">
+        <span
+          v-if="eventImgFlg"
+          class="uk-margin-small-right"
+          uk-spinner="ratio: 3"
+        ></span>
+        <img
+          class="pointer"
+          :data-src="roomData.event.image"
+          alt=""
+          uk-img
+          @click="openUrl(eventData.event.event_url)"
+        />
+      </div>
+      <div class="uk-width-expand@s">
+        <table class="uk-table uk-table-divider">
+          <caption>
+            {{
+              roomData.event.name
+            }}
+          </caption>
+          <tbody>
+            <tr>
+              <td>開始日時</td>
+              <td>{{ formatTime(roomData.event.started_at) }}</td>
+            </tr>
+            <tr>
+              <td>終了日時</td>
+              <td>{{ formatTime(roomData.event.ended_at) }}</td>
+            </tr>
+            <tr v-if="eventData.event.ranking !== undefined">
+              <td>現在のポイント（順位）</td>
+              <td>
+                {{ formatNum(eventData.event.ranking.point) }}pt（{{
+                  eventData.event.ranking.rank
+                }}位）
+              </td>
+            </tr>
+            <tr v-else>
+              <td>現在のポイント（Lv）</td>
+              <td>
+                {{
+                  formatNum(eventData.event.quest.support.current_point)
+                }}pt（Lv{{ eventData.event.quest.quest_level }}）
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr />
+    <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
+      <div>
+        <table class="uk-table uk-table-middle uk-table-divider">
+          <caption>
+            お知らせ
+          </caption>
+          <tbody v-if="infos != []">
+            <tr v-for="(info, index) in infos" :key="index">
+              <!-- eslint-disable vue/no-v-html -->
+              <td v-html="info.fields.info"></td>
+              <!-- eslint-enable -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <table class="uk-table uk-table-middle uk-table-divider">
+          <tbody v-if="streaminglog != []">
+            <tr v-for="(item, index) in streaminglog" :key="index">
+              <td style="white-space: nowrap">
+                {{ formatTime(item.info.startedAt) }} のログ
+              </td>
+              <td>
+                <button
+                  class="uk-button uk-button-primary"
+                  type="button"
+                  @click="$router.push('/history?id=' + item.id)"
+                >
+                  表示
+                </button>
+                <button
+                  class="uk-button uk-button-danger"
+                  type="button"
+                  @click="deleteLog(item.id)"
+                >
+                  削除
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
+import moment from 'moment'
+import client from '~/plugins/contentful'
+import constants from '~/constants'
+import pkg from '~/package.json'
 
 export default {
+  name: 'IndexPage',
+  beforeRouteLeave(to, from, next) {
+    this.end()
+    next()
+  },
+  async asyncData() {
+    let infos = []
+    await client
+      .getEntries({
+        content_type: 'info',
+      })
+      .then((res) => (infos = res.items))
+      .catch()
+    return { infos }
+  },
   data() {
     return {
-      title: "HOME",
-      developerId: 3699368,
-      roomId: null,
+      title: 'HOME',
+      api: null,
       socket: null,
-      infoData: [
-        {
-          title: "獲得ポイント",
-          num: 0,
-          icon: "mdi-file-powerpoint-box-outline",
-        },
-        {
-          title: "現在のフォロワー数",
-          num: 0,
-          icon: "mdi-account-multiple-plus",
-        },
-        {
-          title: "来場者数",
-          num: 0,
-          icon: "mdi-account-group",
-        },
-        {
-          title: "配信開始時間",
-          liveStartDate: "",
-          icon: "mdi-clock-outline",
-        },
-      ],
-      telop: null,
-      streamData: null,
-      commentList: [],
-      useGiftList: [],
-      freeGiftList: [],
-      preGiftList: [],
-      countList: [],
-      rankingList: [],
-      totalPoint: 0,
-      showBtn: true,
+      roomId: null,
+      url: null,
+      broadcastKey: null,
+      roomData: [],
+      eventData: null,
+      streaminglog: [],
       checkPing: null,
-      fulldialog: true,
-      styleSetting: {
-        commentSize: "",
-        giftSize: "",
-        rankingSize: "",
-      },
-      logFlg: false,
-      logList: [],
-      premiumFlg: false,
-    };
+      profileImgFlg: true,
+      eventImgFlg: true,
+    }
   },
   head() {
     return {
       title: this.title,
-    };
-  },
-  mounted() {
-    switch (this.$vuetify.breakpoint.name) {
-      case "xs":
-        this.styleSetting.giftSize = "30vh";
-        this.styleSetting.comentSize = "50vh";
-        this.styleSetting.rankingSize = "50vh";
-        break;
-      case "sm":
-        this.styleSetting.giftSize = "20vh";
-        this.styleSetting.comentSize = "110vh";
-        this.styleSetting.rankingSize = "50vh";
-        break;
-      case "md":
-        this.styleSetting.giftSize = "20vh";
-        this.styleSetting.comentSize = "130vh";
-        this.styleSetting.rankingSize = "70vh";
-        break;
-      case "lg":
-        this.styleSetting.giftSize = "20vh";
-        this.styleSetting.comentSize = "50vh";
-        this.styleSetting.rankingSize = "60vh";
-        break;
-      case "xl":
-        this.styleSetting.giftSize = "20vh";
-        this.styleSetting.comentSize = "68vh";
-        this.styleSetting.rankingSize = "70vh";
-        break;
     }
-    // ルームID読み込み
+  },
+  created() {
     setTimeout(() => {
-      if (this.$store.state.roomid === null) {
-        this.fulldialog = true;
+      if (
+        this.$store.state.version === null ||
+        this.$store.state.version !== pkg.version
+      ) {
+        this.$store.commit('setVersion', pkg.version)
+      }
+      if (this.$store.state.apiFlg) {
+        this.api = constants.url.main
       } else {
-        this.fulldialog = false;
-        this.roomId = this.$store.state.roomid;
+        this.api = constants.url.sub
+      }
+      if (this.$store.state.roomid === null || this.$store.state.url === null) {
+        localStorage.clear()
+        this.$router.push('/search')
+        return
+      } else {
+        this.roomId = this.$store.state.roomid
+        this.getRoomData()
       }
       if (this.$store.state.streaminglog != null) {
-        this.logFlg = true;
-        this.logList = this.$store.state.streaminglog;
-        if (
-          this.$route.query.id != undefined &&
-          0 <= this.$route.query.id &&
-          this.$route.query.id <= this.logList.length
-        ) {
-          this.commentList = this.logList[this.$route.query.id].comment;
-          this.freeGiftList = this.logList[this.$route.query.id].free;
-          this.preGiftList = this.logList[this.$route.query.id].pre;
-          this.countList = this.logList[this.$route.query.id].count;
-          this.rankingList = this.logList[this.$route.query.id].ranking;
-          this.infoData = this.logList[this.$route.query.id].info;
-        }
+        this.streaminglog = this.$store.state.streaminglog
       }
-    }, 0);
-    // サブAPIの起動
-    axios.get(process.env.API_SUB_URL);
+    }, 0)
+  },
+  mounted() {
+    // ソケット接続
+    setTimeout(() => {
+      if (this.$store.state.url != null) {
+        this.url = this.$store.state.url
+        this.getApi(`${this.api}${constants.url.other.broadcast}${this.url}`)
+          .then((res) => {
+            this.broadcastKey = res.data
+            if (res.data.split(':').length === 2) {
+              this.$router.push('/onlive')
+            } else {
+              this.connectSocket()
+            }
+          })
+          .catch((e) => {
+            alert('エラーが発生しました')
+          })
+      }
+    }, 1000)
   },
   methods: {
-    async checkLive() {
-      window.history.replaceState(null, null, window.location.pathname);
-      // 初期化
-      this.clearData();
-      // 配信しているか確認
-      let responseData = await this.getApi(
-        `${process.env.API_SUB_URL}/api/users/${this.roomId}`
-      );
-      // Error or Onlive or Premium
-      if (
-        responseData.status != 200 ||
-        !responseData.data.is_onlive ||
-        responseData.data.premium_room_type === 1
-      ) {
-        if (responseData.data.premium_room_type === 1) {
-          console.log("プレミアム配信中です");
-          await axios
-            .get(`${process.env.API_SUB_URL}/api/users/onlive/${this.roomId}`)
-            .then((response) => {
-              if (response.data.length != undefined) {
-                if (response.data) {
-                  if (Object.keys(response.data[0]).length === 0) {
-                    alert(
-                      "プレミアム配信中です\nコメント取得に時間がかかりますしばらくしてからもう一度接続ボタンを押してください"
-                    );
-                    return;
-                  } else {
-                    this.streamData = response.data[0];
-                    this.premiumFlg = true;
-                  }
-                } else {
-                  alert(
-                    "プレミアム配信中です\nコメント取得に時間がかかりますしばらくしてからもう一度接続ボタンを押してください"
-                  );
-                  return;
-                }
-              }
-            });
-          if (!this.premiumFlg) {
-            return;
-          } else {
-            alert(
-              "現在プレミアム配信では累計ポイント・ランキングなど一部データが取得できません\nご了承ください"
-            );
-          }
-        } else {
-          alert("配信停止中です");
-          return;
-        }
-      }
-      // ボタン非表示
-      this.showBtn = false;
-      // 開始時間
-      this.infoData[3].liveStartDate =
-        responseData.data.current_live_started_at;
-      // 総視聴者
-      this.infoData[2].num = responseData.data.view_num;
-      // フォロワー
-      this.infoData[1].num = responseData.data.follower_num;
-
-      if (!this.premiumFlg) {
-        // 使えるギフトリスト取得
-        let responseUseGift = await this.getApi(
-          `${process.env.API_SUB_URL}/api/live/giftlist/${this.roomId}`
-        );
-        this.useGiftList = responseUseGift.data.normal;
-        // ライブランキング取得
-        let responseRanking = await this.getApi(
-          `${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`
-        );
-        this.rankingList = responseRanking.data.stage_user_list;
-        // テロップ取得
-        let responseTelop = await this.getApi(
-          `${process.env.API_SUB_URL}/api/live/telop/${this.roomId}`
-        );
-        this.telop = responseTelop.data.telop;
-        // 配信情報取得
-        let responseLiveData = await this.getApi(
-          `${process.env.API_SUB_URL}/api/users/live/${this.roomId}`
-        );
-        this.streamData = responseLiveData.data;
-        this.title = responseLiveData.data.room_name;
-        // 接続
-        this.socketSetting(responseLiveData.data.bcsvr_key);
-      } else {
-        // 接続
-        this.socketSetting(this.streamData.bcsvr_key);
-      }
-    },
-    getApi(url) {
-      return axios.get(url);
-    },
-    socketSetting(bcsvrKey) {
+    connectSocket() {
       // 接続
-      this.socket = new WebSocket("wss://online.showroom-live.com");
+      this.socket = new WebSocket(constants.ws)
       // 接続確認
       this.socket.onopen = (e) => {
-        this.socket.send(`SUB\t${bcsvrKey}`);
-      };
+        this.socket.send(`SUB\t${this.broadcastKey}`)
+      }
       // エラー発生時
-      this.socket.onerror = (error) => {
-        alert("エラーが発生しました\nページをリロードします");
-        this.socket.close();
-        clearInterval(this.checkPing);
-        location.reload();
-        return;
-      };
+      this.socket.onerror = (e) => {
+        this.error()
+      }
       // 疎通確認
       this.checkPing = setInterval(() => {
-        this.socket.send("PING\tshowroom");
-        this.update();
-      }, 60000);
+        this.socket.send('PING\tshowroom')
+      }, 60000)
       // メッセージ受信
       this.socket.onmessage = (data) => {
         // 死活監視
-        if (data.data === "ACK\tshowroom") {
-          return;
+        if (data.data === 'ACK\tshowroom') {
+          return
         }
         // エラー
-        if (data.data === "ERR") {
-          alert("エラーが発生しました\nページをリロードします");
-          this.socket.close();
-          clearInterval(this.checkPing);
-          location.reload();
-          return;
+        if (
+          data.data === 'ERR' ||
+          data.data === 'Could not decode a text frame as UTF-8.'
+        ) {
+          return
         }
         // JSON変換
-        let getJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1]);
-        // 処理分岐
-        if (Object.keys(getJson).length === 10) {
-          // コメントログ
-          this.commentProcess(getJson);
-        } else if (Object.keys(getJson).length === 13) {
-          // ギフトログ
-          this.giftProcess(getJson);
-        } else if (Object.keys(getJson).length === 6) {
-          // テロップ
-          this.telopProcess(getJson);
-        } else if (Object.keys(getJson).length === 4 && getJson.t == 101) {
-          this.socket.close();
-          clearInterval(this.checkPing);
-          let result = confirm(
-            "配信が終了しました\n\n今回の配信ログを見返せるように保存しますか？"
-          );
-          if (result) {
-            this.logList.push({
-              day: Math.floor(new Date().getTime() / 1000),
-              comment: this.commentList,
-              free: this.freeGiftList,
-              pre: this.preGiftList,
-              count: this.countList,
-              ranking: this.rankingList,
-              info: this.infoData,
-            });
-            this.$store.commit("setStreaminglog", this.logList);
-          }
-        }
-      };
-    },
-    commentProcess(commentObj) {
-      // 自動投稿空白対策
-      if (commentObj.cm === undefined) {
-        return;
-      }
-      // 全角数字を半角に変換
-      let numberFormat = commentObj.cm.replace(/[０-９]/g, (s) => {
-        return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
-      });
-
-      if (!isNaN(numberFormat) && Number(numberFormat) <= 50) {
-        // カウント
-        this.addCount(commentObj);
-      } else {
-        // コメント
-        this.addComment(commentObj);
-      }
-    },
-    giftProcess(giftObj) {
-      // ギフトログ
-      if (giftObj.gt == 2) {
-        // 投票
-        if (Number(giftObj.g) > 10000 && Number(giftObj.g) <= 10070) {
-        } else if (giftObj.g == 1601) {
-          // 虹星
-          this.addPreGift(giftObj);
-        } else {
-          // 無料
-          this.addFreeGift(giftObj);
-        }
-      } else {
-        // 有料
-        this.addPreGift(giftObj);
-      }
-    },
-    telopProcess(socketTelop) {
-      this.telop = socketTelop.telop;
-    },
-    addCount(countObj) {
-      // 既に存在するか確認
-      if (this.countList.some((e) => e.id == countObj.u)) {
-        for (let i in this.countList) {
-          if (this.countList[i].id === countObj.u) {
-            this.countList[i].num = countObj.cm;
-            this.countList[i].name = countObj.ac;
-            this.countList[i].avatar = countObj.av;
-            // 全角の場合
-            if (countObj.cm == "50" && !this.countList[i].pointFlg) {
-              this.countList[i].pointFlg = true;
-              this.totalPoint += 50;
-            }
-          }
-        }
-        // TODO
-        let countData = null;
-
-        this.countList.some((val, i) => {
-          if (val.id == countObj.u) {
-            countData = val;
-            this.countList.splice(i, 1);
-          }
-        });
-
-        // 先頭に追加
-        this.countList.unshift(countData);
-      } else {
-        // 新規追加
-        this.countList.unshift({
-          id: countObj.u,
-          name: countObj.ac,
-          num: countObj.cm,
-          flg: countObj.ua,
-          avatar: countObj.av,
-          pointFlg: false,
-        });
-      }
-    },
-    addComment(commentObj) {
-      // てむルームに来る荒らし対策
-      if (
-        this.roomId == "382233" &&
-        (commentObj.cm.match(/「いらすとや」/) ||
-          commentObj.cm.match(/🤬/) ||
-          commentObj.cm.match(/💢/) ||
-          commentObj.cm.match(/し、ね/) ||
-          commentObj.cm.match(/シ、ネ/) ||
-          commentObj.cm.match(/ブ、ス/))
-      ) {
-        return;
-      }
-      this.commentList.unshift({
-        id: commentObj.u,
-        name: commentObj.ac,
-        comment: commentObj.cm,
-        flg: commentObj.ua,
-        avatar: commentObj.av,
-      });
-    },
-    addPreGift(giftObj) {
-      // 使えるギフトのポイントを検索
-      let useGiftPoint = this.useGiftList.find((e) => e.gift_id === giftObj.g);
-      // 一覧にあれば加算対象
-      if (useGiftPoint != undefined) {
-        // 10連
-        if (giftObj.n == 10) {
-          this.infoData[0].num += Math.floor(
-            useGiftPoint.point * giftObj.n * 2.5 * 1.25
-          );
-        } else {
-          this.infoData[0].num += Math.floor(
-            useGiftPoint.point * giftObj.n * 2.5
-          );
-        }
-      }
-      // 既に存在するか確認
-      if (
-        this.preGiftList.some(
-          (e) => e.id === giftObj.u && e.gitId === giftObj.g
+        const getJson = JSON.parse(
+          data.data.split(`MSG\t${this.broadcastKey}`)[1]
         )
-      ) {
-        for (let i in this.preGiftList) {
-          if (
-            this.preGiftList[i].id === giftObj.u &&
-            this.preGiftList[i].gitId === giftObj.g
-          ) {
-            this.preGiftList[i].num += giftObj.n;
-            this.preGiftList[i].name = giftObj.ac;
-            this.preGiftList[i].avatar = giftObj.av;
-          }
+
+        if (getJson.t === 104) {
+          this.end()
+          this.$router.push('/onlive')
         }
-        let preGiftData = null;
-        this.preGiftList.some((val, i) => {
-          if (val.id === giftObj.u && val.gitId === giftObj.g) {
-            preGiftData = val;
-            this.preGiftList.splice(i, 1);
-          }
-        });
-        this.preGiftList.unshift(preGiftData);
-      } else {
-        this.preGiftList.unshift({
-          id: giftObj.u,
-          name: giftObj.ac,
-          gitId: giftObj.g,
-          num: giftObj.n,
-          flg: giftObj.ua,
-          avatar: giftObj.av,
-        });
       }
     },
-    addFreeGift(giftObj) {
-      // 10連
-      if (giftObj.n == 10) {
-        this.infoData[0].num += Math.floor(giftObj.n * 1.25);
-      } else {
-        this.infoData[0].num += giftObj.n;
+    error() {
+      alert('エラーが発生しました\nページをリロードします')
+      this.end()
+      location.reload()
+    },
+    end() {
+      if (this.socket != null) {
+        this.socket.close()
       }
-
-      // 既に存在するか確認
-      if (this.freeGiftList.some((e) => e.id == giftObj.u)) {
-        for (let i in this.freeGiftList) {
-          if (this.freeGiftList[i].id === giftObj.u) {
-            this.freeGiftList[i].num += giftObj.n;
-            this.freeGiftList[i].gitId = giftObj.g;
-            this.freeGiftList[i].name = giftObj.ac;
-            this.freeGiftList[i].avatar = giftObj.av;
-          }
-        }
-        // TODO
-        let freeGiftData = null;
-
-        this.freeGiftList.some((val, i) => {
-          if (val.id == giftObj.u) {
-            freeGiftData = val;
-            this.freeGiftList.splice(i, 1);
-          }
-        });
-
-        // 先頭に追加
-        this.freeGiftList.unshift(freeGiftData);
-      } else {
-        this.freeGiftList.unshift({
-          id: giftObj.u,
-          name: giftObj.ac,
-          gitId: giftObj.g,
-          num: giftObj.n,
-          flg: giftObj.ua,
-          avatar: giftObj.av,
-        });
+      if (this.checkPing != null) {
+        clearInterval(this.checkPing)
       }
     },
-    update() {
-      // 視聴者・フォロワー
-      axios
-        .get(`${process.env.API_SUB_URL}/api/users/${this.roomId}`)
-        .then((response) => {
-          // フォロワー
-          this.infoData[1].num = response.data.follower_num;
-          if (response.data.is_onlive) {
-            // 総視聴者
-            this.infoData[2].num = response.data.view_num;
-          }
-        });
-      if (!this.premiumFlg) {
-        // ライブランキング
-        axios
-          .get(`${process.env.API_SUB_URL}/api/live/ranking/${this.roomId}`)
-          .then((response) => {
-            this.rankingList = response.data.stage_user_list;
-          });
-      }
+    getRoomData() {
+      // 配信情報取得
+      this.getApi(`${this.api}${constants.url.room.profile}${this.roomId}`)
+        .then((res) => {
+          this.profileImgFlg = false
+          this.roomData = res.data
+          this.getEventData()
+        })
+        .catch((e) => {
+          alert('エラーが発生しました')
+        })
     },
-    deleteData() {
-      let result = window.confirm(
-        "初期化しますか？\nルーム情報、今までのログが削除されます"
-      );
+    getEventData() {
+      if (this.roomData.event === null) {
+        return
+      }
+      // イベント情報取得
+      // TODO:DBにアクセスして登録されていたら集計サイトURL表示
+      this.getApi(
+        `${this.api}${constants.url.room.eventAndSupport}${this.roomId}`
+      )
+        .then((res) => {
+          this.eventImgFlg = false
+          this.eventData = res.data
+        })
+        .catch((e) => {
+          alert('エラーが発生しました')
+        })
+    },
+    getApi(url) {
+      return axios.get(url)
+    },
+    deleteLog(id) {
+      const result = confirm('配信ログを削除しますか？')
       if (result) {
-        this.$store.commit("setRoomid", null);
-        this.$store.commit("setStreaminglog", null);
-        location.reload();
+        const newLogList = this.streaminglog.filter((ele) => ele.id !== id)
+        this.streaminglog = newLogList
+        this.$store.commit('setStreaminglog', this.streaminglog)
       }
     },
-    clearData() {
-      this.commentList = [];
-      this.freeGiftList = [];
-      this.preGiftList = [];
-      this.countList = [];
-      this.rankingList = [];
-      this.infoData = [
-        {
-          title: "獲得ポイント",
-          num: 0,
-          icon: "mdi-file-powerpoint-box-outline",
-        },
-        {
-          title: "現在のフォロワー数",
-          num: 0,
-          icon: "mdi-account-multiple-plus",
-        },
-        {
-          title: "来場者数",
-          num: 0,
-          icon: "mdi-account-group",
-        },
-        {
-          title: "配信開始時間",
-          liveStartDate: "",
-          icon: "mdi-clock-outline",
-        },
-      ];
+    openUrl(url) {
+      window.open(url, '_blank')
+    },
+    formatTime(unixTime) {
+      return moment(unixTime * 1000).format('llll')
+    },
+    dataFormat() {
+      const result = confirm(
+        'ルームデータ・配信ログを全て削除しますか？\n※削除した場合データは元に戻せません'
+      )
+      if (result) {
+        localStorage.clear()
+        location.reload()
+      }
+    },
+    formatNum(num) {
+      if (num !== undefined) {
+        return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+      }
     },
   },
-};
+}
 </script>
