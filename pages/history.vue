@@ -59,9 +59,12 @@
             <div>
               <Gift :gift="freeGiftList" @parentMethod="getListener" />
               <Gift :gift="preGiftList" @parentMethod="getListener" />
-              <Count :count="countList" @parentMethod="getListener" />
+              <!-- <Count :count="countList" @parentMethod="getListener" /> -->
             </div>
-            <Ranking :ranking="rankingList" @parentMethod="getListener" />
+            <div>
+              <Count :count="countList" @parentMethod="getListener" />
+              <Ranking :ranking="rankingList" @parentMethod="getListener" />
+            </div>
           </div>
         </div>
       </div>
@@ -182,11 +185,11 @@ export default {
   height: 80vh;
 }
 
-#ranking {
+/* #ranking {
   height: 80vh;
-}
+} */
 
 .gift {
-  height: 26vh;
+  height: 39vh;
 }
 </style>
