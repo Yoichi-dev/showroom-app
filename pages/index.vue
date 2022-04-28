@@ -150,6 +150,7 @@ import axios from 'axios'
 import moment from 'moment'
 import client from '~/plugins/contentful'
 import constants from '~/constants'
+import pkg from '~/package.json'
 
 export default {
   name: 'IndexPage',
@@ -184,12 +185,19 @@ export default {
   },
   created() {
     setTimeout(() => {
+      if (
+        this.$store.state.version === null ||
+        this.$store.state.version !== pkg.version
+      ) {
+        this.$store.commit('setVersion', pkg.version)
+      }
       if (this.$store.state.apiFlg) {
         this.api = constants.url.main
       } else {
         this.api = constants.url.sub
       }
-      if (this.$store.state.roomid === null) {
+      if (this.$store.state.roomid === null || this.$store.state.url === null) {
+        localStorage.clear()
         this.$router.push('/search')
         return
       } else {

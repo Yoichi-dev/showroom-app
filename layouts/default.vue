@@ -4,7 +4,9 @@
       <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
           <li class="uk-active">
-            <a @click="$router.push('/')">Watch Log β create by T.Yoichiro</a>
+            <a @click="$router.push('/')"
+              >{{ title }} Ver.{{ version }} Create by T.Yoichiro
+            </a>
           </li>
         </ul>
       </div>
@@ -14,11 +16,14 @@
 </template>
 
 <script>
+import pkg from '~/package.json'
+
 export default {
   name: 'DefaultLayout',
   data() {
     return {
-      title: 'Watch Log β版',
+      title: 'Watch Log β',
+      version: pkg.version,
     }
   },
 }

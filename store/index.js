@@ -5,6 +5,7 @@ export const state = () => ({
     url: null,
     apiFlg: true,
     streaminglog: null,
+    version: null,
 })
 
 export const mutations = {
@@ -19,5 +20,8 @@ export const mutations = {
     },
     setApiFlg(state, apiFlg) {
         state.apiFlg = apiFlg
+    },
+    setVersion(state, version) {
+        state.version = version
     },
 }
