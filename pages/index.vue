@@ -208,7 +208,6 @@ export default {
         return
       } else {
         this.roomId = this.$store.state.roomid
-        this.getRoomData()
       }
       if (this.$store.state.streaminglog != null) {
         this.streaminglog = this.$store.state.streaminglog
@@ -228,9 +227,20 @@ export default {
             } else {
               this.connectSocket()
             }
+            this.getRoomData()
           })
           .catch((e) => {
-            alert('エラーが発生しました')
+            this.getApi(
+              `${this.api}${constants.url.room.profile}${this.roomId}`
+            )
+              .then((res) => {
+                if (res.data.premium_room_type === 1) {
+                  this.$router.push('/premium')
+                }
+              })
+              .catch((e) => {
+                alert('エラーが発生しました\nリロードしてください')
+              })
           })
       }
     }, 1000)
@@ -339,6 +349,7 @@ export default {
         'ルームデータ・配信ログを全て削除しますか？\n※削除した場合データは元に戻せません'
       )
       if (result) {
+        this.getApi(`${this.api}${constants.url.other.delete}`)
         localStorage.clear()
         location.reload()
       }

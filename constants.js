@@ -4,6 +4,8 @@ const constants = {
     sub: "https://showroom-app-api.herokuapp.com",
     search: "other/search?keyword=",
     live: {
+      onlives: "/live/onlives",
+      premium: "/live/premium",
       giftList: "/live/gift_list/",
       stageUserList: "/live/stage_user_list/",
       liveInfo: "/live/live_info/",
