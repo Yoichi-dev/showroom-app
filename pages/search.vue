@@ -101,7 +101,11 @@ export default {
           }
         })
         .catch((e) => {
-          apiFlg = false
+          if (e.response && e.response.status === 401) {
+            alert('1日の初期化回数を越えました')
+          } else {
+            apiFlg = false
+          }
         })
         .finally(() => {
           this.searchFlg = false

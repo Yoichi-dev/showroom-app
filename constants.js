@@ -20,7 +20,8 @@ const constants = {
       profile: "/users/profile/",
     },
     other: {
-      broadcast: "/other/broadcast"
+      broadcast: "/other/broadcast",
+      delete: "/other/delete"
     }
   },
   ws: "wss://online.showroom-live.com",
