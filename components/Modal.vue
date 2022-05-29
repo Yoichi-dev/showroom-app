@@ -45,7 +45,7 @@
                     ブロック解除
                   </button>
                 </div>
-                <div v-else>開発者をブロックすることできません</div>
+                <div v-else>WatchLogの開発者をブロックすることできません</div>
                 <hr />
                 <h3 v-if="modal.account_id === adminId" class="uk-card-title">
                   WatchLogの開発者です
@@ -225,7 +225,7 @@ export default {
   },
   data() {
     return {
-      adminId: '3699368',
+      adminId: 3699368,
       showFlg: true,
     }
   },
