@@ -190,13 +190,18 @@ export default {
         i >= 0;
         i--
       ) {
-        this.commentProcess({
-          u: befotCommentLogJson.data.comment_log[i].user_id,
-          ac: befotCommentLogJson.data.comment_log[i].name,
-          cm: befotCommentLogJson.data.comment_log[i].comment,
-          ua: befotCommentLogJson.data.comment_log[i].ua,
-          av: befotCommentLogJson.data.comment_log[i].avatar_id,
-        })
+        // 管理者ブロック
+        if (
+          !this.adminBlockCheck(befotCommentLogJson.data.comment_log[i].user_id)
+        ) {
+          this.commentProcess({
+            u: befotCommentLogJson.data.comment_log[i].user_id,
+            ac: befotCommentLogJson.data.comment_log[i].name,
+            cm: befotCommentLogJson.data.comment_log[i].comment,
+            ua: befotCommentLogJson.data.comment_log[i].ua,
+            av: befotCommentLogJson.data.comment_log[i].avatar_id,
+          })
+        }
       }
       // ギフトログを取得
       const befotGiftLogJson = await this.getApi(
@@ -283,7 +288,7 @@ export default {
         return
       }
       // ブロック
-      if (this.blockCheck(commentObj.u)) {
+      if (this.blockCheck(commentObj.u) || this.adminBlockCheck(commentObj.u)) {
         return
       }
       // 全角数字を半角に変換
@@ -363,7 +368,7 @@ export default {
     },
     giftProcess(giftObj) {
       // ブロック
-      if (this.blockCheck(giftObj.u)) {
+      if (this.blockCheck(giftObj.u) || this.adminBlockCheck(giftObj.u)) {
         return
       }
       // ギフトログ
@@ -548,6 +553,9 @@ export default {
     },
     blockCheck(id) {
       return this.blockUser.includes(id)
+    },
+    adminBlockCheck(id) {
+      return constants.blockUsers.includes(id)
     },
     addBlock(id) {
       this.listenerData.block = true
