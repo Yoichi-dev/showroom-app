@@ -51,11 +51,11 @@ export default {
 }
 
 .visitor {
-  background-color: rgba(172, 172, 172, 0.199);
+  background-color: rgba(172, 172, 172, 0.1);
 }
 
 .developer {
-  background-color: lavender;
+  background-color: rgba(230, 230, 250, 0.5);
 }
 
 .scrollbar::-webkit-scrollbar {
