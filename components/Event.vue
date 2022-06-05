@@ -13,7 +13,9 @@
           :elevation="hover ? 16 : 2"
           @click="$router.push('/event/' + event.event_id)"
         >
+          <v-img v-if="endFlg" :src="event.image"></v-img>
           <v-img
+            v-else
             :src="
               event.image
                 .replace('_s.png', '_l.png')
@@ -28,6 +30,6 @@
 
 <script>
 export default {
-  props: ["eventList"],
+  props: ["eventList", "endFlg"],
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Info />
-    <Event :eventList="eventList" />
+    <Event :eventList="eventList" :endFlg="true" />
   </div>
 </template>
 
