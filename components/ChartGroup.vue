@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row justify="center" class="mt-10">
-      <p class="mt-10 title text--primary">{{ title }}の時間別ポイント</p>
+      <p class="mt-10 title text--primary">{{ title }}のポイント</p>
     </v-row>
     <v-row justify="center" class="mt-10">
       <Chart
@@ -11,7 +11,7 @@
       />
     </v-row>
     <v-row justify="center" class="mt-10">
-      <p class="mt-10 title text--primary">{{ title }}の時間別フォロワー</p>
+      <p class="mt-10 title text--primary">{{ title }}のフォロワー</p>
     </v-row>
     <v-row justify="center" class="mt-10">
       <Chart
@@ -21,7 +21,7 @@
       />
     </v-row>
     <v-row justify="center" class="mt-10">
-      <p class="mt-10 title text--primary">{{ title }}の時間別順位</p>
+      <p class="mt-10 title text--primary">{{ title }}の順位</p>
     </v-row>
     <v-row justify="center" class="mt-10">
       <Chart
