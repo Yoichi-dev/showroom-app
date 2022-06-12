@@ -1,6 +1,6 @@
 const constants = {
   url: {
-    main: "https://yoichiro-api-v1.site:61808",
+    main: "https://showroom-app-api.herokuapp.com",
     sub: "https://showroom-app-api.herokuapp.com",
     search: "other/search?keyword=",
     live: {
