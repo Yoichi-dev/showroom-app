@@ -25,8 +25,8 @@ const constants = {
     }
   },
   ws: "wss://online.showroom-live.com",
-  blockRoom: ['259669', '310995', '311596', '323072', '311391'],
-  blockUsers: [3377243, 3640889, 4180180, 3840137, 2862557]
+  blockRoom: ['259669', '310995', '311596', '323072', '311391', '314221'],
+  blockUsers: [3377243, 3640889, 4180180, 3840137, 2862557, 4289196]
 }
 
 module.exports = Object.freeze(constants);
