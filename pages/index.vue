@@ -2,6 +2,13 @@
   <main class="uk-container uk-margin-top">
     <div uk-grid>
       <div class="uk-width-auto@s">
+        現在β版はサポートしていません<br />
+        正式版をご利用ください<br />
+        <a href="https://watch-log.showroom-app.com/" target="_blank">
+          https://watch-log.showroom-app.com
+        </a>
+      </div>
+      <!-- <div class="uk-width-auto@s">
         <span v-if="profileImgFlg" uk-spinner="ratio: 4.5"></span>
         <img
           :data-src="roomData.image"
@@ -44,10 +51,10 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> -->
     </div>
     <hr />
-    <div v-if="eventData != null" uk-grid>
+    <!-- <div v-if="eventData != null" uk-grid>
       <div class="uk-width-auto@s">
         <span
           v-if="eventImgFlg"
@@ -97,24 +104,24 @@
           </tbody>
         </table>
       </div>
-    </div>
+    </div> -->
     <hr />
     <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
-      <div>
+      <!-- <div>
         <table class="uk-table uk-table-middle uk-table-divider">
           <caption>
             お知らせ
           </caption>
           <tbody v-if="infos != []">
-            <tr v-for="(info, index) in infos" :key="index">
-              <!-- eslint-disable vue/no-v-html -->
-              <td v-html="info.fields.info"></td>
-              <!-- eslint-enable -->
-            </tr>
+            <tr v-for="(info, index) in infos" :key="index"> -->
+      <!-- eslint-disable vue/no-v-html -->
+      <!-- <td v-html="info.fields.info"></td> -->
+      <!-- eslint-enable -->
+      <!-- </tr>
           </tbody>
         </table>
-      </div>
-      <div>
+      </div> -->
+      <!-- <div>
         <table class="uk-table uk-table-middle uk-table-divider">
           <tbody v-if="streaminglog != []">
             <tr v-for="(item, index) in streaminglog" :key="index">
@@ -140,7 +147,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> -->
     </div>
   </main>
 </template>
@@ -150,7 +157,7 @@ import axios from 'axios'
 import moment from 'moment'
 import client from '~/plugins/contentful'
 import constants from '~/constants'
-import pkg from '~/package.json'
+// import pkg from '~/package.json'
 
 export default {
   name: 'IndexPage',
@@ -184,50 +191,50 @@ export default {
     }
   },
   created() {
-    setTimeout(() => {
-      if (
-        this.$store.state.version === null ||
-        this.$store.state.version !== pkg.version
-      ) {
-        this.$store.commit('setVersion', pkg.version)
-      }
-      if (this.$store.state.apiFlg) {
-        this.api = constants.url.main
-      } else {
-        this.api = constants.url.sub
-      }
-      if (this.$store.state.roomid === null || this.$store.state.url === null) {
-        localStorage.clear()
-        this.$router.push('/search')
-        return
-      } else {
-        this.roomId = this.$store.state.roomid
-        this.getRoomData()
-      }
-      if (this.$store.state.streaminglog != null) {
-        this.streaminglog = this.$store.state.streaminglog
-      }
-    }, 0)
+    // setTimeout(() => {
+    //   if (
+    //     this.$store.state.version === null ||
+    //     this.$store.state.version !== pkg.version
+    //   ) {
+    //     this.$store.commit('setVersion', pkg.version)
+    //   }
+    //   if (this.$store.state.apiFlg) {
+    //     this.api = constants.url.main
+    //   } else {
+    //     this.api = constants.url.sub
+    //   }
+    //   if (this.$store.state.roomid === null || this.$store.state.url === null) {
+    //     localStorage.clear()
+    //     this.$router.push('/search')
+    //     return
+    //   } else {
+    //     this.roomId = this.$store.state.roomid
+    //     this.getRoomData()
+    //   }
+    //   if (this.$store.state.streaminglog != null) {
+    //     this.streaminglog = this.$store.state.streaminglog
+    //   }
+    // }, 0)
   },
   mounted() {
     // ソケット接続
-    setTimeout(() => {
-      if (this.$store.state.url != null) {
-        this.url = this.$store.state.url
-        this.getApi(`${this.api}${constants.url.other.broadcast}${this.url}`)
-          .then((res) => {
-            this.broadcastKey = res.data
-            if (res.data.split(':').length === 2) {
-              this.$router.push('/onlive')
-            } else {
-              this.connectSocket()
-            }
-          })
-          .catch((e) => {
-            alert('エラーが発生しました')
-          })
-      }
-    }, 1000)
+    // setTimeout(() => {
+    //   if (this.$store.state.url != null) {
+    //     this.url = this.$store.state.url
+    //     this.getApi(`${this.api}${constants.url.other.broadcast}${this.url}`)
+    //       .then((res) => {
+    //         this.broadcastKey = res.data
+    //         if (res.data.split(':').length === 2) {
+    //           this.$router.push('/onlive')
+    //         } else {
+    //           this.connectSocket()
+    //         }
+    //       })
+    //       .catch((e) => {
+    //         alert('エラーが発生しました')
+    //       })
+    //   }
+    // }, 1000)
   },
   methods: {
     connectSocket() {
