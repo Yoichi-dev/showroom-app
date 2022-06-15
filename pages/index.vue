@@ -121,7 +121,7 @@
           </tbody>
         </table>
       </div> -->
-      <!-- <div>
+      <div>
         <table class="uk-table uk-table-middle uk-table-divider">
           <tbody v-if="streaminglog != []">
             <tr v-for="(item, index) in streaminglog" :key="index">
@@ -140,6 +140,7 @@
                   class="uk-button uk-button-danger"
                   type="button"
                   @click="deleteLog(item.id)"
+                  disabled
                 >
                   削除
                 </button>
@@ -147,7 +148,7 @@
             </tr>
           </tbody>
         </table>
-      </div> -->
+      </div>
     </div>
   </main>
 </template>
@@ -191,30 +192,30 @@ export default {
     }
   },
   created() {
-    // setTimeout(() => {
-    //   if (
-    //     this.$store.state.version === null ||
-    //     this.$store.state.version !== pkg.version
-    //   ) {
-    //     this.$store.commit('setVersion', pkg.version)
-    //   }
-    //   if (this.$store.state.apiFlg) {
-    //     this.api = constants.url.main
-    //   } else {
-    //     this.api = constants.url.sub
-    //   }
-    //   if (this.$store.state.roomid === null || this.$store.state.url === null) {
-    //     localStorage.clear()
-    //     this.$router.push('/search')
-    //     return
-    //   } else {
-    //     this.roomId = this.$store.state.roomid
-    //     this.getRoomData()
-    //   }
-    //   if (this.$store.state.streaminglog != null) {
-    //     this.streaminglog = this.$store.state.streaminglog
-    //   }
-    // }, 0)
+    setTimeout(() => {
+      // if (
+      //   this.$store.state.version === null ||
+      //   this.$store.state.version !== pkg.version
+      // ) {
+      //   this.$store.commit('setVersion', pkg.version)
+      // }
+      // if (this.$store.state.apiFlg) {
+      //   this.api = constants.url.main
+      // } else {
+      //   this.api = constants.url.sub
+      // }
+      // if (this.$store.state.roomid === null || this.$store.state.url === null) {
+      //   localStorage.clear()
+      //   this.$router.push('/search')
+      //   return
+      // } else {
+      //   this.roomId = this.$store.state.roomid
+      //   this.getRoomData()
+      // }
+      if (this.$store.state.streaminglog != null) {
+        this.streaminglog = this.$store.state.streaminglog
+      }
+    }, 0)
   },
   mounted() {
     // ソケット接続
