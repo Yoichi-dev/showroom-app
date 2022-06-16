@@ -68,6 +68,9 @@ export default {
       searchFlg: false,
     }
   },
+  mounted() {
+    this.$router.push('/')
+  },
   methods: {
     async search() {
       if (this.searchText.length === 0) {
