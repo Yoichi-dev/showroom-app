@@ -246,7 +246,7 @@ export default {
       }
       // 疎通確認
       this.checkPing = setInterval(() => {
-        // this.socket.send('PING\tshowroom')
+        this.socket.send('PING\tshowroom')
         this.update()
       }, 60000)
       // メッセージ受信
