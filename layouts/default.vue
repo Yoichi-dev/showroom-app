@@ -44,6 +44,7 @@ export default {
 
 .scrollbar {
   overflow: scroll;
+  scrollbar-width: none;
 }
 
 .first-look {
