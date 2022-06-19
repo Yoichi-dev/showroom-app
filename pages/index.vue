@@ -284,6 +284,10 @@ export default {
           this.$router.push('/onlive')
         }
       }
+      setTimeout(() => {
+        this.end()
+        location.reload()
+      }, 500000)
     },
     error() {
       alert('エラーが発生しました\nページをリロードします')
