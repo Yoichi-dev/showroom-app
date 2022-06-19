@@ -258,9 +258,9 @@ export default {
         this.error()
       }
       // 疎通確認
-      this.checkPing = setInterval(() => {
-        this.socket.send('PING\tshowroom')
-      }, 60000)
+      // this.checkPing = setInterval(() => {
+      //   this.socket.send('PING\tshowroom')
+      // }, 60000)
       // メッセージ受信
       this.socket.onmessage = (data) => {
         // 死活監視
@@ -294,9 +294,9 @@ export default {
       if (this.socket != null) {
         this.socket.close()
       }
-      if (this.checkPing != null) {
-        clearInterval(this.checkPing)
-      }
+      // if (this.checkPing != null) {
+      //   clearInterval(this.checkPing)
+      // }
     },
     getRoomData() {
       // 配信情報取得
