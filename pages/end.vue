@@ -2,6 +2,9 @@
   <div>
     <Info />
     <Event :eventList="eventList" :endFlg="true" />
+    <span v-if="eventList.length === 0">
+      登録されているイベントがありません
+    </span>
   </div>
 </template>
 

@@ -1,10 +1,11 @@
 <template>
   <v-app dark>
-    <Info />
-    <h1>申し訳ございません、サーバーが停止です。</h1>
-    <h3>
-      又は海外からのアクセスを禁止しているのでサーバー側のIP制限でアクセス出来ない人がいます
-    </h3>
+    <div>
+      <Info />
+    </div>
+    <h1>
+      {{ this.error.statusCode === 404 ? this.pageNotFound : this.otherError }}
+    </h1>
   </v-app>
 </template>
 
@@ -19,8 +20,8 @@ export default {
   },
   data() {
     return {
-      pageNotFound: "404 Not Found",
-      otherError: "An error occurred",
+      pageNotFound: "登録されているイベント情報がありません",
+      otherError: "システムエラーが発生しました",
     };
   },
   head() {

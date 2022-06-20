@@ -292,7 +292,7 @@ export default {
       this.todayRankData.datasets.push({
         tension: 0,
         label: room_name,
-        data: todayData.map((e) => e.rank),
+        data: todayData.map((e) => e.now_rank),
         backgroundColor:
           "rgba(" + color.r + ", " + color.g + ", " + color.b + ", 0)",
         borderColor:
@@ -311,7 +311,7 @@ export default {
     dayChart(room_name, userData, color, index) {
       let dayPoint = userData[0].point;
       let dayFollower = userData[0].follower_num;
-      let dayRank = userData[0].rank;
+      let dayRank = userData[0].now_rank;
       let dayLabel = this.formatMdDate(userData[0].get_at);
       let dayFlg = this.formatDay(userData[0].get_at);
       let dayPointList = [];
@@ -328,7 +328,7 @@ export default {
         }
         dayPoint = v.point;
         dayFollower = v.follower_num;
-        dayRank = v.rank;
+        dayRank = v.now_rank;
         dayLabel = this.formatMdDate(v.get_at);
         if (userData.length - 1 == idx) {
           dayPointList.push(dayPoint);
@@ -402,7 +402,7 @@ export default {
       this.allRankData.datasets.push({
         tension: 0,
         label: room_name,
-        data: userData.map((e) => e.rank),
+        data: userData.map((e) => e.now_rank),
         backgroundColor:
           "rgba(" + color.r + ", " + color.g + ", " + color.b + ", 0)",
         borderColor:

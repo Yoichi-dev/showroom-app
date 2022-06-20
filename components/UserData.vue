@@ -105,17 +105,19 @@ export default {
       (val) => val.room_id === this.roomId
     )[0];
     // 順位
-    this.avgData[0].value = `${userData.rank}位`;
+    this.avgData[0].value = `${userData.now_rank}位`;
     this.avgData[0].sub = `前回集計時の順位 ${
-      this.eventHistory[this.eventHistory.length - 2].rank
+      this.eventHistory[this.eventHistory.length - 2].now_rank
     }位`;
     if (
-      userData.rank === this.eventHistory[this.eventHistory.length - 2].rank
+      userData.now_rank ===
+      this.eventHistory[this.eventHistory.length - 2].now_rank
     ) {
       this.avgData[0].icon = "mdi-trending-neutral";
       this.avgData[0].color = "blue";
     } else if (
-      userData.rank < this.eventHistory[this.eventHistory.length - 2].rank
+      userData.now_rank <
+      this.eventHistory[this.eventHistory.length - 2].now_rank
     ) {
       this.avgData[0].icon = "mdi-trending-up";
     } else {
@@ -143,7 +145,7 @@ export default {
     }
     // トータルポイント
     this.avgData[1].value = `${this.formatNum(userData.point)}pt`;
-    if (userData.rank === 1) {
+    if (userData.now_rank === 1) {
       this.avgData[1].sub = `2位との差 ${this.formatNum(userData.gap)}pt`;
       this.avgData[1].icon = "mdi-crown";
     } else {
