@@ -14,6 +14,10 @@ const constants = {
     room: {
       profile: "/room/profile/",
     },
+    all: {
+      event: "/pointhistory/event/",
+      user: "/pointhistory/event/",
+    }
   },
 }
 

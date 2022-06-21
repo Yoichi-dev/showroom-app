@@ -38,24 +38,15 @@ import constants from "~/constants";
 
 export default {
   async asyncData({ params }) {
-    let responseUserInfo = await axios.get(
-      `${constants.url.domain}${constants.url.room.profile}${params.room_id}`
+    const allData = await axios.get(
+      `${constants.url.domain}${constants.url.all.user}${params.event}/${params.room_id}`
     );
-    let userInfo = responseUserInfo.data;
-    let responseEventHistory = await axios.get(
-      `${constants.url.domain}${constants.url.history.search}${params.event}/${params.room_id}`
-    );
-    let eventHistory = responseEventHistory.data;
-    let responseAggregateData = await axios.get(
-      `${constants.url.domain}${constants.url.history.aggregate}${params.event}`
-    );
-    let aggregateData = responseAggregateData.data;
-    let responseEventInfo = await axios.get(
-      `${constants.url.domain}${constants.url.event.info}${params.event}`
-    );
-    let endFlg =
-      responseEventInfo.data[0].ended_at <
-      Math.round(new Date().getTime() / 1000);
+    const resAllData = allData.data;
+    const userInfo = resAllData.profile;
+    const eventHistory = resAllData.userHistory;
+    const aggregateData = resAllData.eventAggregate;
+    const eventInfo = resAllData.eventInfo;
+    const endFlg = eventInfo.ended_at < Math.round(new Date().getTime() / 1000);
     return { userInfo, eventHistory, aggregateData, endFlg };
   },
   data() {
