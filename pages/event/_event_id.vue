@@ -33,6 +33,10 @@ import moment from "moment";
 import constants from "~/constants";
 
 export default {
+  beforeRouteLeave(to, from, next) {
+    this.dialog = true;
+    next();
+  },
   async asyncData({ params }) {
     const allData = await axios.get(
       `${constants.url.domain}${constants.url.all.event}${params.event_id}`
@@ -47,6 +51,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       todayPointData: {},
       todayFollowerData: {},
       todayRankData: {},

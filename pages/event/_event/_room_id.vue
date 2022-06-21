@@ -1,5 +1,19 @@
 <template>
   <div>
+    <div class="text-center">
+      <v-dialog v-model="dialog" persistent width="500">
+        <v-card color="green" dark>
+          <v-card-text>
+            読み込み中...
+            <v-progress-linear
+              indeterminate
+              color="white"
+              class="mb-0"
+            ></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
     <Info />
     <EndInfo v-if="endFlg" />
     <UserInfo :userInfo="userInfo" />
@@ -37,6 +51,10 @@ import moment from "moment";
 import constants from "~/constants";
 
 export default {
+  beforeRouteLeave(to, from, next) {
+    this.dialog = true;
+    next();
+  },
   async asyncData({ params }) {
     const allData = await axios.get(
       `${constants.url.domain}${constants.url.all.user}${params.event}/${params.room_id}`
@@ -51,6 +69,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       todayPointList: [],
       todayPointData: {},
       todayFollowerData: {},
