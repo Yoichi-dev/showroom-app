@@ -4,7 +4,20 @@
       <table class="uk-table uk-table-small uk-table-hover uk-table-divider">
         <thead>
           <tr>
-            <th colspan="2">{{ telop }}</th>
+            <th>{{ telop }}</th>
+            <th>
+              <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                <label>
+                  <input
+                    v-model="checked"
+                    class="uk-checkbox"
+                    type="checkbox"
+                    @change="change()"
+                  />
+                  {{ checked ? '通知系表示' : '通知系非表示' }}
+                </label>
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -36,7 +49,7 @@
             </td>
             <td v-if="item.flg != 'FF6C1A'">{{ item.comment }}</td>
             <td
-              v-if="item.flg == 'FF6C1A'"
+              v-if="checked && item.flg == 'FF6C1A'"
               colspan="2"
               @click="getListener(item.id)"
             >
@@ -65,11 +78,15 @@ export default {
   data() {
     return {
       developerId: '3699368',
+      checked: true,
     }
   },
   methods: {
     getListener(id) {
       this.$emit('parentMethod', id)
+    },
+    change() {
+      this.viewRadio = !this.checked
     },
   },
 }
