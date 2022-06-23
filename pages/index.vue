@@ -98,7 +98,16 @@
                       />
                     </div>
                   </div>
-                  <button class="btn btn-block btn-primary" @click="search()">
+                  <div class="mt-4 text-center">
+                    <span class="font-weight-normal">
+                      現在サイトからの申請停止中。Twitterより連絡お願いします。
+                    </span>
+                  </div>
+                  <button
+                    class="btn btn-block btn-primary"
+                    @click="search()"
+                    disabled
+                  >
                     申請
                   </button>
                 </div>
