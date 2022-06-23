@@ -58,7 +58,7 @@
                         ><span class="fas fa-server"></span
                       ></span>
                       <span class="alert-inner--text">
-                        minecraft.showroom-app.com:4477
+                        minecraft.showroom-app.com:16767
                       </span>
                     </div>
                   </div>
@@ -151,7 +151,7 @@ export default {
       }
       axios
         .get(
-          `${process.env.API_URL}/api/minecraft/search/${minecraftId}/${twitterId}`
+          `https://showroom-app-api.herokuapp.com/minecraft/register/${minecraftId}/${twitterId}`
         )
         .then((response) => {
           if (response.status != 404) {
