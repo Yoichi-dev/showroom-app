@@ -256,11 +256,19 @@ export default {
           return
         }
         // エラー
-        if (
-          data.data === 'ERR' ||
-          data.data === 'Could not decode a text frame as UTF-8.'
-        ) {
+        if (data.data === 'ERR') {
           this.error()
+        }
+        if (data.data === 'Could not decode a text frame as UTF-8.') {
+          this.commentList.unshift({
+            id: constants.admin,
+            name: 'システムメッセージ',
+            comment:
+              '内部でエラーが発生した可能性があります、もし動作がおかしければリロードしてください。',
+            flg: 'FF6C1A',
+            avatar: 29,
+          })
+          return
         }
         // JSON変換
         const getJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1])
