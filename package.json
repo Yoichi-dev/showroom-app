@@ -1,6 +1,6 @@
 {
   "name": "watch-log",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "SHOWROOM配信のログを確認することができます",
   "author": "TYoichiro",
   "private": true,

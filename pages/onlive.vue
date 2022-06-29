@@ -104,6 +104,7 @@ export default {
   data() {
     return {
       title: 'ONLIVE',
+      bcsvrKey: null,
       api: null,
       socket: null,
       roomId: null,
@@ -217,8 +218,9 @@ export default {
           av: befotGiftLog.avatar_id,
         })
       }
+      this.bcsvrKey = responseLiveData.data.bcsvr_key
       // 接続
-      this.socketSetting(responseLiveData.data.bcsvr_key)
+      this.socketSetting()
       await this.update()
       // インフォメーション取得
       const infoData = JSON.parse(JSON.stringify(this.roomData))
@@ -233,16 +235,18 @@ export default {
       alert('エラーが発生しました\nページをリロードします')
       this.end()
     },
-    socketSetting(bcsvrKey) {
+    socketSetting() {
       // 接続
       this.socket = new WebSocket(constants.ws)
       // 接続確認
       this.socket.onopen = (e) => {
-        this.socket.send(`SUB\t${bcsvrKey}`)
+        this.socket.send(`SUB\t${this.bcsvrKey}`)
       }
       // エラー発生時
       this.socket.onerror = (e) => {
-        this.error()
+        this.socket.close()
+        clearInterval(this.checkPing)
+        this.socketSetting()
       }
       // 疎通確認
       this.checkPing = setInterval(() => {
@@ -260,18 +264,10 @@ export default {
           this.error()
         }
         if (data.data === 'Could not decode a text frame as UTF-8.') {
-          this.commentList.unshift({
-            id: constants.admin,
-            name: 'システムメッセージ',
-            comment:
-              '内部でエラーが発生した可能性があります、もし動作がおかしければリロードしてください。',
-            flg: 'FF6C1A',
-            avatar: 29,
-          })
           return
         }
         // JSON変換
-        const getJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1])
+        const getJson = JSON.parse(data.data.split(`MSG\t${this.bcsvrKey}`)[1])
         // 処理分岐
         if (Object.keys(getJson).length === 10) {
           // コメントログ
