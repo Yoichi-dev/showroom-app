@@ -19,7 +19,7 @@
                 / {{ aggregateData.length }}位中
               </small>
             </v-list-item-title>
-            <v-list-item-subtitle>
+            <v-list-item-subtitle v-if="!endFlg">
               {{ item.sub }}
             </v-list-item-subtitle>
           </v-list-item-content>
