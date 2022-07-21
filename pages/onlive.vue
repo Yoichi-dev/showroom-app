@@ -299,9 +299,13 @@ export default {
       const numberFormat = commentObj.cm.replace(/[０-９]/g, (s) => {
         return String.fromCharCode(s.charCodeAt(0) - 0xfee0)
       })
-      if (!isNaN(numberFormat) && Number(numberFormat) <= 50) {
+      if (
+        !isNaN(numberFormat) &&
+        Number(numberFormat) >= 0 &&
+        Number(numberFormat) <= 50
+      ) {
         // カウント
-        this.addCount(commentObj, Number(numberFormat))
+        this.addCount(commentObj, Math.trunc(Number(numberFormat)))
       } else {
         // コメント
         this.addComment(commentObj)
