@@ -101,6 +101,13 @@
     <hr />
     <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
       <div>
+        <div>
+          <dl>
+            <dt>あなたのID</dt>
+            <dd>{{ $store.state.uuid }}</dd>
+          </dl>
+        </div>
+        <hr />
         <table class="uk-table uk-table-middle uk-table-divider">
           <caption>
             お知らせ
@@ -148,6 +155,7 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import UUID from 'uuidjs'
 import client from '~/plugins/contentful'
 import constants from '~/constants'
 import pkg from '~/package.json'
@@ -211,6 +219,14 @@ export default {
       }
       if (this.$store.state.streaminglog != null) {
         this.streaminglog = this.$store.state.streaminglog
+      }
+      // UUID
+      if (this.$store.state.uuid === null) {
+        const uuidGen = UUID.generate()
+        this.$store.commit('setUuid', uuidGen)
+        this.uuid = uuidGen
+      } else {
+        this.uuid = this.$store.state.uuid
       }
     }, 0)
   },
@@ -350,7 +366,11 @@ export default {
       )
       if (result) {
         this.getApi(`${this.api}${constants.url.other.delete}`)
-        localStorage.clear()
+        this.$store.commit('setRoomid', null)
+        this.$store.commit('setUrl', null)
+        this.$store.commit('setStreaminglog', null)
+        this.$store.commit('setApiFlg', null)
+        this.$store.commit('setVersion', null)
         location.reload()
       }
     },

@@ -6,6 +6,7 @@ export const state = () => ({
     apiFlg: true,
     streaminglog: null,
     version: null,
+    uuid: null
 })
 
 export const mutations = {
@@ -23,5 +24,8 @@ export const mutations = {
     },
     setVersion(state, version) {
         state.version = version
+    },
+    setUuid(state, uuid) {
+        state.uuid = uuid
     },
 }

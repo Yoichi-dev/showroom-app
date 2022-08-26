@@ -55,6 +55,7 @@
 
 <script>
 import axios from 'axios'
+import UUID from 'uuidjs'
 import constants from '~/constants'
 import pkg from '~/package.json'
 
@@ -147,6 +148,13 @@ export default {
         this.$store.commit('setRoomid', room.id)
         this.$store.commit('setUrl', room.url)
         this.$store.commit('setVersion', pkg.version)
+        if (
+          this.$store.state.uuid === undefined ||
+          this.$store.state.uuid === null
+        ) {
+          const uuidGen = UUID.generate()
+          this.$store.commit('setUuid', uuidGen)
+        }
         this.$router.push('/')
       }
     },
