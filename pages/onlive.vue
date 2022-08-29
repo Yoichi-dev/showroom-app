@@ -132,6 +132,7 @@ export default {
       blockUser: [],
       blockKeyword: [],
       streaminglog: [],
+      allThrow: [],
     }
   },
   head() {
@@ -463,17 +464,39 @@ export default {
       }
     },
     addFreeGift(giftObj) {
-      // 10連
-      if (giftObj.n === 10) {
-        this.freePoint += Math.floor(giftObj.n * 1.25)
+      let throwPoint = 0
+      // 全投げ計算
+      if (giftObj.n > 10) {
+        this.allThrow.push(giftObj)
+        const allThrowcount = this.allThrow.filter(
+          (val) =>
+            val.u === giftObj.u &&
+            val.n === giftObj.n &&
+            val.created_at === giftObj.created_at
+        )
+        if (allThrowcount.length === 1) {
+          throwPoint = giftObj.n * 5
+          if (giftObj.n === 99) {
+            this.freePoint += 607
+          } else {
+            this.freePoint += Math.floor(giftObj.n * 1.25)
+          }
+        } else {
+          return
+        }
+      } else if (giftObj.n === 10) {
+        // 10連
+        this.freePoint += 12
+        throwPoint = giftObj.n
       } else {
         this.freePoint += giftObj.n
+        throwPoint = giftObj.n
       }
       // 既に存在するか確認
       if (this.freeGiftList.some((e) => e.id === giftObj.u)) {
         for (const i in this.freeGiftList) {
           if (this.freeGiftList[i].id === giftObj.u) {
-            this.freeGiftList[i].num += giftObj.n
+            this.freeGiftList[i].num += throwPoint
             this.freeGiftList[i].gitId = giftObj.g
             this.freeGiftList[i].name = giftObj.ac
             this.freeGiftList[i].avatar = giftObj.av
@@ -492,7 +515,7 @@ export default {
           id: giftObj.u,
           name: giftObj.ac,
           gitId: giftObj.g,
-          num: giftObj.n,
+          num: throwPoint,
           flg: giftObj.ua,
           avatar: giftObj.av,
         })
@@ -526,6 +549,8 @@ export default {
       }, 1000)
     },
     async update() {
+      // 配列初期化
+      this.allThrow = []
       // インフォメーション
       await this.getApi(
         `${constants.url.sub}${constants.url.room.profile}${this.roomId}`
