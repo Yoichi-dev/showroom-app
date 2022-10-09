@@ -12,7 +12,7 @@ const constants = {
     room: {
       profile: "https://yoichiro-api-v1.site:61808/room/profile/",
       eventAndSupport: "https://yoichiro-api-v1.site:61808/room/event_and_support/",
-      telop: "http://localhost:3001/other/telop/"
+      telop: "https://yoichiro-api-v1.site:61808/other/telop/"
     },
     user: {
       profile: "https://yoichiro-api-v1.site:61808/users/profile/",
@@ -24,11 +24,11 @@ const constants = {
       search: "https://yoichiro-api-v1.site:61808/other/search?keyword=",
     },
     watchlog: {
-      getloglist: "http://localhost:3001/watchlog/getloglist",
+      getloglist: "https://yoichiro-api-v1.site:61808/watchlog/getloglist",
       addlog: "https://yoichiro-api-v1.site:61808/watchlog/addlog",
-      getlog: "http://localhost:3001/watchlog/getlog",
-      corruption: "http://localhost:3001/watchlog/corruption",
-      delete: "http://localhost:3001/watchlog/delete"
+      getlog: "https://yoichiro-api-v1.site:61808/watchlog/getlog",
+      corruption: "https://yoichiro-api-v1.site:61808/watchlog/corruption",
+      delete: "https://yoichiro-api-v1.site:61808/watchlog/delete"
     }
   },
   ws: "wss://online.showroom-live.com",
