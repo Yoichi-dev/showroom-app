@@ -164,7 +164,7 @@ export default {
       localStorage.room_url_key = this.room.url
       localStorage.room_id = this.room.id
 
-      if (localStorage.uuid === 'undefined' || localStorage.uuid === null) {
+      if (localStorage.uuid === undefined || localStorage.uuid === null) {
         localStorage.uuid = UUID.generate()
       }
 
