@@ -1,10 +1,11 @@
+import colors from 'vuetify/es5/util/colors'
 import pkg from "./package.json";
-require('dotenv').config()
 
 export default {
   ssr: false,
   target: 'static',
   head: {
+    titleTemplate: '%s | Watch Log',
     title: pkg.name,
     meta: [
       { charset: 'utf-8' },
@@ -13,7 +14,7 @@ export default {
       { hid: 'og:title', property: 'og:title', content: 'Watch Log β | 配信中のコメント・ギフト確認ツール' },
       { hid: 'og:url', property: 'og:url', content: 'https://watch-log-beta.showroom-app.com' },
       { hid: 'description', name: 'description', content: pkg.description },
-      { hid: 'og:image', property: 'og:image', content: 'https://watch-log-beta.showroom-app.com/og.png?20200303' },
+      { hid: 'og:image', property: 'og:image', content: 'https://watch-log-beta.showroom-app.com/og.png?20221010' },
       { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:creator', property: 'twitter:creator', content: '@TYoichiro' },
       { name: 'twitter:site', property: 'twitter:site', content: '@TYoichiro' },
@@ -23,20 +24,22 @@ export default {
   },
   css: [],
   plugins: [
-    { src: '~/plugins/localStorage.js', ssr: false },
-    '@/plugins/contentful'
+    '@/plugins/numberFormat',
+    '@/plugins/nameCut',
   ],
   components: true,
   buildModules: [
     '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify',
+    '@nuxtjs/moment',
   ],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    ['@nuxtjs/moment', ['ja']],
-    '@nuxtjs/dotenv',
-    "~/modules/uikit"
   ],
+  moment: {
+    locales: ['ja']
+  },
   axios: {
     baseURL: '/',
   },
@@ -50,6 +53,23 @@ export default {
   },
   generate: {
     fallback: true
+  },
+  vuetify: {
+    customVariables: ['~/assets/variables.scss'],
+    theme: {
+      dark: false,
+      themes: {
+        dark: {
+          primary: colors.blue.darken2,
+          accent: colors.grey.darken3,
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3,
+        },
+      },
+    },
   },
   env: {
     CTF_SPACE_ID: process.env.CTF_SPACE_ID,

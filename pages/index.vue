@@ -1,156 +1,99 @@
 <template>
-  <main class="uk-container uk-margin-top">
-    <div uk-grid>
-      <div class="uk-width-auto@s">
-        現在β版はサポートしていません<br />
-        正式版をご利用ください<br />
-        <a href="https://watch-log.showroom-app.com/" target="_blank">
-          https://watch-log.showroom-app.com
-        </a>
-      </div>
-      <!-- <div class="uk-width-auto@s">
-        <span v-if="profileImgFlg" uk-spinner="ratio: 4.5"></span>
-        <img
-          :data-src="roomData.image"
-          class="pointer"
-          alt=""
-          uk-img
-          @click="openUrl(roomData.share_url)"
-        />
-      </div>
-      <div class="uk-width-expand@s">
-        <table class="uk-table uk-table-divider">
-          <caption>
-            {{
-              roomData.room_name
-            }}
-          </caption>
-          <tbody>
-            <tr>
-              <td>フォロワー</td>
-              <td>{{ formatNum(roomData.follower_num) }}人</td>
-            </tr>
-            <tr>
-              <td>ルームレベル</td>
-              <td>{{ roomData.room_level }}</td>
-            </tr>
-            <tr>
-              <td>ランク</td>
-              <td>{{ roomData.show_rank_subdivided }}</td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <button
-                  class="uk-button uk-button-danger"
-                  type="button"
-                  @click="dataFormat()"
-                >
-                  初期化
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
-    </div>
-    <hr />
-    <!-- <div v-if="eventData != null" uk-grid>
-      <div class="uk-width-auto@s">
-        <span
-          v-if="eventImgFlg"
-          class="uk-margin-small-right"
-          uk-spinner="ratio: 3"
-        ></span>
-        <img
-          class="pointer"
-          :data-src="roomData.event.image"
-          alt=""
-          uk-img
-          @click="openUrl(eventData.event.event_url)"
-        />
-      </div>
-      <div class="uk-width-expand@s">
-        <table class="uk-table uk-table-divider">
-          <caption>
-            {{
-              roomData.event.name
-            }}
-          </caption>
-          <tbody>
-            <tr>
-              <td>開始日時</td>
-              <td>{{ formatTime(roomData.event.started_at) }}</td>
-            </tr>
-            <tr>
-              <td>終了日時</td>
-              <td>{{ formatTime(roomData.event.ended_at) }}</td>
-            </tr>
-            <tr v-if="eventData.event.ranking !== undefined">
-              <td>現在のポイント（順位）</td>
-              <td>
-                {{ formatNum(eventData.event.ranking.point) }}pt（{{
-                  eventData.event.ranking.rank
-                }}位）
-              </td>
-            </tr>
-            <tr v-else>
-              <td>現在のポイント（Lv）</td>
-              <td>
-                {{
-                  formatNum(eventData.event.quest.support.current_point)
-                }}pt（Lv{{ eventData.event.quest.quest_level }}）
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div> -->
-    <hr />
-    <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
-      <!-- <div>
-        <table class="uk-table uk-table-middle uk-table-divider">
-          <caption>
-            お知らせ
-          </caption>
-          <tbody v-if="infos != []">
-            <tr v-for="(info, index) in infos" :key="index"> -->
-      <!-- eslint-disable vue/no-v-html -->
-      <!-- <td v-html="info.fields.info"></td> -->
-      <!-- eslint-enable -->
-      <!-- </tr>
-          </tbody>
-        </table>
-      </div> -->
-      <div>
-        <table class="uk-table uk-table-middle uk-table-divider">
-          <tbody v-if="streaminglog != []">
-            <tr v-for="(item, index) in streaminglog" :key="index">
-              <td style="white-space: nowrap">
-                {{ formatTime(item.info.startedAt) }} のログ
-              </td>
-              <td>
-                <button
-                  class="uk-button uk-button-primary"
-                  type="button"
-                  @click="$router.push('/history?id=' + item.id)"
-                >
-                  表示
-                </button>
-                <button
-                  class="uk-button uk-button-danger"
-                  type="button"
-                  @click="deleteLog(item.id)"
-                  disabled
-                >
-                  削除
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
+  <div>
+    <v-parallax v-if="roomStatus" height="300" :src="roomStatus.image_s">
+      <v-row align="center">
+        <v-col cols="3">
+          <v-img
+            max-height="170"
+            max-width="300"
+            class="deep-purple lighten-4"
+            :src="roomStatus.image_s"
+          ></v-img>
+        </v-col>
+        <v-col cols="9">
+          <span class="ma-auto text-h4 font-weight-thin">
+            {{ roomStatus.room_name }}
+          </span>
+        </v-col>
+      </v-row>
+    </v-parallax>
+    <v-container>
+      <v-row v-if="infoData.length !== 0">
+        <v-col cols="12">
+          <v-card>
+            <v-subheader>お知らせ</v-subheader>
+            <v-list two-line>
+              <template v-for="(info, index) in infoData">
+                <v-list-item :key="index">
+                  <v-list-item-avatar></v-list-item-avatar>
+
+                  <v-list-item-content>
+                    <v-list-item-title>{{
+                      timeFormat(info.sys.updatedAt)
+                    }}</v-list-item-title>
+                    <!-- eslint-disable vue/no-v-html -->
+                    <v-list-item-subtitle v-html="info.fields.info">
+                      <!-- eslint-enable -->
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+
+                <v-divider
+                  v-if="infoData.length - 1 !== index"
+                  :key="`divider-${index}`"
+                  inset
+                ></v-divider>
+              </template>
+            </v-list>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-row justify="center">
+      <v-dialog v-model="searchDialog" persistent max-width="500">
+        <v-card>
+          <v-card-title class="text-h5">
+            ルームが登録されていません
+          </v-card-title>
+          <v-card-text>
+            Watch Logを利用するためにはルームの登録が必要です<br />
+            また、本アプリケーションの<span
+              class="text-decoration-underline light-blue lighten-5"
+              style="white-space: nowrap"
+              >メインターゲットは配信者</span
+            >になります<br />
+            あくまでも<span
+              class="text-decoration-underline light-blue lighten-5"
+              style="white-space: nowrap"
+              >配信補助アプリ</span
+            >と言う位置付けです<br /><br />
+            こちらはβ版です<br />
+            不具合など発生したら教えてくれると嬉しいです<br />
+            <span
+              class="text-decoration-underline red lighten-5"
+              style="white-space: nowrap"
+              >β版のURLは秘密</span
+            >でお願いします<br />（検索しても出てこない設定にしているため）
+            <br /><br />
+            <span class="white--text"
+              >訳:リソースの無駄なのでリスナーは使うな</span
+            >
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              outlined
+              text
+              @click="$router.push('/search')"
+            >
+              理解した上で登録
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -158,198 +101,136 @@ import axios from 'axios'
 import moment from 'moment'
 import client from '~/plugins/contentful'
 import constants from '~/constants'
-// import pkg from '~/package.json'
 
 export default {
   name: 'IndexPage',
   beforeRouteLeave(to, from, next) {
-    this.end()
+    if (this.socket !== null) {
+      this.socket.close()
+      clearInterval(this.socketPing)
+    }
     next()
   },
-  async asyncData() {
-    let infos = []
-    await client
+  async asyncData({ redirect }) {
+    if (!localStorage.room_url_key) {
+      return { roomStatus: null }
+    }
+
+    const status = await axios.get(
+      `${constants.url.other.status}/${localStorage.room_url_key}`
+    )
+
+    if (status === undefined) {
+      redirect('/maintenance')
+      return
+    }
+
+    if (status.data.is_live) {
+      sessionStorage.room_status = JSON.stringify(status.data)
+      redirect('/onlive')
+      return
+    } else {
+      sessionStorage.room_status = null
+    }
+
+    return { roomStatus: status.data }
+  },
+  data: () => ({
+    title: '',
+    searchDialog: false,
+    infoData: [],
+    socket: null,
+    socketPing: null,
+  }),
+  mounted() {
+    if (!localStorage.room_url_key) {
+      this.searchDialog = true
+      return
+    }
+    this.srConnect()
+
+    // 利用可能ギフト取得
+    axios
+      .get(`${constants.url.live.giftList}${this.roomStatus.room_id}`)
+      .then((res) => {
+        localStorage.use_gifts = JSON.stringify(res.data.normal)
+      })
+    // お知らせ取得
+    client
       .getEntries({
         content_type: 'info',
       })
-      .then((res) => (infos = res.items))
-      .catch()
-    return { infos }
-  },
-  data() {
-    return {
-      api: null,
-      socket: null,
-      roomId: null,
-      url: null,
-      broadcastKey: null,
-      roomData: [],
-      eventData: null,
-      streaminglog: [],
-      checkPing: null,
-      profileImgFlg: true,
-      eventImgFlg: true,
-    }
-  },
-  created() {
-    setTimeout(() => {
-      // if (
-      //   this.$store.state.version === null ||
-      //   this.$store.state.version !== pkg.version
-      // ) {
-      //   this.$store.commit('setVersion', pkg.version)
-      // }
-      // if (this.$store.state.apiFlg) {
-      //   this.api = constants.url.main
-      // } else {
-      //   this.api = constants.url.sub
-      // }
-      // if (this.$store.state.roomid === null || this.$store.state.url === null) {
-      //   localStorage.clear()
-      //   this.$router.push('/search')
-      //   return
-      // } else {
-      //   this.roomId = this.$store.state.roomid
-      //   this.getRoomData()
-      // }
-      if (this.$store.state.streaminglog != null) {
-        this.streaminglog = this.$store.state.streaminglog
-      }
-    }, 0)
-  },
-  mounted() {
-    // ソケット接続
-    // setTimeout(() => {
-    //   if (this.$store.state.url != null) {
-    //     this.url = this.$store.state.url
-    //     this.getApi(`${this.api}${constants.url.other.broadcast}${this.url}`)
-    //       .then((res) => {
-    //         this.broadcastKey = res.data
-    //         if (res.data.split(':').length === 2) {
-    //           this.$router.push('/onlive')
-    //         } else {
-    //           this.connectSocket()
-    //         }
-    //       })
-    //       .catch((e) => {
-    //         alert('エラーが発生しました')
-    //       })
-    //   }
-    // }, 1000)
+      .then((res) => {
+        this.infoData = res.items
+      })
+    // ブロックリスト取得
+    client
+      .getEntries({
+        content_type: 'block',
+      })
+      .then((res) => {
+        localStorage.block = JSON.stringify(res.items[0].fields)
+      })
   },
   methods: {
-    connectSocket() {
+    srConnect() {
       // 接続
       this.socket = new WebSocket(constants.ws)
       // 接続確認
       this.socket.onopen = (e) => {
-        this.socket.send(`SUB\t${this.broadcastKey}`)
-      }
-      // エラー発生時
-      this.socket.onerror = (e) => {
-        this.error()
+        this.socket.send(`SUB\t${this.roomStatus.broadcast_key}`)
       }
       // 疎通確認
-      this.checkPing = setInterval(() => {
+      this.socketPing = setInterval(() => {
         this.socket.send('PING\tshowroom')
       }, 60000)
+      // エラー発生時
+      this.socket.onerror = (e) => {
+        this.socket.close()
+        clearInterval(this.socketPing)
+        // 再接続
+        this.srConnect()
+      }
       // メッセージ受信
       this.socket.onmessage = (data) => {
         // 死活監視
-        if (data.data === 'ACK\tshowroom') {
-          return
-        }
-        // エラー
         if (
-          data.data === 'ERR' ||
+          data.data === 'ACK\tshowroom' ||
           data.data === 'Could not decode a text frame as UTF-8.'
         ) {
           return
         }
+        // エラー
+        if (data.data === 'ERR') {
+          this.socket.close()
+          clearInterval(this.socketPing)
+          // 再接続
+          this.srConnect()
+        }
+
         // JSON変換
-        const getJson = JSON.parse(
-          data.data.split(`MSG\t${this.broadcastKey}`)[1]
+        const msgJson = JSON.parse(
+          data.data.split(`MSG\t${this.roomStatus.broadcast_key}`)[1]
         )
 
-        if (getJson.t === 104) {
-          this.end()
-          this.$router.push('/onlive')
+        if (msgJson.t === 104) {
+          this.socket.close()
+          clearInterval(this.socketPing)
+          // 再接続
+          location.reload()
         }
       }
     },
-    error() {
-      alert('エラーが発生しました\nページをリロードします')
-      this.end()
-      location.reload()
-    },
-    end() {
-      if (this.socket != null) {
-        this.socket.close()
-      }
-      if (this.checkPing != null) {
-        clearInterval(this.checkPing)
-      }
-    },
-    getRoomData() {
-      // 配信情報取得
-      this.getApi(`${this.api}${constants.url.room.profile}${this.roomId}`)
-        .then((res) => {
-          this.profileImgFlg = false
-          this.roomData = res.data
-          this.getEventData()
-        })
-        .catch((e) => {
-          alert('エラーが発生しました')
-        })
-    },
-    getEventData() {
-      if (this.roomData.event === null) {
-        return
-      }
-      // イベント情報取得
-      // TODO:DBにアクセスして登録されていたら集計サイトURL表示
-      this.getApi(
-        `${this.api}${constants.url.room.eventAndSupport}${this.roomId}`
-      )
-        .then((res) => {
-          this.eventImgFlg = false
-          this.eventData = res.data
-        })
-        .catch((e) => {
-          alert('エラーが発生しました')
-        })
-    },
-    getApi(url) {
-      return axios.get(url)
-    },
-    deleteLog(id) {
-      const result = confirm('配信ログを削除しますか？')
-      if (result) {
-        const newLogList = this.streaminglog.filter((ele) => ele.id !== id)
-        this.streaminglog = newLogList
-        this.$store.commit('setStreaminglog', this.streaminglog)
-      }
-    },
-    openUrl(url) {
-      window.open(url, '_blank')
-    },
-    formatTime(unixTime) {
-      return moment(unixTime * 1000).format('llll')
-    },
-    dataFormat() {
-      const result = confirm(
-        'ルームデータ・配信ログを全て削除しますか？\n※削除した場合データは元に戻せません'
-      )
-      if (result) {
-        localStorage.clear()
-        location.reload()
-      }
-    },
-    formatNum(num) {
-      if (num !== undefined) {
-        return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
-      }
+    timeFormat(time) {
+      return moment(time).format('llll')
     },
   },
 }
 </script>
+
+<style>
+.v-parallax__image {
+  -ms-filter: blur(6px) brightness(50%);
+  filter: blur(6px) brightness(50%);
+}
+</style>
