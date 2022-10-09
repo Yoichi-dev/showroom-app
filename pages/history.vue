@@ -73,7 +73,7 @@ export default {
     if (localStorage.use_gifts !== null) {
       this.$refs.prGift.useGiftList = JSON.parse(localStorage.use_gifts)
     }
-    const dbLog = JSON.parse(this.logData.log_json)
+    const dbLog = this.logData.log_json
 
     this.telop = dbLog.telop
 
