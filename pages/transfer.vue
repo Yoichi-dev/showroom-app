@@ -92,20 +92,22 @@ export default {
     }
   },
   methods: {
-    transfer() {
+    async transfer() {
       this.loader = 'アップロード中...'
       this.loading = true
-      for (let i = 0; i < this.oldLog.streaminglog.length; i++) {
-        ;(async () => {
-          await this.optimization(this.oldLog.streaminglog[i])
-        })()
-      }
+      const insertData = this.oldLog.streaminglog.map((streaminglog) =>
+        axios.post(
+          constants.url.watchlog.addlog,
+          this.optimization(streaminglog)
+        )
+      )
+      await Promise.all([...insertData])
       localStorage.removeItem('vuex')
       this.loader = null
       this.loading = false
       this.$router.push('/log')
     },
-    async optimization(oldLogList) {
+    optimization(oldLogList) {
       // ログデータの最適化
       const listenerList = []
       const commentList = []
@@ -248,11 +250,11 @@ export default {
         telop: '',
       }
 
-      await axios.post(constants.url.watchlog.addlog, {
+      return {
         uuid: this.uuid,
         log_id: oldLogList.info.startedAt,
         log_json: saveLog,
-      })
+      }
     },
     timeFormat(time) {
       return moment(time * 1000).format('llll')
