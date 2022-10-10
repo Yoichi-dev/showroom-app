@@ -1,6 +1,6 @@
 const constants = {
   url: {
-    domain: "https://showroom-app-api.herokuapp.com",
+    domain: "https://yoichiro-api-v1.site:61808",
     event: {
       hold: "/events/hold",
       end: "/events/end",
