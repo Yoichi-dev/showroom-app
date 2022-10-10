@@ -91,7 +91,7 @@ export default {
 
     this.roomStatus = JSON.parse(sessionStorage.room_status)
 
-    if (localStorage.use_gifts !== null) {
+    if (localStorage.use_gifts !== undefined) {
       this.useGiftList = JSON.parse(localStorage.use_gifts)
     }
 
