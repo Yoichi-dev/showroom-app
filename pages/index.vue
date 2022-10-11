@@ -171,6 +171,25 @@ export default {
       .then((res) => {
         localStorage.block = JSON.stringify(res.items[0].fields)
       })
+    // 制限解除確認
+    client
+      .getEntries({
+        content_type: 'lift',
+      })
+      .then((res) => {
+        const lift = res.items[0].fields
+        for (const user of lift.users) {
+          if (
+            user.room_id === localStorage.room_id &&
+            user.room_url_key === localStorage.room_url_key &&
+            user.uuid === localStorage.uuid
+          ) {
+            localStorage.lift = 1
+            break
+          }
+          localStorage.lift = 0
+        }
+      })
   },
   methods: {
     srConnect() {

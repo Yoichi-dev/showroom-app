@@ -169,6 +169,7 @@ export default {
       }
 
       localStorage.version = pkg.version
+      localStorage.lift = 0
 
       this.$router.push('/')
     },
