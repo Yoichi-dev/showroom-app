@@ -235,6 +235,7 @@ export default {
         if (msgJson.t === 104) {
           this.socket.close()
           clearInterval(this.socketPing)
+          localStorage.removeItem('room_status')
           // 再接続
           location.reload()
         }

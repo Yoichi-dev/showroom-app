@@ -5,7 +5,7 @@
         <v-col>
           <p class="text-h5">ブロックユーザー管理</p>
           開発者によるWatchLog内での強制ブロックユーザーは現在{{
-            adminBlockUserId.length
+            adminBlockUsers.length
           }}人（非公開）います
           <v-simple-table v-if="userBlockUsers.length !== 0" class="mt-15">
             <thead>
@@ -59,9 +59,6 @@ export default {
     return { adminBlockUsers }
   },
   data: () => ({
-    title: '',
-    adminBlockUserId: [3377243, 3640889, 4180180, 3840137, 2862557, 4289196],
-    blockUsers: [],
     userBlockUsers: [],
   }),
   mounted() {

@@ -628,6 +628,7 @@ export default {
           log_json: saveLog,
         })
         .then((res) => {
+          localStorage.removeItem('room_status')
           this.$router.push('/')
         })
     },
