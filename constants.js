@@ -21,7 +21,8 @@ const constants = {
     },
     other: {
       broadcast: "/other/broadcast",
-      delete: "/other/delete"
+      delete: "/other/delete",
+      apiCheck: "https://yoichiro-api-v1.site:61808/watchlog"
     }
   },
   ws: "wss://online.showroom-live.com",
