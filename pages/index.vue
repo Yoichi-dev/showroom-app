@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-parallax v-if="roomStatus" height="300" :src="roomStatus.image_s">
+    <v-parallax
+      v-if="roomStatus && $vuetify.breakpoint.name !== 'xs'"
+      height="300"
+      :src="roomStatus.image_s"
+    >
       <v-row align="center">
         <v-col cols="3">
           <v-img
@@ -17,10 +21,66 @@
         </v-col>
       </v-row>
     </v-parallax>
+    <v-card v-if="roomStatus && $vuetify.breakpoint.name === 'xs'">
+      <v-img
+        class="white--text align-end"
+        height="200px"
+        :src="
+          roomStatus.image_s
+            .replace('_s.png', '_l.png')
+            .replace('_s.jpeg', '_l.jpeg')
+        "
+      >
+        <v-card-title class="top-img">{{ roomStatus.room_name }}</v-card-title>
+      </v-img>
+    </v-card>
+
     <v-container>
+      <v-row v-if="eventData">
+        <v-col cols="12" sm="4">
+          <v-img :src="eventData.image"></v-img>
+        </v-col>
+        <v-col cols="12" sm="8">
+          <v-simple-table>
+            <thead>
+              <tr>
+                <th colspan="2" class="text-left">
+                  {{ eventData.event_name }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>開始日時</td>
+                <td>{{ timeFormat(eventData.started_at * 1000) }}</td>
+              </tr>
+              <tr>
+                <td>終了日時</td>
+                <td>{{ timeFormat(eventData.ended_at * 1000) }}</td>
+              </tr>
+              <tr v-if="eventData.ranking !== undefined">
+                <td>現在のポイント（順位）</td>
+                <td>
+                  {{ $numberFormat(eventData.ranking.point) }}pt（{{
+                    eventData.ranking.rank
+                  }}位）
+                </td>
+              </tr>
+              <tr v-else>
+                <td>現在のポイント（Lv）</td>
+                <td>
+                  {{
+                    $numberFormat(eventData.quest.support.current_point)
+                  }}pt（Lv{{ eventData.quest.quest_level }}）
+                </td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+        </v-col>
+      </v-row>
       <v-row v-if="infoData.length !== 0">
         <v-col cols="12">
-          <v-card>
+          <v-card class="mb-10">
             <v-subheader>お知らせ</v-subheader>
             <v-list two-line>
               <template v-for="(info, index) in infoData">
@@ -136,12 +196,19 @@ export default {
     return { roomStatus: status.data }
   },
   data: () => ({
-    title: '',
+    title: 'ホーム',
     searchDialog: false,
     infoData: [],
     socket: null,
     socketPing: null,
+    roomProfile: null,
+    eventData: null,
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {
     if (!localStorage.room_url_key) {
       this.searchDialog = true
@@ -190,6 +257,23 @@ export default {
           localStorage.lift = 0
         }
       })
+    ;(async () => {
+      // ルーム情報取得
+      await axios
+        .get(`${constants.url.room.profile}${this.roomStatus.room_id}`)
+        .then((res) => {
+          this.roomProfile = res.data
+        })
+      if (this.roomProfile !== null) {
+        await axios
+          .get(
+            `${constants.url.room.eventAndSupport}${this.roomStatus.room_id}`
+          )
+          .then((res) => {
+            this.eventData = res.data.event
+          })
+      }
+    })()
   },
   methods: {
     srConnect() {
@@ -252,5 +336,9 @@ export default {
 .v-parallax__image {
   -ms-filter: blur(6px) brightness(50%);
   filter: blur(6px) brightness(50%);
+}
+
+.top-img {
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
 }
 </style>

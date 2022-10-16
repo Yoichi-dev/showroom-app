@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-container>
-      <v-row class="mt-5">
+      <v-row v-if="vuexFlg" class="mt-5">
         <v-col>
           <p class="text-h5">データ移行</p>
-          旧バージョン(Ver.1.x.x)のログデータを移行する事ができます
+          旧βバージョン(Ver.1.x.x)のログデータを移行する事ができます
           <p v-if="!dataFlg && !errorFlg" class="mt-15">
             過去ログが存在しません
           </p>
@@ -83,6 +83,7 @@ export default {
     uuid: null,
     loader: null,
     loading: false,
+    vuexFlg: true,
   }),
   mounted() {
     this.room_id = localStorage.room_id
@@ -105,6 +106,8 @@ export default {
 
         this.errorFlg = true
       }
+    } else {
+      this.vuexFlg = false
     }
   },
   methods: {
