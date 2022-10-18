@@ -102,11 +102,11 @@
     <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
       <div>
         <div>
-          <dl v-if="!apiFlg">
+          <!-- <dl v-if="!apiFlg">
             <dd class="uk-text-danger">
               あなたの環境は時期バージョンで利用できない可能性があります
             </dd>
-          </dl>
+          </dl> -->
           <dl>
             <dt>あなたのID</dt>
             <dd>{{ $store.state.uuid }}</dd>
@@ -267,11 +267,11 @@ export default {
       }
     }, 1000)
     // API Check
-    if (!localStorage.api_check) {
-      this.apiCheck(constants.url.other.apiCheck)
-    } else {
-      this.apiFlg = JSON.parse(localStorage.api_check)
-    }
+    // if (!localStorage.api_check) {
+    //   this.apiCheck(constants.url.other.apiCheck)
+    // } else {
+    //   this.apiFlg = JSON.parse(localStorage.api_check)
+    // }
   },
   methods: {
     connectSocket() {
@@ -391,18 +391,18 @@ export default {
         return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
       }
     },
-    apiCheck(url) {
-      axios
-        .get(url)
-        .then((res) => {
-          localStorage.api_check = true
-          this.apiFlg = true
-        })
-        .catch((e) => {
-          localStorage.api_check = false
-          this.apiFlg = false
-        })
-    },
+    // apiCheck(url) {
+    //   axios
+    //     .get(url)
+    //     .then((res) => {
+    //       localStorage.api_check = true
+    //       this.apiFlg = true
+    //     })
+    //     .catch((e) => {
+    //       localStorage.api_check = false
+    //       this.apiFlg = false
+    //     })
+    // },
   },
 }
 </script>
