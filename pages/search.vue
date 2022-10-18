@@ -146,7 +146,7 @@ export default {
       }
       if (confirm(`${room.title}を登録しますか？`)) {
         this.$store.commit('setRoomid', room.id)
-        this.$store.commit('setUrl', room.url)
+        this.$store.commit('setUrl', `/${room.url}`)
         this.$store.commit('setVersion', pkg.version)
         if (
           this.$store.state.uuid === undefined ||
