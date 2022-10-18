@@ -1,34 +1,34 @@
 const constants = {
   url: {
     live: {
-      onlives: "https://yoichiro-api-v1.site:61808/live/onlives",
-      premium: "https://yoichiro-api-v1.site:61808/live/premium",
-      giftList: "https://yoichiro-api-v1.site:61808/live/gift_list/",
-      stageUserList: "https://yoichiro-api-v1.site:61808/live/stage_user_list/",
-      liveInfo: "https://yoichiro-api-v1.site:61808/live/live_info/",
-      commentLog: "https://yoichiro-api-v1.site:61808/live/comment_log/",
-      giftLog: "https://yoichiro-api-v1.site:61808/live/gift_log/",
+      onlives: "https://pianistmusica.net/live/onlives",
+      premium: "https://pianistmusica.net/live/premium",
+      giftList: "https://pianistmusica.net/live/gift_list/",
+      stageUserList: "https://pianistmusica.net/live/stage_user_list/",
+      liveInfo: "https://pianistmusica.net/live/live_info/",
+      commentLog: "https://pianistmusica.net/live/comment_log/",
+      giftLog: "https://pianistmusica.net/live/gift_log/",
     },
     room: {
-      profile: "https://yoichiro-api-v1.site:61808/room/profile/",
-      eventAndSupport: "https://yoichiro-api-v1.site:61808/room/event_and_support/",
-      telop: "https://yoichiro-api-v1.site:61808/other/telop/"
+      profile: "https://pianistmusica.net/room/profile/",
+      eventAndSupport: "https://pianistmusica.net/room/event_and_support/",
+      telop: "https://pianistmusica.net/other/telop/"
     },
     user: {
-      profile: "https://yoichiro-api-v1.site:61808/users/profile/",
+      profile: "https://pianistmusica.net/users/profile/",
     },
     other: {
-      broadcast: "https://yoichiro-api-v1.site:61808/other/broadcast",
-      status: "https://yoichiro-api-v1.site:61808/other/status",
-      delete: "https://yoichiro-api-v1.site:61808/other/delete",
-      search: "https://yoichiro-api-v1.site:61808/other/search?keyword=",
+      broadcast: "https://pianistmusica.net/other/broadcast",
+      status: "https://pianistmusica.net/other/status",
+      delete: "https://pianistmusica.net/other/delete",
+      search: "https://pianistmusica.net/other/search?keyword=",
     },
     watchlog: {
-      getloglist: "https://yoichiro-api-v1.site:61808/watchlog/getloglist",
-      addlog: "https://yoichiro-api-v1.site:61808/watchlog/addlog",
-      getlog: "https://yoichiro-api-v1.site:61808/watchlog/getlog",
-      corruption: "https://yoichiro-api-v1.site:61808/watchlog/corruption",
-      delete: "https://yoichiro-api-v1.site:61808/watchlog/delete"
+      getloglist: "https://pianistmusica.net/watchlog/getloglist",
+      addlog: "https://pianistmusica.net/watchlog/addlog",
+      getlog: "https://pianistmusica.net/watchlog/getlog",
+      corruption: "https://pianistmusica.net/watchlog/corruption",
+      delete: "https://pianistmusica.net/watchlog/delete"
     }
   },
   ws: "wss://online.showroom-live.com",
