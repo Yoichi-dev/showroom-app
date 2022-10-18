@@ -20,7 +20,7 @@ const constants = {
       profile: "/users/profile/",
     },
     other: {
-      broadcast: "/other/broadcast",
+      broadcast: "/other/broadcast/",
       delete: "/other/delete",
       apiCheck: "https://yoichiro-api-v1.site:61808/watchlog"
     }
