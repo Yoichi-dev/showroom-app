@@ -22,8 +22,13 @@ export default {
     UserProfile,
   },
   data: () => ({
-    title: '',
+    title: 'リスナー名変更',
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {},
   methods: {
     openProfile(id) {

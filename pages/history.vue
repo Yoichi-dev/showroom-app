@@ -51,6 +51,7 @@ export default {
     return { logData: res.data[0] }
   },
   data: () => ({
+    title: '過去ログ',
     telop: '',
     infoObj: {
       free: 0,
@@ -69,6 +70,11 @@ export default {
     countObj: [],
     rankingObj: [],
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {
     if (localStorage.use_gifts !== null) {
       this.$refs.prGift.useGiftList = JSON.parse(localStorage.use_gifts)

@@ -73,6 +73,7 @@ import constants from '~/constants'
 export default {
   name: 'LogPage',
   data: () => ({
+    title: 'ログ一覧',
     room_id: null,
     room_url_key: null,
     uuid: null,
@@ -81,6 +82,11 @@ export default {
     dialog: false,
     deleteId: null,
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {
     axios
       .post(constants.url.watchlog.getloglist, {

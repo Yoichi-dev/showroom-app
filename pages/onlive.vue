@@ -54,6 +54,7 @@ export default {
   },
   layout: 'onlive',
   data: () => ({
+    title: 'オンライブ',
     telop: '',
     socket: null,
     socketPing: null,
@@ -78,6 +79,11 @@ export default {
     allThrowList: [],
     roomStatus: null,
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {
     if (
       !sessionStorage.room_status ||

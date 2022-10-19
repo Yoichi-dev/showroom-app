@@ -74,6 +74,7 @@ import constants from '~/constants'
 export default {
   name: 'TransferPage',
   data: () => ({
+    title: 'データ引継ぎ',
     oldLog: null,
     dataFlg: false,
     errorFlg: false,
@@ -85,6 +86,11 @@ export default {
     loading: false,
     vuexFlg: true,
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {
     this.room_id = localStorage.room_id
     this.room_url_key = localStorage.room_url_key

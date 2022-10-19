@@ -96,7 +96,7 @@ export default {
     return { block }
   },
   data: () => ({
-    title: '',
+    title: 'ルーム検索',
     error: '',
     room: {
       img: '',
@@ -108,6 +108,11 @@ export default {
     searchFlg: false,
     searchList: [],
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {
     localStorage.block = JSON.stringify(this.block[0].fields)
     if (localStorage.room_id) {

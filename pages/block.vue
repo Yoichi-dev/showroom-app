@@ -59,8 +59,14 @@ export default {
     return { adminBlockUsers }
   },
   data: () => ({
+    title: 'ブロック一覧',
     userBlockUsers: [],
   }),
+  head() {
+    return {
+      title: this.title,
+    }
+  },
   mounted() {
     this.updateTable()
   },
