@@ -2,10 +2,10 @@
   <v-row>
     <v-col class="text-center">
       <blockquote class="blockquote">
-        &#8220;First, solve the problem. Then, write the code.&#8221;
+        &#8220;メンテナンス中です&#8221;
         <footer>
           <small>
-            <em>&mdash;John Johnson</em>
+            <em>&mdash;Watch Log</em>
           </small>
         </footer>
       </blockquote>
