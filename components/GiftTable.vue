@@ -59,7 +59,7 @@
                       v-on="on"
                     />
                   </template>
-                  <span> {{ $numberFormat(getGiftPoint(item.gid)) }}pt </span>
+                  <span> {{ $numberFormat(getGiftPoint(item.gid)) }}G </span>
                 </v-tooltip>
               </span>
 

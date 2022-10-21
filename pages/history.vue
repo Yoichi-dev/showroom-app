@@ -87,58 +87,66 @@ export default {
       const listener = dbLog.listener.filter(
         (user) => user.id === comment.id
       )[0]
-      if (comment.flg === 'FF6C1A' || comment.flg === 'follow') {
-        this.commentObj.push({
-          id: comment.id,
-          name: '',
-          cm: comment.cm,
-          flg: comment.flg,
-          av: '',
-        })
-      } else {
-        this.commentObj.push({
-          id: listener.id,
-          name: listener.name,
-          cm: comment.cm,
-          flg: comment.flg,
-          av: listener.av,
-        })
+      if (!this.blockCheck(comment.id)) {
+        if (comment.flg === 'FF6C1A' || comment.flg === 'follow') {
+          this.commentObj.push({
+            id: comment.id,
+            name: '',
+            cm: comment.cm,
+            flg: comment.flg,
+            av: '',
+          })
+        } else {
+          this.commentObj.push({
+            id: listener.id,
+            name: listener.name,
+            cm: comment.cm,
+            flg: comment.flg,
+            av: listener.av,
+          })
+        }
       }
     })
 
     dbLog.count.forEach((count) => {
       const listener = dbLog.listener.filter((user) => user.id === count.id)[0]
-      this.countObj.push({
-        id: listener.id,
-        name: listener.name,
-        num: count.num,
-        flg: listener.flg,
-        av: listener.av,
-      })
+      if (!this.blockCheck(listener.id)) {
+        this.countObj.push({
+          id: listener.id,
+          name: listener.name,
+          num: count.num,
+          flg: listener.flg,
+          av: listener.av,
+        })
+      }
     })
 
     dbLog.free.forEach((free) => {
       const listener = dbLog.listener.filter((user) => user.id === free.id)[0]
-      this.freeGiftObj.push({
-        id: listener.id,
-        name: listener.name,
-        num: free.num,
-        flg: listener.flg,
-        av: listener.av,
-        gid: free.gid,
-      })
+      if (!this.blockCheck(listener.id)) {
+        this.freeGiftObj.push({
+          id: listener.id,
+          name: listener.name,
+          num: free.num,
+          flg: listener.flg,
+          av: listener.av,
+          gid: free.gid,
+        })
+      }
     })
 
     dbLog.pre.forEach((pre) => {
       const listener = dbLog.listener.filter((user) => user.id === pre.id)[0]
-      this.preGiftObj.push({
-        id: listener.id,
-        name: listener.name,
-        num: pre.num,
-        flg: listener.flg,
-        av: listener.av,
-        gid: pre.gid,
-      })
+      if (!this.blockCheck(listener.id)) {
+        this.preGiftObj.push({
+          id: listener.id,
+          name: listener.name,
+          num: pre.num,
+          flg: listener.flg,
+          av: listener.av,
+          gid: pre.gid,
+        })
+      }
     })
 
     dbLog.ranking.forEach((ranking) => {
@@ -156,6 +164,10 @@ export default {
       })
     })
 
+    if (dbLog.info.isOfficial === undefined) {
+      dbLog.info.isOfficial = true
+    }
+    dbLog.info.startView = dbLog.info.view
     this.infoObj = dbLog.info
   },
   methods: {
@@ -169,6 +181,14 @@ export default {
         if (list[i].account_id === id) {
           blockFlg = true
         }
+      }
+      // admin block
+      let adminList = []
+      if (localStorage.block) {
+        adminList = JSON.parse(localStorage.block)
+      }
+      if (adminList.userId.includes(id)) {
+        blockFlg = true
       }
       return blockFlg
     },

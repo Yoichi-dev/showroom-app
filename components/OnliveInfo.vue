@@ -41,14 +41,12 @@ export default {
         main: `約 ${this.$numberFormat(
           infoObj.free + infoObj.pre + infoObj.count
         )}pt`,
-        sub: `<span style="white-space: nowrap">無料 ${this.$numberFormat(
+        sub: `無料 ${this.$numberFormat(
           infoObj.free
-        )}pt | </span><span style="white-space: nowrap">有料 ${this.$numberFormat(
+        )}pt | 有料 ${this.$numberFormat(
           infoObj.pre
-        )}pt | </span><span style="white-space: nowrap">カウント ${this.$numberFormat(
-          infoObj.count
-        )}pt</span>`,
-        icon: 'mdi-star-outline',
+        )}pt | カウント ${this.$numberFormat(infoObj.count)}pt`,
+        icon: infoObj.isOfficial ? 'mdi-star-outline' : 'mdi-sprout-outline',
       }
     },
     createFollwer(infoObj) {

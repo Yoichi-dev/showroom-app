@@ -8,7 +8,7 @@
         <v-list-item-title class="text-h5">
           {{ infoCardData.main }}
         </v-list-item-title>
-        <v-list-item-subtitle v-html="infoCardData.sub"> </v-list-item-subtitle>
+        <v-list-item-subtitle> {{ infoCardData.sub }} </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-avatar tile size="50">
         <v-icon size="50">{{ infoCardData.icon }}</v-icon>

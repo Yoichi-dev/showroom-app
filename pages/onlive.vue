@@ -69,6 +69,7 @@ export default {
       startView: 0,
       startTime: 0,
       elapsedTime: 0,
+      isOfficial: true,
     },
     commentObj: [],
     freeGiftObj: [],
@@ -101,6 +102,8 @@ export default {
       this.useGiftList = JSON.parse(localStorage.use_gifts)
     }
 
+    this.infoObj.isOfficial = this.roomStatus.is_official
+
     this.connect(this.roomStatus.broadcast_key)
 
     this.infoObj.startTime = this.roomStatus.started_at
@@ -120,14 +123,14 @@ export default {
             u: res.data.comment_log[i].user_id,
             ua: res.data.comment_log[i].ua,
           }
-          if (commentCountCheck(commentObj)) {
-            // コメント
-            if (!this.blockCheck(commentObj.u)) {
+          if (!this.blockCheck(commentObj.u)) {
+            if (commentCountCheck(commentObj)) {
+              // コメント
               this.commentObj.push(comment(commentObj))
+            } else {
+              // カウント
+              this.deduplicationCount(count(commentObj))
             }
-          } else {
-            // カウント
-            this.deduplicationCount(count(commentObj))
           }
         }
       })
@@ -238,24 +241,26 @@ export default {
 
         switch (msgJson.t) {
           case '1':
-            if (commentCountCheck(msgJson)) {
-              // コメント
-              if (!this.blockCheck(msgJson.u)) {
+            if (!this.blockCheck(msgJson.u)) {
+              if (commentCountCheck(msgJson)) {
+                // コメント
                 this.commentObj.push(comment(msgJson))
+              } else {
+                // カウント
+                this.deduplicationCount(count(msgJson))
               }
-            } else {
-              // カウント
-              this.deduplicationCount(count(msgJson))
             }
             break
           case '2':
-            // ギフト
-            if (giftCheck(msgJson)) {
-              // 無料
-              this.deduplicationFreeGift(freeGift(msgJson))
-            } else {
-              // 有料
-              this.deduplicationPreGift(preGift(msgJson))
+            if (!this.blockCheck(msgJson.u)) {
+              // ギフト
+              if (giftCheck(msgJson)) {
+                // 無料
+                this.deduplicationFreeGift(freeGift(msgJson))
+              } else {
+                // 有料
+                this.deduplicationPreGift(preGift(msgJson))
+              }
             }
             break
           case 3:
