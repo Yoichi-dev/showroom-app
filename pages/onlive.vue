@@ -212,8 +212,8 @@ export default {
       // エラー発生時
       this.socket.onerror = (e) => {
         this.socket.close()
+        this.socket = null
         clearInterval(this.socketPing)
-        clearInterval(this.timer)
         this.connect(this.roomStatus.broadcast_key)
       }
       // メッセージ受信
@@ -227,7 +227,10 @@ export default {
         }
         // エラー
         if (data.data === 'ERR') {
-          this.error()
+          this.socket.close()
+          this.socket = null
+          clearInterval(this.socketPing)
+          this.connect(this.roomStatus.broadcast_key)
         }
 
         // JSON変換
