@@ -36,6 +36,18 @@
     </v-card>
 
     <v-container>
+      <v-row v-if="pointHistoryFlg" justify="center">
+        <v-alert class="mt-5" outlined type="success" text>
+          連携サイト、Point Historyで参加イベントの集計をしています<br />
+          <a
+            :href="`https://point-history.showroom-app.com/event/${eventData.event_id}`"
+            target="_blank"
+            >https://point-history.showroom-app.com/event/{{
+              eventData.event_id
+            }}</a
+          >
+        </v-alert>
+      </v-row>
       <v-row v-if="eventData">
         <v-col cols="12" sm="4">
           <v-img :src="eventData.image"></v-img>
@@ -203,6 +215,7 @@ export default {
     socketPing: null,
     roomProfile: null,
     eventData: null,
+    pointHistoryFlg: false,
   }),
   head() {
     return {
@@ -272,6 +285,15 @@ export default {
           .then((res) => {
             this.eventData = res.data.event
           })
+        if (this.eventData) {
+          await axios
+            .get(
+              `${constants.url.point.event}${this.eventData.event_id}/${this.roomStatus.room_id}`
+            )
+            .then((res) => {
+              this.pointHistoryFlg = res.data
+            })
+        }
       }
     })()
   },

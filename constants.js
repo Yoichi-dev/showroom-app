@@ -29,6 +29,9 @@ const constants = {
       getlog: "https://pianistmusica.net/watchlog/getlog",
       corruption: "https://pianistmusica.net/watchlog/corruption",
       delete: "https://pianistmusica.net/watchlog/delete"
+    },
+    point: {
+      event: "https://pianistmusica.net/pointhistory/check/"
     }
   },
   ws: "wss://online.showroom-live.com",
