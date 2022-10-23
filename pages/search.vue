@@ -63,6 +63,10 @@
           {{ room.title }}
         </v-card-title>
         <v-card-text> このルームを登録しますか？ </v-card-text>
+        <v-card-text class="red--text">
+          現在登録ルームの削除機能が無いため、1度登録したら変更できません<br />
+          公式⇔フリー枠の移動等による変更は個別対応になります
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="register()"> 登録 </v-btn>

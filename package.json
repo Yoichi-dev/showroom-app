@@ -1,6 +1,6 @@
 {
   "name": "watch-log-beta",
-  "version": "2.0.0-b7",
+  "version": "2.0.0-b10",
   "description": "SHOWROOM配信のログを確認することができます",
   "author": "TYoichiro",
   "private": true,
