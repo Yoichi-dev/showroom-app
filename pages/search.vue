@@ -85,7 +85,20 @@ import pkg from '~/package.json'
 export default {
   name: 'SearchPage',
   layout: 'onlive',
-  async asyncData() {
+  async asyncData({ redirect }) {
+    let maintenance = []
+    await client
+      .getEntries({
+        content_type: 'maintenance',
+      })
+      .then((res) => (maintenance = res.items[0].fields))
+      .catch()
+
+    if (maintenance.flg) {
+      redirect('/maintenance')
+      return
+    }
+
     let block = []
     await client
       .getEntries({

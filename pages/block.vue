@@ -49,7 +49,25 @@ export default {
   components: {
     UserProfile,
   },
-  async asyncData() {
+  async asyncData({ redirect }) {
+    if (!localStorage.room_url_key) {
+      redirect('/')
+      return
+    }
+
+    let maintenance = []
+    await client
+      .getEntries({
+        content_type: 'maintenance',
+      })
+      .then((res) => (maintenance = res.items[0].fields))
+      .catch()
+
+    if (maintenance.flg) {
+      redirect('/maintenance')
+      return
+    }
+
     let adminBlockUsers = []
     await client
       .getEntries({

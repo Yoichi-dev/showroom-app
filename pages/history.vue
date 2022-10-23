@@ -25,6 +25,7 @@ import GiftTable from '~/components/GiftTable'
 import CountTable from '~/components/CountTable'
 import RankingTable from '~/components/RankingTable'
 import constants from '~/constants'
+import client from '~/plugins/contentful'
 
 export default {
   name: 'HistoryPage',
@@ -36,6 +37,24 @@ export default {
     RankingTable,
   },
   async asyncData({ redirect, query }) {
+    if (!localStorage.room_url_key) {
+      redirect('/')
+      return
+    }
+
+    let maintenance = []
+    await client
+      .getEntries({
+        content_type: 'maintenance',
+      })
+      .then((res) => (maintenance = res.items[0].fields))
+      .catch()
+
+    if (maintenance.flg) {
+      redirect('/maintenance')
+      return
+    }
+
     if (query.id === undefined || query.id === null) {
       redirect('/log')
       return

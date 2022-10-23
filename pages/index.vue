@@ -195,15 +195,22 @@ export default {
       return { roomStatus: null }
     }
 
-    const status = await axios
-      .get(`${constants.url.other.status}/${localStorage.room_url_key}`)
-      .catch((e) => {
-        console.log(e)
+    let maintenance = []
+    await client
+      .getEntries({
+        content_type: 'maintenance',
       })
-    if (status === undefined) {
+      .then((res) => (maintenance = res.items[0].fields))
+      .catch()
+
+    if (maintenance.flg) {
       redirect('/maintenance')
       return
     }
+
+    const status = await axios.get(
+      `${constants.url.other.status}/${localStorage.room_url_key}`
+    )
 
     if (status.data.is_live) {
       sessionStorage.room_status = JSON.stringify(status.data)
