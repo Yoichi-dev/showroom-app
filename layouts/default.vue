@@ -68,6 +68,11 @@ export default {
           title: 'ブロック一覧',
           to: '/block',
         },
+        {
+          icon: 'mdi-account',
+          title: 'ユーザー情報',
+          to: '/user',
+        },
       ],
       title: 'Watch Log β版',
       author: 'T.Yoichiro',
