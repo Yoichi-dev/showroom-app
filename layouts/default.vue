@@ -68,15 +68,19 @@ export default {
           title: 'ブロック一覧',
           to: '/block',
         },
-        {
-          icon: 'mdi-content-copy',
-          title: 'データ引継ぎ',
-          to: '/transfer',
-        },
       ],
       title: 'Watch Log β版',
       author: 'T.Yoichiro',
       version: pkg.version,
+    }
+  },
+  mounted() {
+    if (localStorage.vuex) {
+      this.items.push({
+        icon: 'mdi-content-copy',
+        title: 'データ引継ぎ',
+        to: '/transfer',
+      })
     }
   },
 }

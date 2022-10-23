@@ -115,7 +115,7 @@ export default {
   },
   mounted() {
     localStorage.block = JSON.stringify(this.block[0].fields)
-    if (localStorage.room_id) {
+    if (localStorage.room_id || localStorage.room_url_key) {
       this.$router.push('/')
     }
   },
