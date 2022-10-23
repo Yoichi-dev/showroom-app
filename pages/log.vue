@@ -4,6 +4,10 @@
       <v-row class="mt-5">
         <v-col>
           <p class="text-h5">配信ログ</p>
+          <p v-if="!liftFlg">
+            配信者登録されていません、登録されていない場合ログは3件までしか表示できません<br />
+            配信者登録（制限解除）は<nuxt-link to="/user">こちら</nuxt-link>
+          </p>
           <p v-if="logList.length === 0" class="mt-15">ログが存在しません</p>
           <v-simple-table v-else class="mt-5">
             <tbody>
@@ -103,6 +107,7 @@ export default {
     logList: [],
     dialog: false,
     deleteId: null,
+    liftFlg: false,
   }),
   head() {
     return {
@@ -110,12 +115,17 @@ export default {
     }
   },
   mounted() {
+    this.liftFlg = Number(localStorage.lift)
     axios
       .post(constants.url.watchlog.getloglist, {
         uuid: localStorage.uuid,
       })
       .then((res) => {
-        this.logList = res.data
+        if (this.liftFlg) {
+          this.logList = res.data
+        } else {
+          this.logList = res.data.slice(0, 3)
+        }
       })
     this.room_id = localStorage.room_id
     this.room_url_key = localStorage.room_url_key
