@@ -58,11 +58,11 @@ export default {
           title: 'ログ一覧',
           to: '/log',
         },
-        {
-          icon: 'mdi-account',
-          title: 'リスナー名変更',
-          to: '/name',
-        },
+        // {
+        //   icon: 'mdi-account',
+        //   title: 'リスナー名変更',
+        //   to: '/name',
+        // },
         {
           icon: 'mdi-account-cancel',
           title: 'ブロック一覧',
