@@ -139,6 +139,13 @@
               style="white-space: nowrap"
               >配信補助アプリ</span
             >と言う位置付けです<br /><br />
+            このアプリケーションは<span
+              class="text-decoration-underline light-blue lighten-5"
+              style="white-space: nowrap"
+              >SHOWROOMとは関係ない個人で作ってるもの</span
+            >になります<br />
+            運用は開発者の裁量です
+            <br /><br />
             こちらはβ版です<br />
             不具合など発生したら教えてくれると嬉しいです<br />
             <span
@@ -188,10 +195,11 @@ export default {
       return { roomStatus: null }
     }
 
-    const status = await axios.get(
-      `${constants.url.other.status}/${localStorage.room_url_key}`
-    )
-
+    const status = await axios
+      .get(`${constants.url.other.status}/${localStorage.room_url_key}`)
+      .catch((e) => {
+        console.log(e)
+      })
     if (status === undefined) {
       redirect('/maintenance')
       return
