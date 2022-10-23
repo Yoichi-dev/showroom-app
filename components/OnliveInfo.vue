@@ -52,7 +52,7 @@ export default {
     createFollwer(infoObj) {
       return {
         main: `${this.$numberFormat(infoObj.follwer)}人`,
-        sub: `開始から ${infoObj.follwer >= infoObj.startFollwer ? '+' : '-'}
+        sub: `開始から ${infoObj.follwer >= infoObj.startFollwer ? '+' : ''}
         ${this.$numberFormat(infoObj.follwer - infoObj.startFollwer)}人`,
         icon: 'mdi-heart-outline',
       }
