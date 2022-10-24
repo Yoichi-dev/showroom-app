@@ -1,87 +1,152 @@
 <template>
-  <main class="uk-container uk-margin-top">
-    <div>
-      <div class="uk-text-large">ルーム検索・登録</div>
-      <div class="uk-text-small">
-        本アプリを使用するには事前にルームを登録する必要があります<br />
-        （SRのルーム検索機能で検索出来ない事は検索できません）
-      </div>
-    </div>
-    <div class="uk-margin">
-      <div class="uk-search uk-search-default">
-        <span uk-search-icon></span>
-        <input
-          v-model="searchText"
-          class="uk-search-input"
-          type="search"
-          placeholder="ルーム名"
-          :disabled="searchFlg"
-        />
-      </div>
-      <button
-        class="uk-button uk-button-default"
-        :disabled="searchFlg"
-        @click="search()"
-      >
-        {{ inputText }}
-      </button>
-      <div v-if="searchFlg" uk-spinner></div>
-    </div>
-    <hr />
-    <div v-if="searchList.length === 10" class="uk-text-small uk-margin-bottom">
-      検索結果は上位10件のみ表示されます
-    </div>
-    <div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
-      <div
-        v-for="(item, index) in searchList"
-        :key="index"
-        class="uk-width-1-3@m pointer"
-        @click="selectRoom(item)"
-      >
-        <div class="uk-card-hover uk-card uk-card-default">
-          <div class="uk-card-media-top">
-            <img :src="item.img" alt="" />
-          </div>
-          <div class="uk-card-body">
-            <p>
-              {{ item.title }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+  <div>
+    <v-container class="mt-10">
+      <v-row>
+        <v-text-field
+          class="mx-3"
+          label="検索"
+          color="green"
+          placeholder="ルーム名を入力してEnterで検索"
+          prepend-inner-icon="mdi-magnify"
+          outlined
+          @keypress.enter="searchRoom"
+        ></v-text-field>
+      </v-row>
+      <v-row>
+        <v-col>
+          <p class="red--text">{{ error }}</p>
+          <span>ルーム名を入力して検索してください</span><br />
+          <span>
+            <a href="https://www.showroom-live.com/room/search" target="_blank">
+              SHOWROOMの検索
+            </a>
+            で検索できない事は検索できません
+          </span>
+          <br />
+          <span>また、負荷分散の為検索結果は上位10件のみ表示されます</span>
+        </v-col>
+      </v-row>
+      <v-divider v-if="!searchFlg" class="my-10"></v-divider>
+      <v-progress-linear
+        v-if="searchFlg"
+        class="my-10"
+        indeterminate
+        color="green"
+      ></v-progress-linear>
+      <v-row>
+        <v-col
+          v-for="(item, index) in searchList"
+          :key="index"
+          cols="12"
+          sm="6"
+          lg="3"
+        >
+          <v-hover v-slot="{ hover }">
+            <v-card
+              :elevation="hover ? 16 : 2"
+              class="mx-auto"
+              :class="{ 'on-hover': hover }"
+              @click="registerCheck(item)"
+            >
+              <v-img class="white--text align-end" :src="item.img"> </v-img>
+              <v-card-text class="text--primary">
+                <div>{{ item.title }}</div>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-dialog v-model="dialog" persistent max-width="500">
+      <v-card>
+        <v-card-title class="text-h5">
+          {{ room.title }}
+        </v-card-title>
+        <v-card-text> このルームを登録しますか？ </v-card-text>
+        <v-card-text class="red--text">
+          現在登録ルームの削除機能が無いため、1度登録したら変更できません<br />
+          公式⇔フリー枠の移動等による変更は個別対応になります
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="register()"> 登録 </v-btn>
+          <v-btn color="green darken-1" text @click="dialog = false">
+            キャンセル
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
 import UUID from 'uuidjs'
 import constants from '~/constants'
+import client from '~/plugins/contentful'
 import pkg from '~/package.json'
 
 export default {
   name: 'SearchPage',
-  data() {
-    return {
-      title: 'ルーム検索',
-      searchList: [],
-      searchText: '',
-      inputText: '検索',
-      searchFlg: false,
+  layout: 'onlive',
+  async asyncData({ redirect }) {
+    let maintenance = []
+    await client
+      .getEntries({
+        content_type: 'maintenance',
+      })
+      .then((res) => (maintenance = res.items[0].fields))
+      .catch()
+
+    if (maintenance.flg) {
+      redirect('/maintenance')
+      return
     }
+
+    let block = []
+    await client
+      .getEntries({
+        content_type: 'block',
+      })
+      .then((res) => (block = res.items))
+      .catch()
+    return { block }
   },
+  data: () => ({
+    title: 'ルーム検索',
+    error: '',
+    room: {
+      img: '',
+      id: '',
+      url: '',
+      title: '',
+    },
+    dialog: false,
+    searchFlg: false,
+    searchList: [],
+  }),
   head() {
     return {
       title: this.title,
     }
   },
+  mounted() {
+    localStorage.block = JSON.stringify(this.block[0].fields)
+    if (localStorage.room_id || localStorage.room_url_key) {
+      this.$router.push('/')
+    }
+  },
   methods: {
-    async search() {
-      if (this.searchText.length === 0) {
+    searchRoom(val) {
+      this.error = ''
+      this.searchList = []
+
+      if (val.target.value.length === 0) {
+        this.error = 'ルーム名を入力してください'
         return
       }
 
-      const keyword = this.searchText
+      const keyword = val.target.value
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -89,74 +154,46 @@ export default {
         .replace(/'/g, '&#39;')
 
       this.searchFlg = true
-      this.inputText = '検索中...'
 
-      let apiFlg = true
-
-      await axios
-        .get(`${constants.url.main}/${constants.url.search}${keyword}`)
+      axios
+        .get(`${constants.url.other.search}${keyword}`)
         .then((response) => {
-          this.searchList = response.data
           if (response.data.length === 0) {
-            alert('検索結果がありません\n条件を変えて検索してください')
-          }
-        })
-        .catch((e) => {
-          if (e.response && e.response.status === 401) {
-            alert('1日の初期化回数を越えました')
+            this.error = '検索結果がありません。条件を変えて検索してください'
           } else {
-            apiFlg = false
+            this.searchList = response.data
           }
-        })
-        .finally(() => {
-          this.searchFlg = false
-          this.inputText = '検索'
-        })
-
-      if (!apiFlg) {
-        this.subApiSearch(keyword)
-      }
-    },
-    async subApiSearch(keyword) {
-      this.searchFlg = true
-      this.inputText = '検索中...'
-
-      await axios
-        .get(`${constants.url.sub}/${constants.url.search}${keyword}`)
-        .then((response) => {
-          this.searchList = response.data
-          if (response.data.length === 0) {
-            alert('検索結果がありません\n条件を変えて検索してください')
-          }
-          // IPの関係でメインAPIが使えない人用
-          this.$store.commit('setApiFlg', false)
         })
         .catch((e) => {
           alert('エラーが発生しました')
         })
         .finally(() => {
           this.searchFlg = false
-          this.inputText = '検索'
         })
     },
-    selectRoom(room) {
-      if (constants.blockRoom.includes(room.id)) {
-        alert('このルームは登録できません')
+    registerCheck(room) {
+      this.error = ''
+      if (this.block[0].fields.roomId.includes(room.id)) {
+        this.error = 'このルームは登録できません'
         return
       }
-      if (confirm(`${room.title}を登録しますか？`)) {
-        this.$store.commit('setRoomid', room.id)
-        this.$store.commit('setUrl', `/${room.url}`)
-        this.$store.commit('setVersion', pkg.version)
-        if (
-          this.$store.state.uuid === undefined ||
-          this.$store.state.uuid === null
-        ) {
-          const uuidGen = UUID.generate()
-          this.$store.commit('setUuid', uuidGen)
-        }
-        this.$router.push('/')
+
+      this.dialog = true
+      this.room = room
+    },
+    register() {
+      this.dialog = false
+      localStorage.room_url_key = this.room.url
+      localStorage.room_id = this.room.id
+
+      if (localStorage.uuid === undefined || localStorage.uuid === null) {
+        localStorage.uuid = UUID.generate()
       }
+
+      localStorage.version = pkg.version
+      localStorage.lift = 0
+
+      this.$router.push('/')
     },
   },
 }

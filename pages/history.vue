@@ -1,201 +1,216 @@
 <template>
-  <main class="uk-margin-top uk-margin-left uk-margin-right">
-    <Modal
-      id="open"
-      uk-toggle="target: #profile"
-      :modal="listenerData"
-      @addBlock="addBlock"
-      @delBlock="delBlock"
-    />
-    <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
-      <Info
-        :info="{
-          title: '獲得ポイント',
-          main: `約 ${formatNum(freePoint + prePoint + countPoint)}pt`,
-          sub: `無料 ${formatNum(freePoint)}pt | 有料 ${formatNum(
-            prePoint
-          )}pt | カウント ${formatNum(countPoint)}pt`,
-          icon: 'star',
-        }"
-      />
-
-      <Info
-        :info="{
-          title: 'フォロワー',
-          main: `${formatNum(followerNum)}人`,
-          sub: '',
-          icon: 'heart',
-        }"
-      />
-
-      <Info
-        :info="{
-          title: '来場者',
-          main: `${formatNum(viewNum)}人`,
-          sub: '',
-          icon: 'users',
-        }"
-      />
-
-      <Info
-        :info="{
-          title: '配信開始時間',
-          main: formatTime(startedAt),
-          sub: '',
-          icon: 'clock',
-        }"
-      />
-    </div>
-
-    <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
-      <Comment
-        :comment="commentList"
-        :telop="telop"
-        @parentMethod="getListener"
-      />
-      <div>
-        <div>
-          <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
-            <div>
-              <Gift :gift="freeGiftList" @parentMethod="getListener" />
-              <Gift :gift="preGiftList" @parentMethod="getListener" />
-              <!-- <Count :count="countList" @parentMethod="getListener" /> -->
-            </div>
-            <div>
-              <Count :count="countList" @parentMethod="getListener" />
-              <Ranking :ranking="rankingList" @parentMethod="getListener" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+  <div>
+    <v-container fluid>
+      <OnliveInfo :info-data="infoObj" />
+      <v-row class="mt-0">
+        <CommentTable :telop-data="telop" :comment-data="commentObj" />
+        <v-col>
+          <v-row>
+            <GiftTable :gitf-data="freeGiftObj" :gift-flg="false" />
+            <GiftTable ref="prGift" :gitf-data="preGiftObj" :gift-flg="true" />
+            <CountTable :count-data="countObj" />
+            <RankingTable :ranking-data="rankingObj" />
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
-import moment from 'moment'
+import OnliveInfo from '~/components/OnliveInfo'
+import CommentTable from '~/components/CommentTable'
+import GiftTable from '~/components/GiftTable'
+import CountTable from '~/components/CountTable'
+import RankingTable from '~/components/RankingTable'
 import constants from '~/constants'
+import client from '~/plugins/contentful'
 
 export default {
   name: 'HistoryPage',
-  data() {
-    return {
-      title: 'ログ履歴',
-      api: null,
-      telop: '',
-      useGiftList: [],
-      rankingList: [],
-      countList: [],
-      commentList: [],
-      preGiftList: [],
-      freeGiftList: [],
-      freePoint: 0,
-      prePoint: 0,
-      countPoint: 0,
-      follower: 0,
-      view: 0,
-      startedAt: 0,
-      viewNum: 0,
-      followerNum: 0,
-      listenerData: {},
-      blockUser: [],
-      streaminglog: [],
-    }
+  components: {
+    OnliveInfo,
+    CommentTable,
+    GiftTable,
+    CountTable,
+    RankingTable,
   },
+  async asyncData({ redirect, query }) {
+    if (!localStorage.room_url_key) {
+      redirect('/')
+      return
+    }
+
+    let maintenance = []
+    await client
+      .getEntries({
+        content_type: 'maintenance',
+      })
+      .then((res) => (maintenance = res.items[0].fields))
+      .catch()
+
+    if (maintenance.flg) {
+      redirect('/maintenance')
+      return
+    }
+
+    if (query.id === undefined || query.id === null) {
+      redirect('/log')
+      return
+    }
+    const res = await axios.post(constants.url.watchlog.getlog, {
+      uuid: localStorage.uuid,
+      log_id: query.id,
+    })
+    if (res.data.length !== 1) {
+      redirect('/log')
+      return
+    }
+    return { logData: res.data[0] }
+  },
+  data: () => ({
+    title: '過去ログ',
+    telop: '',
+    infoObj: {
+      free: 0,
+      pre: 0,
+      count: 0,
+      follwer: 0,
+      startFollwer: 0,
+      view: 0,
+      startView: 0,
+      startTime: 0,
+      elapsedTime: 0,
+    },
+    commentObj: [],
+    freeGiftObj: [],
+    preGiftObj: [],
+    countObj: [],
+    rankingObj: [],
+  }),
   head() {
     return {
       title: this.title,
     }
   },
-  created() {
-    setTimeout(() => {
-      if (this.$store.state.apiFlg) {
-        this.api = constants.url.main
-      } else {
-        this.api = constants.url.sub
-      }
-    }, 0)
-  },
   mounted() {
-    setTimeout(() => {
-      if (this.$store.state.roomid === null) {
-        this.$router.push('/search')
-      }
-      if (
-        this.$store.state.streaminglog !== null &&
-        this.$route.query.id !== undefined
-      ) {
-        for (const i in this.$store.state.streaminglog) {
-          if (
-            String(this.$store.state.streaminglog[i].id) ===
-            this.$route.query.id
-          ) {
-            this.commentList = this.$store.state.streaminglog[i].comment
-            this.freeGiftList = this.$store.state.streaminglog[i].free
-            this.preGiftList = this.$store.state.streaminglog[i].pre
-            this.countList = this.$store.state.streaminglog[i].count
-            this.rankingList = this.$store.state.streaminglog[i].ranking
-            this.followerNum =
-              this.$store.state.streaminglog[i].info.followerNum
-            this.viewNum = this.$store.state.streaminglog[i].info.viewNum
-            this.startedAt = this.$store.state.streaminglog[i].info.startedAt
-            this.freePoint = this.$store.state.streaminglog[i].info.freePoint
-            this.prePoint = this.$store.state.streaminglog[i].info.prePoint
-            this.countPoint = this.$store.state.streaminglog[i].info.countPoint
-          }
+    if (localStorage.use_gifts !== null) {
+      this.$refs.prGift.useGiftList = JSON.parse(localStorage.use_gifts)
+    }
+    const dbLog = this.logData.log_json
+
+    this.telop = dbLog.telop
+
+    dbLog.comment.forEach((comment) => {
+      const listener = dbLog.listener.filter(
+        (user) => user.id === comment.id
+      )[0]
+      if (!this.blockCheck(comment.id)) {
+        if (comment.flg === 'FF6C1A' || comment.flg === 'follow') {
+          this.commentObj.push({
+            id: comment.id,
+            name: '',
+            cm: comment.cm,
+            flg: comment.flg,
+            av: '',
+          })
+        } else {
+          this.commentObj.push({
+            id: listener.id,
+            name: listener.name,
+            cm: comment.cm,
+            flg: comment.flg,
+            av: listener.av,
+          })
         }
-        this.streaminglog = this.$store.state.streaminglog
-      } else {
-        this.$router.push('/')
       }
-    }, 0)
+    })
+
+    dbLog.count.forEach((count) => {
+      const listener = dbLog.listener.filter((user) => user.id === count.id)[0]
+      if (!this.blockCheck(listener.id)) {
+        this.countObj.push({
+          id: listener.id,
+          name: listener.name,
+          num: count.num,
+          flg: listener.flg,
+          av: listener.av,
+        })
+      }
+    })
+
+    dbLog.free.forEach((free) => {
+      const listener = dbLog.listener.filter((user) => user.id === free.id)[0]
+      if (!this.blockCheck(listener.id)) {
+        this.freeGiftObj.push({
+          id: listener.id,
+          name: listener.name,
+          num: free.num,
+          flg: listener.flg,
+          av: listener.av,
+          gid: free.gid,
+        })
+      }
+    })
+
+    dbLog.pre.forEach((pre) => {
+      const listener = dbLog.listener.filter((user) => user.id === pre.id)[0]
+      if (!this.blockCheck(listener.id)) {
+        this.preGiftObj.push({
+          id: listener.id,
+          name: listener.name,
+          num: pre.num,
+          flg: listener.flg,
+          av: listener.av,
+          gid: pre.gid,
+        })
+      }
+    })
+
+    dbLog.ranking.forEach((ranking) => {
+      const listener = dbLog.listener.filter(
+        (user) => user.id === ranking.id
+      )[0]
+      this.rankingObj.push({
+        order_no: ranking.rank,
+        flg: listener.flg,
+        user: {
+          user_id: listener.id,
+          name: listener.name,
+          avatar_url: `https://image.showroom-cdn.com/showroom-prod/image/avatar/${listener.av}.png?v=92`,
+        },
+      })
+    })
+
+    if (dbLog.info.isOfficial === undefined) {
+      dbLog.info.isOfficial = true
+    }
+    dbLog.info.startView = dbLog.info.view
+    this.infoObj = dbLog.info
   },
   methods: {
-    getApi(url) {
-      return axios.get(url)
-    },
-    formatTime(unixTime) {
-      return moment(unixTime * 1000).format('H時 mm分 ss秒')
-    },
-    formatNum(num) {
-      return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
-    },
-    getListener(id) {
-      this.listenerData = {}
-      axios
-        .get(`${this.api}${constants.url.user.profile}${id}`)
-        .then((response) => {
-          this.listenerData = response.data
-          this.listenerData.account_id = id
-          this.listenerData.block = this.blockUser.includes(id)
-          document.getElementById('open').click()
-        })
-    },
     blockCheck(id) {
-      return this.blockUser.includes(id)
-    },
-    addBlock(id) {
-      this.listenerData.block = true
-      this.blockUser.push(id)
-    },
-    delBlock(id) {
-      this.blockUser = this.blockUser.filter((user) => user !== id)
+      let list = []
+      if (localStorage.block_users) {
+        list = JSON.parse(localStorage.block_users)
+      }
+      let blockFlg = false
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].account_id === id) {
+          blockFlg = true
+        }
+      }
+      // admin block
+      let adminList = []
+      if (localStorage.block) {
+        adminList = JSON.parse(localStorage.block)
+      }
+      if (adminList.userId.includes(id)) {
+        blockFlg = true
+      }
+      return blockFlg
     },
   },
 }
 </script>
-
-<style>
-#comment {
-  height: 80vh;
-}
-
-/* #ranking {
-  height: 80vh;
-} */
-
-.gift {
-  height: 39vh;
-}
-</style>

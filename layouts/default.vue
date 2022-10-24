@@ -1,18 +1,40 @@
 <template>
-  <div>
-    <nav class="uk-navbar-container" uk-navbar>
-      <div class="uk-navbar-left">
-        <ul class="uk-navbar-nav">
-          <li class="uk-active">
-            <a @click="$router.push('/')"
-              >{{ title }} Ver.{{ version }} Create by T.Yoichiro
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    <Nuxt />
-  </div>
+  <v-app>
+    <v-navigation-drawer v-model="drawer" :clipped="clipped" fixed app>
+      <v-list>
+        <v-list-item
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.to"
+          router
+          exact
+        >
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar :clipped-left="clipped" dense fixed app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-toolbar-title
+        style="cursor: pointer"
+        @click="$router.push('/')"
+        v-text="title"
+      />
+      <v-spacer />
+      Ver.{{ version }}
+    </v-app-bar>
+    <v-main>
+      <Nuxt />
+    </v-main>
+    <v-footer :absolute="!fixed" app>
+      <span>&copy; {{ new Date().getFullYear() }} {{ author }}</span>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
@@ -22,44 +44,49 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
+      clipped: true,
+      drawer: null,
+      fixed: false,
+      items: [
+        {
+          icon: 'mdi-home',
+          title: 'ホーム',
+          to: '/',
+        },
+        {
+          icon: 'mdi-math-log',
+          title: 'ログ一覧',
+          to: '/log',
+        },
+        // {
+        //   icon: 'mdi-account',
+        //   title: 'リスナー名変更',
+        //   to: '/name',
+        // },
+        {
+          icon: 'mdi-account-cancel',
+          title: 'ブロック一覧',
+          to: '/block',
+        },
+        {
+          icon: 'mdi-account',
+          title: 'ユーザー情報',
+          to: '/user',
+        },
+      ],
       title: 'Watch Log',
+      author: 'T.Yoichiro',
       version: pkg.version,
+    }
+  },
+  mounted() {
+    if (localStorage.vuex) {
+      this.items.push({
+        icon: 'mdi-content-copy',
+        title: 'データ引継ぎ',
+        to: '/transfer',
+      })
     }
   },
 }
 </script>
-
-<style>
-.uk-navbar-nav > li > a {
-  text-transform: none;
-}
-
-.uk-table th {
-  text-transform: none;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.scrollbar {
-  overflow: scroll;
-  scrollbar-width: none;
-}
-
-.first-look {
-  background-color: aliceblue;
-}
-
-.visitor {
-  background-color: rgba(172, 172, 172, 0.1);
-}
-
-.developer {
-  background-color: rgba(230, 230, 250, 0.5);
-}
-
-.scrollbar::-webkit-scrollbar {
-  display: none;
-}
-</style>
