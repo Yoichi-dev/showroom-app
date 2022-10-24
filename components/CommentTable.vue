@@ -31,7 +31,8 @@
           id="commentArea"
           :class="
             $vuetify.breakpoint.name === 'xs' ||
-            $vuetify.breakpoint.name === 'sm'
+            $vuetify.breakpoint.name === 'sm' ||
+            $vuetify.breakpoint.name === 'md'
               ? ''
               : 'table-scale'
           "
@@ -41,7 +42,8 @@
             :key="i"
             :class="
               $vuetify.breakpoint.name === 'xs' ||
-              $vuetify.breakpoint.name === 'sm'
+              $vuetify.breakpoint.name === 'sm' ||
+              $vuetify.breakpoint.name === 'md'
                 ? ''
                 : 'table-scale'
             "

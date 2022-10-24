@@ -7,7 +7,8 @@
           :telop-data="telop"
           :comment-data="
             $vuetify.breakpoint.name === 'xs' ||
-            $vuetify.breakpoint.name === 'sm'
+            $vuetify.breakpoint.name === 'sm' ||
+            $vuetify.breakpoint.name === 'md'
               ? commentObjUn
               : commentObj
           "
@@ -138,7 +139,8 @@ export default {
               this.commentObj.push(comment(commentObj))
               if (
                 this.$vuetify.breakpoint.name === 'xs' ||
-                this.$vuetify.breakpoint.name === 'sm'
+                this.$vuetify.breakpoint.name === 'sm' ||
+                this.$vuetify.breakpoint.name === 'md'
               ) {
                 this.commentObjUn.unshift(comment(commentObj))
               }
@@ -262,7 +264,8 @@ export default {
                 this.commentObj.push(comment(msgJson))
                 if (
                   this.$vuetify.breakpoint.name === 'xs' ||
-                  this.$vuetify.breakpoint.name === 'sm'
+                  this.$vuetify.breakpoint.name === 'sm' ||
+                  this.$vuetify.breakpoint.name === 'md'
                 ) {
                   this.commentObjUn.unshift(comment(msgJson))
                 }
@@ -311,7 +314,8 @@ export default {
             this.commentObj.push(info(msgJson))
             if (
               this.$vuetify.breakpoint.name === 'xs' ||
-              this.$vuetify.breakpoint.name === 'sm'
+              this.$vuetify.breakpoint.name === 'sm' ||
+              this.$vuetify.breakpoint.name === 'md'
             ) {
               this.commentObjUn.unshift(info(msgJson))
             }
