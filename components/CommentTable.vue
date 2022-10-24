@@ -27,8 +27,25 @@
             </th>
           </tr>
         </thead>
-        <tbody id="commentArea" class="table-scale">
-          <tr v-for="(comment, i) in commentData" :key="i" class="table-scale">
+        <tbody
+          id="commentArea"
+          :class="
+            $vuetify.breakpoint.name === 'xs' ||
+            $vuetify.breakpoint.name === 'sm'
+              ? ''
+              : 'table-scale'
+          "
+        >
+          <tr
+            v-for="(comment, i) in commentData"
+            :key="i"
+            :class="
+              $vuetify.breakpoint.name === 'xs' ||
+              $vuetify.breakpoint.name === 'sm'
+                ? ''
+                : 'table-scale'
+            "
+          >
             <td
               v-if="comment.flg !== 'FF6C1A' && comment.flg !== 'follow'"
               class="pointer pr-0"

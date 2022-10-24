@@ -3,7 +3,15 @@
     <v-container fluid>
       <OnliveInfo :info-data="infoObj" />
       <v-row class="mt-0">
-        <CommentTable :telop-data="telop" :comment-data="commentObj" />
+        <CommentTable
+          :telop-data="telop"
+          :comment-data="
+            $vuetify.breakpoint.name === 'xs' ||
+            $vuetify.breakpoint.name === 'sm'
+              ? commentObjUn
+              : commentObj
+          "
+        />
         <v-col>
           <v-row>
             <GiftTable :gitf-data="freeGiftObj" :gift-flg="false" />
@@ -72,6 +80,7 @@ export default {
       isOfficial: true,
     },
     commentObj: [],
+    commentObjUn: [],
     freeGiftObj: [],
     preGiftObj: [],
     countObj: [],
@@ -127,6 +136,12 @@ export default {
             if (commentCountCheck(commentObj)) {
               // コメント
               this.commentObj.push(comment(commentObj))
+              if (
+                this.$vuetify.breakpoint.name === 'xs' ||
+                this.$vuetify.breakpoint.name === 'sm'
+              ) {
+                this.commentObjUn.unshift(comment(commentObj))
+              }
             } else {
               // カウント
               this.deduplicationCount(count(commentObj))
@@ -245,6 +260,12 @@ export default {
               if (commentCountCheck(msgJson)) {
                 // コメント
                 this.commentObj.push(comment(msgJson))
+                if (
+                  this.$vuetify.breakpoint.name === 'xs' ||
+                  this.$vuetify.breakpoint.name === 'sm'
+                ) {
+                  this.commentObjUn.unshift(comment(msgJson))
+                }
               } else {
                 // カウント
                 this.deduplicationCount(count(msgJson))
@@ -288,6 +309,12 @@ export default {
             break
           case 18:
             this.commentObj.push(info(msgJson))
+            if (
+              this.$vuetify.breakpoint.name === 'xs' ||
+              this.$vuetify.breakpoint.name === 'sm'
+            ) {
+              this.commentObjUn.unshift(info(msgJson))
+            }
             break
           case 100:
             // console.log('不明' + msgJson.created_at)
