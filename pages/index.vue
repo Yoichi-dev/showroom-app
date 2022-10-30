@@ -3,7 +3,11 @@
     <v-parallax
       v-if="roomStatus && $vuetify.breakpoint.name !== 'xs'"
       height="300"
-      :src="roomStatus.image_s"
+      :src="
+        roomStatus.image_s
+          .replace('_s.png', '_l.png')
+          .replace('_s.jpeg', '_l.jpeg')
+      "
     >
       <v-row align="center">
         <v-col cols="3">
@@ -11,7 +15,11 @@
             max-height="170"
             max-width="300"
             class="deep-purple lighten-4"
-            :src="roomStatus.image_s"
+            :src="
+              roomStatus.image_s
+                .replace('_s.png', '_l.png')
+                .replace('_s.jpeg', '_l.jpeg')
+            "
           ></v-img>
         </v-col>
         <v-col cols="9">
@@ -50,7 +58,13 @@
       </v-row>
       <v-row v-if="eventData">
         <v-col cols="12" sm="4">
-          <v-img :src="eventData.image"></v-img>
+          <v-img
+            :src="
+              eventData.image
+                .replace('_s.png', '_l.png')
+                .replace('_s.jpeg', '_l.jpeg')
+            "
+          ></v-img>
         </v-col>
         <v-col cols="12" sm="8">
           <v-simple-table>
