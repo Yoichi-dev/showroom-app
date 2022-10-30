@@ -213,16 +213,23 @@ export default {
       return
     }
 
-    const status = await axios.get(
-      `${constants.url.other.status}/${localStorage.room_url_key}`
-    )
+    const status = await axios
+      .get(`${constants.url.other.status}/${localStorage.room_url_key}`)
+      .catch((e) => {
+        console.log(e)
+      })
+
+    if (status === undefined) {
+      redirect('/premium')
+      return
+    } else {
+      sessionStorage.room_status = null
+    }
 
     if (status.data.is_live) {
       sessionStorage.room_status = JSON.stringify(status.data)
       redirect('/onlive')
       return
-    } else {
-      sessionStorage.room_status = null
     }
 
     return { roomStatus: status.data }
