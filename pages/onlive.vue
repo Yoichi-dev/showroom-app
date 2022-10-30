@@ -210,11 +210,11 @@ export default {
       })
 
     // テロップ
-    axios
-      .get(`${constants.url.room.telop}${this.roomStatus.room_id}`)
-      .then((res) => {
-        this.telop = res.data
-      })
+    // axios
+    //   .get(`${constants.url.room.telop}${this.roomStatus.room_id}`)
+    //   .then((res) => {
+    //     this.telop = res.data
+    //   })
   },
   methods: {
     connect(bcsvrKey) {
@@ -498,11 +498,11 @@ export default {
           this.rankingObj = res.data.stage_user_list
         })
       // テロップ
-      await axios
-        .get(`${constants.url.room.telop}${this.roomStatus.room_id}`)
-        .then((res) => {
-          this.telop = res.data
-        })
+      // await axios
+      //   .get(`${constants.url.room.telop}${this.roomStatus.room_id}`)
+      //   .then((res) => {
+      //     this.telop = res.data
+      //   })
     },
     blockCheck(id) {
       let list = []
