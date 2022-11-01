@@ -1,6 +1,10 @@
 export default ({ app }, inject) => {
   inject('nameCut', (name) => {
 
+    if (name.length <= 10) {
+      return name
+    }
+
     let editName = name
 
     if (editName.includes('@')) {
