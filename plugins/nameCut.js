@@ -15,6 +15,34 @@ export default ({ app }, inject) => {
       editName = editName.substring(0, editName.indexOf('＠'))
     }
 
+    if (editName.includes('◎')) {
+      editName = editName.substring(0, editName.indexOf('◎'))
+    }
+
+    if (editName.includes('○')) {
+      editName = editName.substring(0, editName.indexOf('○'))
+    }
+
+    if (editName.includes('〇')) {
+      editName = editName.substring(0, editName.indexOf('〇'))
+    }
+
+    if (editName.includes('#')) {
+      editName = editName.substring(0, editName.indexOf('#'))
+    }
+
+    if (editName.includes('＃')) {
+      editName = editName.substring(0, editName.indexOf('＃'))
+    }
+
+    if (editName.includes('、')) {
+      editName = editName.substring(0, editName.indexOf('、'))
+    }
+
+    if (editName.includes('【')) {
+      editName = editName.substring(0, editName.indexOf('【'))
+    }
+
     if (editName === '') {
       editName = name
     }
