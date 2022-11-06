@@ -8,6 +8,7 @@ const constants = {
       liveInfo: "https://pianistmusica.net/live/live_info/",
       commentLog: "https://pianistmusica.net/live/comment_log/",
       giftLog: "https://pianistmusica.net/live/gift_log/",
+      summaryRanking: "https://pianistmusica.net/live/summary_ranking/",
     },
     room: {
       profile: "https://pianistmusica.net/room/profile/",

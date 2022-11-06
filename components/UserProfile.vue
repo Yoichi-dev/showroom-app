@@ -72,7 +72,13 @@
                       class="text--primary"
                       style="white-space: pre-wrap; word-wrap: break-word"
                     >
-                      {{ '\r\n' + userDataJson.description }}
+                      {{
+                        '\r\n' +
+                        userDataJson.description.replace(
+                          /\r\n\r\n\r\n/g,
+                          '\r\n'
+                        )
+                      }}
                     </div>
                   </v-col>
                 </v-row>

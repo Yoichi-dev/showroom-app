@@ -208,13 +208,6 @@ export default {
       .then((res) => {
         this.rankingObj = res.data.stage_user_list
       })
-
-    // テロップ
-    // axios
-    //   .get(`${constants.url.room.telop}${this.roomStatus.room_id}`)
-    //   .then((res) => {
-    //     this.telop = res.data
-    //   })
   },
   methods: {
     connect(bcsvrKey) {
@@ -311,13 +304,15 @@ export default {
             // console.log(msgJson)
             break
           case 18:
-            this.commentObj.push(info(msgJson))
-            if (
-              this.$vuetify.breakpoint.name === 'xs' ||
-              this.$vuetify.breakpoint.name === 'sm' ||
-              this.$vuetify.breakpoint.name === 'md'
-            ) {
-              this.commentObjUn.unshift(info(msgJson))
+            if (!this.blockCheck(msgJson.u)) {
+              this.commentObj.push(info(msgJson))
+              if (
+                this.$vuetify.breakpoint.name === 'xs' ||
+                this.$vuetify.breakpoint.name === 'sm' ||
+                this.$vuetify.breakpoint.name === 'md'
+              ) {
+                this.commentObjUn.unshift(info(msgJson))
+              }
             }
             break
           case 100:
