@@ -18,7 +18,7 @@
             <GiftTable :gitf-data="freeGiftObj" :gift-flg="false" />
             <GiftTable ref="prGift" :gitf-data="preGiftObj" :gift-flg="true" />
             <CountTable :count-data="countObj" />
-            <RankingTable :ranking-data="rankingObj" />
+            <RankingTable ref="event" :ranking-data="rankingObj" />
           </v-row>
         </v-col>
       </v-row>
@@ -89,6 +89,7 @@ export default {
     useGiftList: [],
     allThrowList: [],
     roomStatus: null,
+    eventData: null,
   }),
   head() {
     return {
@@ -190,16 +191,25 @@ export default {
             }
           }
         })
+
+      // 来場者
+      await axios
+        .get(`${constants.url.room.profile}${this.roomStatus.room_id}`)
+        .then((res) => {
+          this.infoObj.startView = res.data.view_num
+          this.infoObj.view = res.data.view_num
+          this.infoObj.startFollwer = res.data.follower_num
+          this.infoObj.follwer = res.data.follower_num
+        })
     })()
 
-    // 来場者
+    // イベント
     axios
-      .get(`${constants.url.room.profile}${this.roomStatus.room_id}`)
+      .get(`${constants.url.room.eventAndSupport}${this.roomStatus.room_id}`)
       .then((res) => {
-        this.infoObj.startView = res.data.view_num
-        this.infoObj.view = res.data.view_num
-        this.infoObj.startFollwer = res.data.follower_num
-        this.infoObj.follwer = res.data.follower_num
+        if (res.data.event) {
+          this.$refs.event.eventFlg = true
+        }
       })
 
     // ランキング

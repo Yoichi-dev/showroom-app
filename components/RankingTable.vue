@@ -1,9 +1,10 @@
 <template>
   <v-col cols="12" sm="6">
     <v-card elevation="10" height="40vh">
-      <v-tabs v-model="tab" color="deep-purple accent-4" center-active>
+      <v-tabs v-model="tab" color="deep-purple accent-4">
         <v-tab href="#tab-1"> ライブ </v-tab>
         <v-tab href="#tab-2"> 累計 </v-tab>
+        <v-tab v-if="eventFlg" href="#tab-3"> イベント貢献 </v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab">
@@ -99,6 +100,51 @@
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-tab-item>
+        <v-tab-item v-if="eventFlg" value="tab-3">
+          <v-simple-table height="35.5vh">
+            <tbody>
+              <tr
+                v-for="(item, i) in contributionRanking"
+                :key="i"
+                class="pointer"
+                @click="openProfile(item.user_id)"
+              >
+                <td class="text-nowrap mr-0 pr-1">{{ item.rank }}位</td>
+                <td class="ml-0 pl-0">
+                  <span v-if="item.user_id === developer">
+                    <v-chip
+                      class="mb-1"
+                      color="purple"
+                      text-color="white"
+                      small
+                    >
+                      開発者
+                    </v-chip>
+                    {{ item.name }}
+                  </span>
+                  <span v-else>
+                    <span>{{ $nameCut(item.name) }}</span>
+                  </span>
+                </td>
+                <td class="ml-0 pl-0">{{ $numberFormat(item.point) }}pt</td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+          <v-btn
+            class="mb-10 mr-3"
+            elevation="2"
+            color="green"
+            dark
+            small
+            absolute
+            right
+            fab
+            bottom
+            @click="reloadEventRanking()"
+          >
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </v-tab-item>
       </v-tabs-items>
     </v-card>
     <UserProfile ref="profile" />
@@ -125,7 +171,14 @@ export default {
     developer: '',
     tab: null,
     summaryRanking: [],
+    contributionRanking: [],
+    eventFlg: false,
   }),
+  watch: {
+    eventFlg() {
+      this.reloadEventRanking()
+    },
+  },
   mounted() {
     this.developer = constants.developer
     this.reloadRanking()
@@ -148,6 +201,22 @@ export default {
           })
       }
     },
+    reloadEventRanking() {
+      if (localStorage.room_id) {
+        this.contributionRanking = []
+        // 貢献ランキング
+        axios
+          .get(
+            `${constants.url.event.contributionRanking}${localStorage.room_id}`
+          )
+          .then((res) => {
+            this.contributionRanking = res.data.ranking
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+      }
+    },
   },
 }
 </script>
@@ -159,5 +228,11 @@ export default {
 
 .pointer {
   cursor: pointer;
+}
+</style>
+
+<style>
+.v-slide-group__prev {
+  display: none !important;
 }
 </style>

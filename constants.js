@@ -18,6 +18,9 @@ const constants = {
     user: {
       profile: "https://pianistmusica.net/users/profile/",
     },
+    event: {
+      contributionRanking: "https://pianistmusica.net/events/contribution_ranking/"
+    },
     other: {
       broadcast: "https://pianistmusica.net/other/broadcast",
       status: "https://pianistmusica.net/other/status",
