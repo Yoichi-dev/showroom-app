@@ -76,6 +76,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="reDialog" persistent max-width="500">
+      <v-card>
+        <v-card-title class="text-h5"> 注意 </v-card-title>
+        <v-card-text>
+          変更を行った場合登録情報が消えてしまいます<br />
+          ユーザー情報ページより再登録お願いします
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="reDialog = false">
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -122,6 +137,7 @@ export default {
       title: '',
     },
     dialog: false,
+    reDialog: false,
     searchFlg: false,
     searchList: [],
   }),
@@ -132,7 +148,10 @@ export default {
   },
   mounted() {
     localStorage.block = JSON.stringify(this.block[0].fields)
-    if (localStorage.room_id || localStorage.room_url_key) {
+
+    if (this.$route.query.u) {
+      this.reDialog = true
+    } else if (localStorage.room_id || localStorage.room_url_key) {
       this.$router.push('/')
     }
   },

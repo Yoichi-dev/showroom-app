@@ -23,6 +23,15 @@
           <p v-else class="mt-10">配信者登録済み（制限解除済み）</p>
         </v-col>
       </v-row>
+      <v-row v-if="liftFlg" class="mt-5">
+        <v-col>
+          <p class="text-h5">ルーム情報変更</p>
+          <p>
+            ルーム移行によりユーザー情報が変わった方は
+            <nuxt-link :to="`/search?u=${uuid}`"> こちら </nuxt-link>
+          </p>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
