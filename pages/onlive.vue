@@ -152,6 +152,9 @@ export default {
           }
         }
       })
+      .catch((e) => {
+        console.log(e)
+      })
     ;(async () => {
       // 利用可能ギフト
       await axios
@@ -160,6 +163,9 @@ export default {
           this.useGiftList = res.data.normal
           this.$refs.prGift.useGiftList = res.data.normal
           localStorage.use_gifts = JSON.stringify(res.data.normal)
+        })
+        .catch((e) => {
+          console.log(e)
         })
 
       // 有料ギフト
@@ -191,6 +197,9 @@ export default {
             }
           }
         })
+        .catch((e) => {
+          console.log(e)
+        })
 
       // 来場者
       await axios
@@ -200,6 +209,9 @@ export default {
           this.infoObj.view = res.data.view_num
           this.infoObj.startFollwer = res.data.follower_num
           this.infoObj.follwer = res.data.follower_num
+        })
+        .catch((e) => {
+          console.log(e)
         })
     })()
 
@@ -211,12 +223,18 @@ export default {
           this.$refs.event.eventFlg = true
         }
       })
+      .catch((e) => {
+        console.log(e)
+      })
 
     // ランキング
     axios
       .get(`${constants.url.live.stageUserList}${this.roomStatus.room_id}`)
       .then((res) => {
         this.rankingObj = res.data.stage_user_list
+      })
+      .catch((e) => {
+        console.log(e)
       })
   },
   methods: {
