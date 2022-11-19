@@ -1,41 +1,41 @@
 const constants = {
   url: {
     live: {
-      onlives: "https://pianistmusica.net/live/onlives",
-      premium: "https://pianistmusica.net/live/premium",
-      giftList: "https://pianistmusica.net/live/gift_list/",
-      stageUserList: "https://pianistmusica.net/live/stage_user_list/",
-      liveInfo: "https://pianistmusica.net/live/live_info/",
-      commentLog: "https://pianistmusica.net/live/comment_log/",
-      giftLog: "https://pianistmusica.net/live/gift_log/",
-      summaryRanking: "https://pianistmusica.net/live/summary_ranking/",
+      onlives: "https://api.showroom-app.com/live/onlives",
+      premium: "https://api.showroom-app.com/live/premium",
+      giftList: "https://api.showroom-app.com/live/gift_list/",
+      stageUserList: "https://api.showroom-app.com/live/stage_user_list/",
+      liveInfo: "https://api.showroom-app.com/live/live_info/",
+      commentLog: "https://api.showroom-app.com/live/comment_log/",
+      giftLog: "https://api.showroom-app.com/live/gift_log/",
+      summaryRanking: "https://api.showroom-app.com/live/summary_ranking/",
     },
     room: {
-      profile: "https://pianistmusica.net/room/profile/",
-      eventAndSupport: "https://pianistmusica.net/room/event_and_support/",
-      telop: "https://pianistmusica.net/other/telop/"
+      profile: "https://api.showroom-app.com/room/profile/",
+      eventAndSupport: "https://api.showroom-app.com/room/event_and_support/",
+      telop: "https://api.showroom-app.com/other/telop/"
     },
     user: {
-      profile: "https://pianistmusica.net/users/profile/",
+      profile: "https://api.showroom-app.com/users/profile/",
     },
     event: {
-      contributionRanking: "https://pianistmusica.net/events/contribution_ranking/"
+      contributionRanking: "https://api.showroom-app.com/events/contribution_ranking/"
     },
     other: {
-      broadcast: "https://pianistmusica.net/other/broadcast",
-      status: "https://pianistmusica.net/other/status",
-      delete: "https://pianistmusica.net/other/delete",
-      search: "https://pianistmusica.net/other/search?keyword=",
+      broadcast: "https://api.showroom-app.com/other/broadcast",
+      status: "https://api.showroom-app.com/other/status",
+      delete: "https://api.showroom-app.com/other/delete",
+      search: "https://api.showroom-app.com/other/search?keyword=",
     },
     watchlog: {
-      getloglist: "https://pianistmusica.net/watchlog/getloglist",
-      addlog: "https://pianistmusica.net/watchlog/addlog",
-      getlog: "https://pianistmusica.net/watchlog/getlog",
-      corruption: "https://pianistmusica.net/watchlog/corruption",
-      delete: "https://pianistmusica.net/watchlog/delete"
+      getloglist: "https://api.showroom-app.com/watchlog/getloglist",
+      addlog: "https://api.showroom-app.com/watchlog/addlog",
+      getlog: "https://api.showroom-app.com/watchlog/getlog",
+      corruption: "https://api.showroom-app.com/watchlog/corruption",
+      delete: "https://api.showroom-app.com/watchlog/delete"
     },
     point: {
-      event: "https://pianistmusica.net/pointhistory/check/"
+      event: "https://api.showroom-app.com/pointhistory/check/"
     }
   },
   ws: "wss://online.showroom-live.com",
