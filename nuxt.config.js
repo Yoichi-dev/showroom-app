@@ -14,6 +14,7 @@ export default {
       { hid: 'og:title', property: 'og:title', content: 'Watch Log | 配信中のコメント・ギフト確認ツール' },
       { hid: 'og:url', property: 'og:url', content: 'https://watch-log.showroom-app.com' },
       { hid: 'description', name: 'description', content: pkg.description },
+      { hid: 'keywords', name: 'keywords', content: 'ウォッチログ,watchlog,showroom,ショールーム,配信ログ,ログ,コメビュ,コメントビューアー' },
       { hid: 'og:image', property: 'og:image', content: 'https://watch-log.showroom-app.com/og.png?20221010' },
       { name: 'twitter:card', property: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:creator', property: 'twitter:creator', content: '@TYoichiro' },
