@@ -88,6 +88,12 @@
                 </v-chip>
                 <span>{{ $nameCut(comment.name) }}</span>
               </span>
+              <span v-else-if="comment.flg === 4">
+                <v-chip class="mb-1" color="orange" text-color="white" small>
+                  公式
+                </v-chip>
+                <span>{{ $nameCut(comment.name) }}</span>
+              </span>
               <span v-else>
                 <span>{{ $nameCut(comment.name) }}</span>
               </span>
