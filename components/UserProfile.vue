@@ -39,7 +39,7 @@
                     <p class="text-h5 text--primary">
                       <img
                         v-if="userDataJson.is_sms_authenticated"
-                        src="https://client-cdn.showroom-live.com/assets/71746d5f26ed3f510ce6b032228365932bf64699/9710805fe5e89d83761f3b2518875e03.svg"
+                        :src="require('@/assets/svg/sms.svg')"
                       />{{ userDataJson.name }}
                     </p>
                     <div v-if="developer === userId">
