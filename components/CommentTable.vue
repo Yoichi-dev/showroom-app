@@ -27,8 +27,27 @@
             </th>
           </tr>
         </thead>
-        <tbody id="commentArea" class="table-scale">
-          <tr v-for="(comment, i) in commentData" :key="i" class="table-scale">
+        <tbody
+          id="commentArea"
+          :class="
+            $vuetify.breakpoint.name === 'xs' ||
+            $vuetify.breakpoint.name === 'sm' ||
+            $vuetify.breakpoint.name === 'md'
+              ? ''
+              : 'table-scale'
+          "
+        >
+          <tr
+            v-for="(comment, i) in commentData"
+            :key="i"
+            :class="
+              $vuetify.breakpoint.name === 'xs' ||
+              $vuetify.breakpoint.name === 'sm' ||
+              $vuetify.breakpoint.name === 'md'
+                ? ''
+                : 'table-scale'
+            "
+          >
             <td
               v-if="comment.flg !== 'FF6C1A' && comment.flg !== 'follow'"
               class="pointer pr-0"
@@ -66,6 +85,12 @@
               <span v-else-if="comment.flg === 2">
                 <v-chip class="mb-1" color="info" text-color="white" small>
                   初見
+                </v-chip>
+                <span>{{ $nameCut(comment.name) }}</span>
+              </span>
+              <span v-else-if="comment.flg === 4">
+                <v-chip class="mb-1" color="orange" text-color="white" small>
+                  公式
                 </v-chip>
                 <span>{{ $nameCut(comment.name) }}</span>
               </span>

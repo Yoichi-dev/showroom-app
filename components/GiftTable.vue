@@ -39,6 +39,12 @@
                 </v-chip>
                 {{ $nameCut(item.name) }}
               </span>
+              <span v-else-if="item.flg === 4">
+                <v-chip class="mb-1" color="orange" text-color="white" small>
+                  公式
+                </v-chip>
+                {{ $nameCut(item.name) }}
+              </span>
               <span v-else>
                 {{ $nameCut(item.name) }}
               </span>
@@ -47,9 +53,9 @@
               <span v-if="giftFlg">
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-img
-                      max-width="25"
-                      max-height="25"
+                    <img
+                      width="25"
+                      height="25"
                       :src="
                         'https://image.showroom-cdn.com/showroom-prod/assets/img/gift/' +
                         item.gid +
@@ -57,6 +63,7 @@
                       "
                       v-bind="attrs"
                       v-on="on"
+                      @error="onImgError"
                     />
                   </template>
                   <span> {{ $numberFormat(getGiftPoint(item.gid)) }}G </span>
@@ -139,6 +146,14 @@ export default {
     },
     nameCut(name) {
       return name.substring(0, name.indexOf('@'))
+    },
+    onImgError(e) {
+      e.target.src =
+        'https://image.showroom-cdn.com/showroom-prod/image/gift/' +
+        e.target.src.replace(
+          'https://image.showroom-cdn.com/showroom-prod/assets/img/gift/',
+          ''
+        )
     },
   },
 }

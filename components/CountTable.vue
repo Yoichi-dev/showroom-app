@@ -39,6 +39,12 @@
                 </v-chip>
                 {{ $nameCut(item.name) }}
               </span>
+              <span v-else-if="item.flg === 4">
+                <v-chip class="mb-1" color="orange" text-color="white" small>
+                  公式
+                </v-chip>
+                {{ $nameCut(item.name) }}
+              </span>
               <span v-else>
                 <span>{{ $nameCut(item.name) }}</span>
               </span>

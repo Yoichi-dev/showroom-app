@@ -8,13 +8,28 @@
           <p>ルームURL：{{ room_url_key }}</p>
           <p>UUID：{{ uuid }}</p>
           <p v-if="!liftFlg" class="mt-10">
-            Watch Logの制限解除申請は<a
+            Watch Logの制限解除申請は
+            <a
               :href="`https://www.twitter.com/messages/compose?recipient_id=1278265302921342976&text=制限解除申請%0D%0Aroom_id:${room_id}%0D%0Aroom_url_key:${room_url_key}%0D%0Aid:${uuid}`"
               target="_blank"
-              >こちら</a
-            >（配信者のみ）
+            >
+              こちら
+            </a>
+            （配信者のみ）
+            <br />
+            <br />
+            配信者として確認できないアカウントからの申請は無視されます
           </p>
           <p v-else class="mt-10">配信者登録済み（制限解除済み）</p>
+        </v-col>
+      </v-row>
+      <v-row v-if="liftFlg" class="mt-5">
+        <v-col>
+          <p class="text-h5">ルーム情報変更</p>
+          <p>
+            ルーム移行によりユーザー情報が変わった方は
+            <nuxt-link :to="`/search?u=${uuid}`"> こちら </nuxt-link>
+          </p>
         </v-col>
       </v-row>
     </v-container>
@@ -32,18 +47,19 @@ export default {
       return
     }
 
-    let maintenance = []
-    await client
+    const maintenance = await client
       .getEntries({
         content_type: 'maintenance',
       })
-      .then((res) => (maintenance = res.items[0].fields))
-      .catch()
+      .then((res) => res.items[0].fields)
+      .catch((e) => {
+        console.log(e)
+      })
 
-    if (maintenance.flg) {
-      redirect('/maintenance')
-      return
-    }
+    // if (maintenance.flg) {
+    //   redirect('/maintenance')
+    //   return
+    // }
 
     return { maintenance }
   },

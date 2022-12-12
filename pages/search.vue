@@ -76,13 +76,28 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="reDialog" persistent max-width="500">
+      <v-card>
+        <v-card-title class="text-h5"> 注意 </v-card-title>
+        <v-card-text>
+          変更を行った場合登録情報が消えてしまいます<br />
+          ユーザー情報ページより再登録お願いします
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="reDialog = false">
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import UUID from 'uuidjs'
 import constants from '~/constants'
+import axios from '~/plugins/axios'
 import client from '~/plugins/contentful'
 import pkg from '~/package.json'
 
@@ -90,18 +105,19 @@ export default {
   name: 'SearchPage',
   layout: 'onlive',
   async asyncData({ redirect }) {
-    let maintenance = []
-    await client
-      .getEntries({
-        content_type: 'maintenance',
-      })
-      .then((res) => (maintenance = res.items[0].fields))
-      .catch()
+    // const maintenance = await client
+    //   .getEntries({
+    //     content_type: 'maintenance',
+    //   })
+    //   .then((res) => res.items[0].fields)
+    //   .catch((e) => {
+    //     console.log(e)
+    //   })
 
-    if (maintenance.flg) {
-      redirect('/maintenance')
-      return
-    }
+    // if (maintenance.flg) {
+    //   redirect('/maintenance')
+    //   return
+    // }
 
     let block = []
     await client
@@ -122,6 +138,7 @@ export default {
       title: '',
     },
     dialog: false,
+    reDialog: false,
     searchFlg: false,
     searchList: [],
   }),
@@ -132,7 +149,10 @@ export default {
   },
   mounted() {
     localStorage.block = JSON.stringify(this.block[0].fields)
-    if (localStorage.room_id || localStorage.room_url_key) {
+
+    if (this.$route.query.u) {
+      this.reDialog = true
+    } else if (localStorage.room_id || localStorage.room_url_key) {
       this.$router.push('/')
     }
   },
@@ -156,7 +176,7 @@ export default {
       this.searchFlg = true
 
       axios
-        .get(`${constants.url.other.search}${keyword}`)
+        .get(`${constants.url.search}${keyword}`)
         .then((response) => {
           if (response.data.length === 0) {
             this.error = '検索結果がありません。条件を変えて検索してください'

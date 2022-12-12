@@ -4,7 +4,7 @@
       <v-row v-if="vuexFlg" class="mt-5">
         <v-col>
           <p class="text-h5">データ移行</p>
-          旧βバージョン(Ver.1.x.x)のログデータを移行する事ができます
+          旧バージョン(Ver.1.x.x)のログデータを移行する事ができます
           <p v-if="!dataFlg && !errorFlg" class="mt-15">
             過去ログが存在しません
           </p>
@@ -49,7 +49,7 @@
       <v-row v-else class="mt-5">
         <v-col>
           <p class="text-h5">データ移行</p>
-          旧βバージョン(Ver.1.x.x)のログデータを移行する事ができます
+          旧バージョン(Ver.1.x.x)のログデータを移行する事ができます
           <p v-if="!dataFlg && !errorFlg" class="mt-15">
             移行するデータはありません
           </p>
@@ -73,13 +73,14 @@ export default {
       return
     }
 
-    let maintenance = []
-    await client
+    const maintenance = await client
       .getEntries({
         content_type: 'maintenance',
       })
-      .then((res) => (maintenance = res.items[0].fields))
-      .catch()
+      .then((res) => res.items[0].fields)
+      .catch((e) => {
+        console.log(e)
+      })
 
     if (maintenance.flg) {
       redirect('/maintenance')

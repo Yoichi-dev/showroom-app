@@ -18,11 +18,16 @@
             <GiftTable :gitf-data="freeGiftObj" :gift-flg="false" />
             <GiftTable ref="prGift" :gitf-data="preGiftObj" :gift-flg="true" />
             <CountTable :count-data="countObj" />
-            <RankingTable ref="event" :ranking-data="rankingObj" />
           </v-row>
         </v-col>
       </v-row>
     </v-container>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+    <v-snackbar v-model="snackbar" timeout="60000" color="red accent-4" top>
+      プレミアムライブは読み込みに時間がかかります...
+    </v-snackbar>
   </div>
 </template>
 
@@ -32,7 +37,6 @@ import OnliveInfo from '~/components/OnliveInfo'
 import CommentTable from '~/components/CommentTable'
 import GiftTable from '~/components/GiftTable'
 import CountTable from '~/components/CountTable'
-import RankingTable from '~/components/RankingTable'
 import {
   comment,
   commentCountCheck,
@@ -42,16 +46,16 @@ import {
   count,
   info,
 } from '~/plugins/liveDataEdit'
+import contentful from '~/plugins/contentful'
 import constants from '~/constants'
 
 export default {
-  name: 'OnlivePage',
+  name: 'PremiumPage',
   components: {
     OnliveInfo,
     CommentTable,
     GiftTable,
     CountTable,
-    RankingTable,
   },
   beforeRouteLeave(to, from, next) {
     if (this.socket !== null) {
@@ -62,8 +66,48 @@ export default {
     next()
   },
   layout: 'onlive',
+  async asyncData({ redirect }) {
+    if (!localStorage.room_url_key) {
+      redirect('/')
+      return
+    }
+
+    if (!sessionStorage.premium) {
+      redirect('/')
+      return
+    }
+
+    const maintenance = await contentful
+      .getEntries({
+        content_type: 'maintenance',
+      })
+      .then((res) => res.items[0].fields)
+
+    if (maintenance.flg) {
+      redirect('/maintenance')
+      return
+    }
+
+    // const status = await axios.post(constants.url.showroom_api, {
+    //   category: 'room',
+    //   type: 'profile',
+    //   key: localStorage.room_id,
+    // })
+
+    // if (status.data.is_onlive !== true || status.data.premium_room_type !== 1) {
+    //   if (status.data.is_onlive) {
+    //     redirect('/onlive')
+    //     return
+    //   } else {
+    //     redirect('/')
+    //     return
+    //   }
+    // }
+
+    return { roomStatus: null }
+  },
   data: () => ({
-    title: 'オンライブ',
+    title: 'プレミアムライブ',
     telop: '',
     socket: null,
     socketPing: null,
@@ -89,7 +133,9 @@ export default {
     useGiftList: [],
     allThrowList: [],
     roomStatus: null,
-    eventData: null,
+    overlay: true,
+    snackbar: true,
+    livePing: null,
   }),
   head() {
     return {
@@ -97,146 +143,61 @@ export default {
     }
   },
   mounted() {
-    if (!sessionStorage.room_status) {
-      this.$router.push('/')
-      return
-    }
+    this.livePing = setInterval(() => {
+      axios
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'onlives',
+          key: new Date().getTime(),
+        })
+        .then((res) => {
+          const premiumList = []
+          for (let i = 0; i < res.data.onlives.length; i++) {
+            if (
+              res.data.onlives[i].genre_id >= 100 &&
+              res.data.onlives[i].genre_id <= 200
+            ) {
+              const check = res.data.onlives[i].lives.find(
+                (e) => e.premium_room_type === 1
+              )
+              if (check !== undefined) {
+                premiumList.push(check)
+              }
+            }
+          }
+          if (premiumList.length !== 0) {
+            for (const data of premiumList) {
+              if (data.room_id === Number(localStorage.room_id)) {
+                this.overlay = false
+                this.snackbar = false
 
-    this.roomStatus = JSON.parse(sessionStorage.room_status)
+                this.roomStatus = data
 
-    if (localStorage.use_gifts) {
+                this.telop = data.telop
+                this.infoObj.startTime = data.started_at
+                this.setTimer(data.started_at)
+
+                this.infoObj.isOfficial = data.genre_id !== 200
+
+                this.infoObj.startView = data.view_num
+                this.infoObj.view = data.view_num
+                this.infoObj.startFollwer = data.follower_num
+                this.infoObj.follwer = data.follower_num
+
+                clearInterval(this.livePing)
+                // 接続
+                this.connect(data.bcsvr_key)
+                break
+              }
+            }
+          }
+        })
+    }, 5000)
+
+    if (localStorage.use_gifts !== undefined) {
       this.useGiftList = JSON.parse(localStorage.use_gifts)
+      this.$refs.prGift.useGiftList = JSON.parse(localStorage.use_gifts)
     }
-
-    this.infoObj.isOfficial = this.roomStatus.is_official
-
-    this.connect(this.roomStatus.broadcast_key)
-
-    this.infoObj.startTime = this.roomStatus.started_at
-
-    this.setTimer(JSON.parse(sessionStorage.room_status).started_at)
-
-    // コメント
-    axios
-      .post(constants.url.showroom_api, {
-        category: 'live',
-        type: 'comment_log',
-        key: localStorage.room_id,
-      })
-      .then((res) => {
-        for (let i = res.data.comment_log.length - 1; i >= 0; i--) {
-          const commentObj = {
-            ac: res.data.comment_log[i].name,
-            av: res.data.comment_log[i].avatar_id,
-            cm: res.data.comment_log[i].comment,
-            created_at: res.data.comment_log[i].created_at,
-            u: res.data.comment_log[i].user_id,
-            ua: res.data.comment_log[i].ua,
-          }
-          if (!this.blockCheck(commentObj.u)) {
-            if (commentCountCheck(commentObj)) {
-              // コメント
-              this.commentObj.push(comment(commentObj))
-              if (
-                this.$vuetify.breakpoint.name === 'xs' ||
-                this.$vuetify.breakpoint.name === 'sm' ||
-                this.$vuetify.breakpoint.name === 'md'
-              ) {
-                this.commentObjUn.unshift(comment(commentObj))
-              }
-            } else {
-              // カウント
-              this.deduplicationCount(count(commentObj))
-            }
-          }
-        }
-      })
-    ;(async () => {
-      // 利用可能ギフト
-      await axios
-        .post(constants.url.showroom_api, {
-          category: 'live',
-          type: 'gift_list',
-          key: localStorage.room_id,
-        })
-        .then((res) => {
-          this.useGiftList = res.data.normal
-          this.$refs.prGift.useGiftList = res.data.normal
-          localStorage.use_gifts = JSON.stringify(res.data.normal)
-        })
-
-      // 有料ギフト
-      await axios
-        .post(constants.url.showroom_api, {
-          category: 'live',
-          type: 'gift_log',
-          key: localStorage.room_id,
-        })
-        .then((res) => {
-          for (const giftObjsRaw of res.data.gift_log) {
-            const giftObj = {
-              u: giftObjsRaw.user_id,
-              ac: giftObjsRaw.name,
-              g: giftObjsRaw.gift_id,
-              n: giftObjsRaw.num,
-              ua: giftObjsRaw.ua,
-              av: giftObjsRaw.avatar_id,
-            }
-            const giftNum = Math.floor(giftObjsRaw.num / 10)
-            const giftNumRemainder = giftObjsRaw.num % 10
-            if (giftNum === 0) {
-              this.deduplicationPreGift(preGift(giftObj))
-            } else {
-              for (let i = 0; i < giftNum; i++) {
-                giftObj.n = 10
-                this.deduplicationPreGift(preGift(giftObj))
-              }
-              if (giftNumRemainder !== 0) {
-                giftObj.n = giftNumRemainder
-                this.deduplicationPreGift(preGift(giftObj))
-              }
-            }
-          }
-        })
-
-      // 来場者
-      await axios
-        .post(constants.url.showroom_api, {
-          category: 'room',
-          type: 'profile',
-          key: localStorage.room_id,
-        })
-        .then((res) => {
-          this.infoObj.startView = res.data.view_num
-          this.infoObj.view = res.data.view_num
-          this.infoObj.startFollwer = res.data.follower_num
-          this.infoObj.follwer = res.data.follower_num
-        })
-    })()
-
-    // イベント
-    axios
-      .post(constants.url.showroom_api, {
-        category: 'room',
-        type: 'event_and_support',
-        key: localStorage.room_id,
-      })
-      .then((res) => {
-        if (res.data.event) {
-          this.$refs.event.eventFlg = true
-        }
-      })
-
-    // ランキング
-    axios
-      .post(constants.url.showroom_api, {
-        category: 'live',
-        type: 'stage_user_list',
-        key: localStorage.room_id,
-      })
-      .then((res) => {
-        this.rankingObj = res.data.stage_user_list
-      })
   },
   methods: {
     connect(bcsvrKey) {
@@ -333,15 +294,13 @@ export default {
             // console.log(msgJson)
             break
           case 18:
-            if (!this.blockCheck(msgJson.u)) {
-              this.commentObj.push(info(msgJson))
-              if (
-                this.$vuetify.breakpoint.name === 'xs' ||
-                this.$vuetify.breakpoint.name === 'sm' ||
-                this.$vuetify.breakpoint.name === 'md'
-              ) {
-                this.commentObjUn.unshift(info(msgJson))
-              }
+            this.commentObj.push(info(msgJson))
+            if (
+              this.$vuetify.breakpoint.name === 'xs' ||
+              this.$vuetify.breakpoint.name === 'sm' ||
+              this.$vuetify.breakpoint.name === 'md'
+            ) {
+              this.commentObjUn.unshift(info(msgJson))
             }
             break
           case 100:
@@ -511,23 +470,35 @@ export default {
       // インフォメーション
       await axios
         .post(constants.url.showroom_api, {
-          category: 'room',
-          type: 'profile',
-          key: localStorage.room_id,
-        })
-        .then((res) => {
-          this.infoObj.view = res.data.view_num
-          this.infoObj.follwer = res.data.follower_num
-        })
-      // ランキング取得
-      await axios
-        .post(constants.url.showroom_api, {
           category: 'live',
-          type: 'stage_user_list',
-          key: localStorage.room_id,
+          type: 'onlives',
+          key: new Date().getTime(),
         })
         .then((res) => {
-          this.rankingObj = res.data.stage_user_list
+          const premiumList = []
+          for (let i = 0; i < res.data.onlives.length; i++) {
+            if (
+              res.data.onlives[i].genre_id >= 100 &&
+              res.data.onlives[i].genre_id <= 200
+            ) {
+              const check = res.data.onlives[i].lives.find(
+                (e) => e.premium_room_type === 1
+              )
+              if (check !== undefined) {
+                premiumList.push(check)
+              }
+            }
+          }
+          if (premiumList.length !== 0) {
+            for (const data of premiumList) {
+              if (data.room_id === Number(localStorage.room_id)) {
+                this.infoObj.view = data.view_num
+                this.infoObj.follwer = data.follower_num
+                this.telop = data.telop
+                break
+              }
+            }
+          }
         })
     },
     blockCheck(id) {
@@ -700,6 +671,7 @@ export default {
         })
         .then((res) => {
           localStorage.removeItem('room_status')
+          sessionStorage.removeItem('premium')
           this.$router.push('/')
         })
     },

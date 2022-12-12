@@ -18,7 +18,7 @@ export default {
   name: 'OnliveLayout',
   data() {
     return {
-      title: 'Watch Log β版',
+      title: 'Watch Log',
       version: pkg.version,
     }
   },

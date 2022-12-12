@@ -70,8 +70,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
+import axios from '~/plugins/axios'
 import constants from '~/constants'
 import client from '~/plugins/contentful'
 
@@ -83,18 +83,19 @@ export default {
       return
     }
 
-    let maintenance = []
-    await client
+    const maintenance = await client
       .getEntries({
         content_type: 'maintenance',
       })
-      .then((res) => (maintenance = res.items[0].fields))
-      .catch()
+      .then((res) => res.items[0].fields)
+      .catch((e) => {
+        console.log(e)
+      })
 
-    if (maintenance.flg) {
-      redirect('/maintenance')
-      return
-    }
+    // if (maintenance.flg) {
+    //   redirect('/maintenance')
+    //   return
+    // }
 
     return { maintenance }
   },

@@ -40,9 +40,6 @@ export default {
   moment: {
     locales: ['ja']
   },
-  axios: {
-    baseURL: '/',
-  },
   pwa: {
     manifest: {
       lang: 'ja',
@@ -74,6 +71,7 @@ export default {
   env: {
     CTF_SPACE_ID: process.env.CTF_SPACE_ID,
     CTF_CDA_ACCESS_TOKEN: process.env.CTF_CDA_ACCESS_TOKEN,
+    baseUrl: process.env.BASE_URL || 'https://pianistmusica.net'
   },
   build: {},
 }

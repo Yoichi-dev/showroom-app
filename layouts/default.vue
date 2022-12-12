@@ -74,19 +74,19 @@ export default {
           to: '/user',
         },
       ],
-      title: 'Watch Log β版',
+      title: 'Watch Log',
       author: 'T.Yoichiro',
       version: pkg.version,
     }
   },
   mounted() {
-    if (localStorage.vuex) {
-      this.items.push({
-        icon: 'mdi-content-copy',
-        title: 'データ引継ぎ',
-        to: '/transfer',
-      })
-    }
+    // if (localStorage.vuex) {
+    //   this.items.push({
+    //     icon: 'mdi-content-copy',
+    //     title: 'データ引継ぎ',
+    //     to: '/transfer',
+    //   })
+    // }
   },
 }
 </script>

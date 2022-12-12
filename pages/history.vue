@@ -18,14 +18,14 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 import OnliveInfo from '~/components/OnliveInfo'
 import CommentTable from '~/components/CommentTable'
 import GiftTable from '~/components/GiftTable'
 import CountTable from '~/components/CountTable'
 import RankingTable from '~/components/RankingTable'
 import constants from '~/constants'
-import client from '~/plugins/contentful'
+// import client from '~/plugins/contentful'
 
 export default {
   name: 'HistoryPage',
@@ -42,18 +42,19 @@ export default {
       return
     }
 
-    let maintenance = []
-    await client
-      .getEntries({
-        content_type: 'maintenance',
-      })
-      .then((res) => (maintenance = res.items[0].fields))
-      .catch()
+    // const maintenance = await client
+    //   .getEntries({
+    //     content_type: 'maintenance',
+    //   })
+    //   .then((res) => res.items[0].fields)
+    //   .catch((e) => {
+    //     console.log(e)
+    //   })
 
-    if (maintenance.flg) {
-      redirect('/maintenance')
-      return
-    }
+    // if (maintenance.flg) {
+    //   redirect('/maintenance')
+    //   return
+    // }
 
     if (query.id === undefined || query.id === null) {
       redirect('/log')
