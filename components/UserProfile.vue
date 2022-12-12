@@ -203,7 +203,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 import constants from '~/constants'
 
 export default {
@@ -247,7 +247,11 @@ export default {
       }
 
       axios
-        .get(`${constants.url.user.profile}${id}`)
+        .post(constants.url.showroom_api, {
+          category: 'user',
+          type: 'profile',
+          key: id,
+        })
         .then((response) => {
           this.userDataJson = response.data
           this.dialog = true

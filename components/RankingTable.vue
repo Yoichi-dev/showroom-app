@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 import UserProfile from '~/components/UserProfile'
 import constants from '~/constants'
 
@@ -192,7 +192,11 @@ export default {
         this.summaryRanking = []
         // 累計ランキング
         axios
-          .get(`${constants.url.live.summaryRanking}${localStorage.room_id}`)
+          .post(constants.url.showroom_api, {
+            category: 'live',
+            type: 'summary_ranking',
+            key: localStorage.room_id,
+          })
           .then((res) => {
             this.summaryRanking = res.data.ranking
           })
@@ -206,9 +210,11 @@ export default {
         this.contributionRanking = []
         // 貢献ランキング
         axios
-          .get(
-            `${constants.url.event.contributionRanking}${localStorage.room_id}`
-          )
+          .post(constants.url.showroom_api, {
+            category: 'event',
+            type: 'contribution_ranking',
+            key: localStorage.room_id,
+          })
           .then((res) => {
             this.contributionRanking = res.data.ranking
           })

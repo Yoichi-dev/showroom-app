@@ -70,8 +70,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
+import axios from '~/plugins/axios'
 import constants from '~/constants'
 import client from '~/plugins/contentful'
 

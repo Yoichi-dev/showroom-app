@@ -181,8 +181,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
+import axios from '~/plugins/axios'
 import client from '~/plugins/contentful'
 import constants from '~/constants'
 
@@ -205,9 +205,6 @@ export default {
         content_type: 'maintenance',
       })
       .then((res) => res.items[0].fields)
-      .catch((e) => {
-        console.log(e)
-      })
 
     if (maintenance.flg) {
       redirect('/maintenance')
@@ -215,25 +212,33 @@ export default {
     }
 
     const status = await axios
-      .get(`${constants.url.other.status}/${localStorage.room_url_key}`)
-      .catch((e) => {
-        console.log(e)
+      .post(constants.url.showroom_api, {
+        category: 'room',
+        type: 'status',
+        key: localStorage.room_url_key,
       })
+      .then((req) => req.data)
 
-    if (status === undefined) {
-      redirect('/premium')
-      return
-    } else {
-      sessionStorage.room_status = null
+    if ('errors' in status) {
+      if ('redirect_url' in status.errors[0]) {
+        sessionStorage.premium = true
+        redirect('/premium')
+        return
+      } else {
+        alert('ルームが存在しない')
+        return
+      }
     }
 
-    if (status.data.is_live) {
-      sessionStorage.room_status = JSON.stringify(status.data)
+    if (status.is_live) {
+      sessionStorage.room_status = JSON.stringify(status)
       redirect('/onlive')
       return
+    } else {
+      sessionStorage.removeItem('room_status')
     }
 
-    return { roomStatus: status.data }
+    return { roomStatus: status }
   },
   data: () => ({
     title: 'ホーム',
@@ -259,7 +264,11 @@ export default {
 
     // 利用可能ギフト取得
     axios
-      .get(`${constants.url.live.giftList}${this.roomStatus.room_id}`)
+      .post(constants.url.showroom_api, {
+        category: 'live',
+        type: 'gift_list',
+        key: localStorage.room_id,
+      })
       .then((res) => {
         localStorage.use_gifts = JSON.stringify(res.data.normal)
       })
@@ -301,23 +310,30 @@ export default {
     ;(async () => {
       // ルーム情報取得
       await axios
-        .get(`${constants.url.room.profile}${this.roomStatus.room_id}`)
+        .post(constants.url.showroom_api, {
+          category: 'room',
+          type: 'profile',
+          key: localStorage.room_id,
+        })
         .then((res) => {
           this.roomProfile = res.data
         })
       if (this.roomProfile !== null) {
         await axios
-          .get(
-            `${constants.url.room.eventAndSupport}${this.roomStatus.room_id}`
-          )
+          .post(constants.url.showroom_api, {
+            category: 'room',
+            type: 'event_and_support',
+            key: localStorage.room_id,
+          })
           .then((res) => {
             this.eventData = res.data.event
           })
         if (this.eventData) {
           await axios
-            .get(
-              `${constants.url.point.event}${this.eventData.event_id}/${this.roomStatus.room_id}`
-            )
+            .post(constants.url.pointhistory_api, {
+              event_id: this.eventData.event_id,
+              room_id: localStorage.room_id,
+            })
             .then((res) => {
               this.pointHistoryFlg = res.data
             })

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 import OnliveInfo from '~/components/OnliveInfo'
 import CommentTable from '~/components/CommentTable'
 import GiftTable from '~/components/GiftTable'

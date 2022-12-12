@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 import OnliveInfo from '~/components/OnliveInfo'
 import CommentTable from '~/components/CommentTable'
 import GiftTable from '~/components/GiftTable'
@@ -97,19 +97,14 @@ export default {
     }
   },
   mounted() {
-    if (
-      !sessionStorage.room_status ||
-      sessionStorage.room_status === undefined ||
-      sessionStorage.room_status === null ||
-      sessionStorage.room_status === 'null'
-    ) {
+    if (!sessionStorage.room_status) {
       this.$router.push('/')
       return
     }
 
     this.roomStatus = JSON.parse(sessionStorage.room_status)
 
-    if (localStorage.use_gifts !== undefined) {
+    if (localStorage.use_gifts) {
       this.useGiftList = JSON.parse(localStorage.use_gifts)
     }
 
@@ -123,7 +118,11 @@ export default {
 
     // コメント
     axios
-      .get(`${constants.url.live.commentLog}${this.roomStatus.room_id}`)
+      .post(constants.url.showroom_api, {
+        category: 'live',
+        type: 'comment_log',
+        key: localStorage.room_id,
+      })
       .then((res) => {
         for (let i = res.data.comment_log.length - 1; i >= 0; i--) {
           const commentObj = {
@@ -158,7 +157,11 @@ export default {
     ;(async () => {
       // 利用可能ギフト
       await axios
-        .get(`${constants.url.live.giftList}${this.roomStatus.room_id}`)
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'gift_list',
+          key: localStorage.room_id,
+        })
         .then((res) => {
           this.useGiftList = res.data.normal
           this.$refs.prGift.useGiftList = res.data.normal
@@ -170,7 +173,11 @@ export default {
 
       // 有料ギフト
       await axios
-        .get(`${constants.url.live.giftLog}${this.roomStatus.room_id}`)
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'gift_log',
+          key: localStorage.room_id,
+        })
         .then((res) => {
           for (const giftObjsRaw of res.data.gift_log) {
             const giftObj = {
@@ -203,7 +210,11 @@ export default {
 
       // 来場者
       await axios
-        .get(`${constants.url.room.profile}${this.roomStatus.room_id}`)
+        .post(constants.url.showroom_api, {
+          category: 'room',
+          type: 'profile',
+          key: localStorage.room_id,
+        })
         .then((res) => {
           this.infoObj.startView = res.data.view_num
           this.infoObj.view = res.data.view_num
@@ -217,7 +228,11 @@ export default {
 
     // イベント
     axios
-      .get(`${constants.url.room.eventAndSupport}${this.roomStatus.room_id}`)
+      .post(constants.url.showroom_api, {
+        category: 'room',
+        type: 'event_and_support',
+        key: localStorage.room_id,
+      })
       .then((res) => {
         if (res.data.event) {
           this.$refs.event.eventFlg = true
@@ -229,7 +244,11 @@ export default {
 
     // ランキング
     axios
-      .get(`${constants.url.live.stageUserList}${this.roomStatus.room_id}`)
+      .post(constants.url.showroom_api, {
+        category: 'live',
+        type: 'stage_user_list',
+        key: localStorage.room_id,
+      })
       .then((res) => {
         this.rankingObj = res.data.stage_user_list
       })
@@ -509,23 +528,25 @@ export default {
       this.allThrowList = []
       // インフォメーション
       await axios
-        .get(`${constants.url.room.profile}${this.roomStatus.room_id}`)
+        .post(constants.url.showroom_api, {
+          category: 'room',
+          type: 'profile',
+          key: localStorage.room_id,
+        })
         .then((res) => {
           this.infoObj.view = res.data.view_num
           this.infoObj.follwer = res.data.follower_num
         })
       // ランキング取得
       await axios
-        .get(`${constants.url.live.stageUserList}${this.roomStatus.room_id}`)
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'stage_user_list',
+          key: localStorage.room_id,
+        })
         .then((res) => {
           this.rankingObj = res.data.stage_user_list
         })
-      // テロップ
-      // await axios
-      //   .get(`${constants.url.room.telop}${this.roomStatus.room_id}`)
-      //   .then((res) => {
-      //     this.telop = res.data
-      //   })
     },
     blockCheck(id) {
       let list = []

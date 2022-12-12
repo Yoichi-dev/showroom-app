@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 import OnliveInfo from '~/components/OnliveInfo'
 import CommentTable from '~/components/CommentTable'
 import GiftTable from '~/components/GiftTable'
@@ -46,7 +46,7 @@ import {
   count,
   info,
 } from '~/plugins/liveDataEdit'
-import client from '~/plugins/contentful'
+import contentful from '~/plugins/contentful'
 import constants from '~/constants'
 
 export default {
@@ -72,35 +72,37 @@ export default {
       return
     }
 
-    const maintenance = await client
+    if (!sessionStorage.premium) {
+      redirect('/')
+      return
+    }
+
+    const maintenance = await contentful
       .getEntries({
         content_type: 'maintenance',
       })
       .then((res) => res.items[0].fields)
-      .catch((e) => {
-        console.log(e)
-      })
 
     if (maintenance.flg) {
       redirect('/maintenance')
       return
     }
 
-    const status = await axios
-      .get(`${constants.url.room.profile}${localStorage.room_id}`)
-      .catch((e) => {
-        console.log(e)
-      })
+    // const status = await axios.post(constants.url.showroom_api, {
+    //   category: 'room',
+    //   type: 'profile',
+    //   key: localStorage.room_id,
+    // })
 
-    if (status.data.is_onlive !== true || status.data.premium_room_type !== 1) {
-      if (status.data.is_onlive) {
-        redirect('/onlive')
-        return
-      } else {
-        redirect('/')
-        return
-      }
-    }
+    // if (status.data.is_onlive !== true || status.data.premium_room_type !== 1) {
+    //   if (status.data.is_onlive) {
+    //     redirect('/onlive')
+    //     return
+    //   } else {
+    //     redirect('/')
+    //     return
+    //   }
+    // }
 
     return { roomStatus: null }
   },
@@ -142,34 +144,54 @@ export default {
   },
   mounted() {
     this.livePing = setInterval(() => {
-      axios.get(constants.url.live.premium).then((res) => {
-        if (res.data.length !== 0) {
-          for (const data of res.data) {
-            if (data.room_id === Number(localStorage.room_id)) {
-              this.overlay = false
-              this.snackbar = false
-
-              this.roomStatus = data
-
-              this.telop = data.telop
-              this.infoObj.startTime = data.started_at
-              this.setTimer(data.started_at)
-
-              this.infoObj.isOfficial = data.genre_id !== 200
-
-              this.infoObj.startView = data.view_num
-              this.infoObj.view = data.view_num
-              this.infoObj.startFollwer = data.follower_num
-              this.infoObj.follwer = data.follower_num
-
-              clearInterval(this.livePing)
-              // 接続
-              this.connect(data.bcsvr_key)
-              break
+      axios
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'onlives',
+          key: new Date().getTime(),
+        })
+        .then((res) => {
+          const premiumList = []
+          for (let i = 0; i < res.data.onlives.length; i++) {
+            if (
+              res.data.onlives[i].genre_id >= 100 &&
+              res.data.onlives[i].genre_id <= 200
+            ) {
+              const check = res.data.onlives[i].lives.find(
+                (e) => e.premium_room_type === 1
+              )
+              if (check !== undefined) {
+                premiumList.push(check)
+              }
             }
           }
-        }
-      })
+          if (premiumList.length !== 0) {
+            for (const data of premiumList) {
+              if (data.room_id === Number(localStorage.room_id)) {
+                this.overlay = false
+                this.snackbar = false
+
+                this.roomStatus = data
+
+                this.telop = data.telop
+                this.infoObj.startTime = data.started_at
+                this.setTimer(data.started_at)
+
+                this.infoObj.isOfficial = data.genre_id !== 200
+
+                this.infoObj.startView = data.view_num
+                this.infoObj.view = data.view_num
+                this.infoObj.startFollwer = data.follower_num
+                this.infoObj.follwer = data.follower_num
+
+                clearInterval(this.livePing)
+                // 接続
+                this.connect(data.bcsvr_key)
+                break
+              }
+            }
+          }
+        })
     }, 5000)
 
     if (localStorage.use_gifts !== undefined) {
@@ -446,18 +468,38 @@ export default {
       // 配列初期化
       this.allThrowList = []
       // インフォメーション
-      await axios.get(constants.url.live.premium).then((res) => {
-        if (res.data.length !== 0) {
-          for (const data of res.data) {
-            if (data.room_id === Number(localStorage.room_id)) {
-              this.infoObj.view = data.view_num
-              this.infoObj.follwer = data.follower_num
-              this.telop = data.telop
-              break
+      await axios
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'onlives',
+          key: new Date().getTime(),
+        })
+        .then((res) => {
+          const premiumList = []
+          for (let i = 0; i < res.data.onlives.length; i++) {
+            if (
+              res.data.onlives[i].genre_id >= 100 &&
+              res.data.onlives[i].genre_id <= 200
+            ) {
+              const check = res.data.onlives[i].lives.find(
+                (e) => e.premium_room_type === 1
+              )
+              if (check !== undefined) {
+                premiumList.push(check)
+              }
             }
           }
-        }
-      })
+          if (premiumList.length !== 0) {
+            for (const data of premiumList) {
+              if (data.room_id === Number(localStorage.room_id)) {
+                this.infoObj.view = data.view_num
+                this.infoObj.follwer = data.follower_num
+                this.telop = data.telop
+                break
+              }
+            }
+          }
+        })
     },
     blockCheck(id) {
       let list = []
@@ -629,6 +671,7 @@ export default {
         })
         .then((res) => {
           localStorage.removeItem('room_status')
+          sessionStorage.removeItem('premium')
           this.$router.push('/')
         })
     },

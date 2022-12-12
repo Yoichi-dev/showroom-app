@@ -95,9 +95,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import UUID from 'uuidjs'
 import constants from '~/constants'
+import axios from '~/plugins/axios'
 import client from '~/plugins/contentful'
 import pkg from '~/package.json'
 
@@ -176,7 +176,7 @@ export default {
       this.searchFlg = true
 
       axios
-        .get(`${constants.url.other.search}${keyword}`)
+        .get(`${constants.url.search}${keyword}`)
         .then((response) => {
           if (response.data.length === 0) {
             this.error = '検索結果がありません。条件を変えて検索してください'

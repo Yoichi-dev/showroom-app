@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '~/plugins/axios'
 import client from '~/plugins/contentful'
 import constants from '~/constants'
 
@@ -106,7 +106,11 @@ export default {
     getGiftList() {
       // 利用可能ギフト取得
       axios
-        .get(`${constants.url.live.giftList}${localStorage.room_id}`)
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'gift_list',
+          key: localStorage.room_id,
+        })
         .then((res) => {
           localStorage.use_gifts = JSON.stringify(res.data.normal)
           location.reload()
