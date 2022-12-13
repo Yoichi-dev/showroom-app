@@ -44,6 +44,13 @@
     </v-card>
 
     <v-container>
+      <v-row v-if="!roomStatus" justify="center">
+        <v-alert class="mt-5" outlined type="error" text>
+          ルームが削除されている可能性があります<br />
+          <nuxt-link :to="`/search?u=${uuid}`"> こちら </nuxt-link>
+          から再登録してください
+        </v-alert>
+      </v-row>
       <v-row v-if="pointHistoryFlg" justify="center">
         <v-alert class="mt-5" outlined type="success" text>
           連携サイト、Point Historyで参加イベントの集計をしています<br />
@@ -225,8 +232,7 @@ export default {
         redirect('/premium')
         return
       } else {
-        alert('ルームが存在しない')
-        return
+        return { roomStatus: null }
       }
     }
 
@@ -249,6 +255,7 @@ export default {
     roomProfile: null,
     eventData: null,
     pointHistoryFlg: false,
+    uuid: null,
   }),
   head() {
     return {
@@ -260,6 +267,13 @@ export default {
       this.searchDialog = true
       return
     }
+
+    this.uuid = localStorage.uuid
+
+    if (!this.roomStatus) {
+      return
+    }
+
     this.srConnect()
 
     // 利用可能ギフト取得
@@ -270,7 +284,9 @@ export default {
         key: localStorage.room_id,
       })
       .then((res) => {
-        localStorage.use_gifts = JSON.stringify(res.data.normal)
+        if (!('errors' in res.data)) {
+          localStorage.use_gifts = JSON.stringify(res.data.normal)
+        }
       })
     // お知らせ取得
     client

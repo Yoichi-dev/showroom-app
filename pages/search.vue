@@ -22,8 +22,6 @@
             </a>
             で検索できない事は検索できません
           </span>
-          <br />
-          <span>また、負荷分散の為検索結果は上位10件のみ表示されます</span>
         </v-col>
       </v-row>
       <v-divider v-if="!searchFlg" class="my-10"></v-divider>
