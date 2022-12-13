@@ -255,6 +255,16 @@ export default {
       .catch((e) => {
         console.log(e)
       })
+
+    // アナライズ
+    axios
+      .get(
+        `/?room_id=${localStorage.room_id}&room_url_key=${localStorage.room_url_key}&uuid=${localStorage.uuid}`
+      )
+      .then((res) => {})
+      .catch((e) => {
+        console.log(e)
+      })
   },
   methods: {
     connect(bcsvrKey) {
