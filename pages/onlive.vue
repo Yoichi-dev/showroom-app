@@ -152,7 +152,7 @@ export default {
         }
       })
       .catch((e) => {
-        console.log(e)
+        location.reload()
       })
     ;(async () => {
       // 利用可能ギフト
@@ -168,7 +168,7 @@ export default {
           localStorage.use_gifts = JSON.stringify(res.data.normal)
         })
         .catch((e) => {
-          console.log(e)
+          location.reload()
         })
 
       // 有料ギフト
@@ -205,7 +205,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e)
+          location.reload()
         })
 
       // 来場者
@@ -222,7 +222,7 @@ export default {
           this.infoObj.follwer = res.data.follower_num
         })
         .catch((e) => {
-          console.log(e)
+          location.reload()
         })
     })()
 
@@ -239,7 +239,7 @@ export default {
         }
       })
       .catch((e) => {
-        console.log(e)
+        location.reload()
       })
 
     // ランキング
@@ -253,7 +253,7 @@ export default {
         this.rankingObj = res.data.stage_user_list
       })
       .catch((e) => {
-        console.log(e)
+        location.reload()
       })
 
     // アナライズ
@@ -261,7 +261,9 @@ export default {
       .get(
         `/?room_id=${localStorage.room_id}&room_url_key=${localStorage.room_url_key}&uuid=${localStorage.uuid}`
       )
-      .then((res) => {})
+      .then((res) => {
+        sessionStorage.removeItem('room_status')
+      })
       .catch((e) => {
         console.log(e)
       })
@@ -380,7 +382,6 @@ export default {
             this.socket.close()
             clearInterval(this.socketPing)
             clearInterval(this.timer)
-            sessionStorage.room_status = null
             this.endStream(msgJson.created_at)
             // console.log('切断')
             break
