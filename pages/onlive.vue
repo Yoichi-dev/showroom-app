@@ -23,6 +23,25 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-row justify="center">
+      <v-dialog v-model="errorDialog" persistent max-width="500">
+        <v-card>
+          <v-card-title class="text-h5">
+            正規の遷移がされませんでした
+          </v-card-title>
+          <v-card-text>
+            再読み込み（リロード）や、このページに直接ブックマークで開かれた可能性があります<br />
+            この画面が出続ける際は開発者に連絡お願いします
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" outlined text @click="errorReload">
+              戻る
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </div>
 </template>
 
@@ -65,6 +84,7 @@ export default {
   data: () => ({
     title: 'オンライブ',
     telop: '',
+    errorDialog: false,
     socket: null,
     socketPing: null,
     timer: null,
@@ -98,6 +118,7 @@ export default {
   },
   mounted() {
     if (!sessionStorage.room_status) {
+      this.errorDialog = true
       this.$router.push('/')
       return
     }
@@ -728,9 +749,12 @@ export default {
           log_json: saveLog,
         })
         .then((res) => {
-          localStorage.removeItem('room_status')
+          sessionStorage.removeItem('room_status')
           this.$router.push('/')
         })
+    },
+    errorReload() {
+      location.reload()
     },
   },
 }

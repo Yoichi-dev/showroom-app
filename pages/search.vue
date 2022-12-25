@@ -204,8 +204,12 @@ export default {
       localStorage.room_url_key = this.room.url
       localStorage.room_id = this.room.id
 
-      if (localStorage.uuid === undefined || localStorage.uuid === null) {
+      if (!localStorage.uuid) {
         localStorage.uuid = UUID.generate()
+      }
+
+      if (!localStorage.register) {
+        localStorage.register = Math.floor(new Date().getTime() / 1000)
       }
 
       localStorage.version = pkg.version

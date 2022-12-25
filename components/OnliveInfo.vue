@@ -32,9 +32,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {}
-  },
   methods: {
     createPoint(infoObj) {
       return {

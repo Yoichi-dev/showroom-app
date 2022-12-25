@@ -99,12 +99,18 @@
                   }}位）
                 </td>
               </tr>
-              <tr v-else>
+              <tr v-else-if="eventData.quest !== undefined">
                 <td>現在のポイント（Lv）</td>
                 <td>
                   {{
                     $numberFormat(eventData.quest.support.current_point)
                   }}pt（Lv{{ eventData.quest.quest_level }}）
+                </td>
+              </tr>
+              <tr v-else>
+                <td>現在の合計ポイント</td>
+                <td>
+                  {{ $numberFormat(eventData.additional_event_point_sum) }}pt
                 </td>
               </tr>
             </tbody>
@@ -274,6 +280,11 @@ export default {
       return
     }
 
+    // 登録日付
+    if (!localStorage.register) {
+      localStorage.register = Math.floor(new Date().getTime() / 1000)
+    }
+
     this.srConnect()
 
     // 利用可能ギフト取得
@@ -311,6 +322,7 @@ export default {
       })
       .then((res) => {
         const lift = res.items[0].fields
+        localStorage.lift = 0
         for (const user of lift.users) {
           if (
             user.room_id === localStorage.room_id &&
@@ -320,7 +332,6 @@ export default {
             localStorage.lift = 1
             break
           }
-          localStorage.lift = 0
         }
       })
     ;(async () => {
