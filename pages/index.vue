@@ -368,7 +368,10 @@ export default {
         }
       }
       // 暫定追加
-      if (localStorage.uuid === 'e02d47ee-2171-4b53-93c9-0f63de991e75') {
+      if (
+        localStorage.uuid === 'e02d47ee-2171-4b53-93c9-0f63de991e75' &&
+        JSON.parse(localStorage.tmp_log).id === 1675242653
+      ) {
         await axios
           .post(constants.url.watchlog.addlog, {
             uuid: localStorage.uuid,
