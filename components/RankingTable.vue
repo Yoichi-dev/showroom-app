@@ -9,7 +9,7 @@
 
       <v-tabs-items v-model="tab">
         <v-tab-item value="tab-1">
-          <v-simple-table height="35.5vh">
+          <v-simple-table v-if="checkFlg" height="35.5vh">
             <tbody>
               <tr
                 v-for="(item, i) in rankingData"
@@ -44,9 +44,16 @@
               </tr>
             </tbody>
           </v-simple-table>
+          <v-simple-table v-else height="35.5vh">
+            <tbody>
+              <tr>
+                <td class="text-nowrap mr-0 pr-1">無効化中</td>
+              </tr>
+            </tbody>
+          </v-simple-table>
         </v-tab-item>
         <v-tab-item value="tab-2">
-          <v-simple-table height="35.5vh">
+          <v-simple-table v-if="checkFlg" height="35.5vh">
             <tbody>
               <tr
                 v-for="(item, i) in summaryRanking"
@@ -85,7 +92,15 @@
               </tr>
             </tbody>
           </v-simple-table>
+          <v-simple-table v-else height="35.5vh">
+            <tbody>
+              <tr>
+                <td class="text-nowrap mr-0 pr-1">無効化中</td>
+              </tr>
+            </tbody>
+          </v-simple-table>
           <v-btn
+            v-if="checkFlg"
             class="mb-10 mr-3"
             elevation="2"
             color="green"
@@ -173,6 +188,7 @@ export default {
     summaryRanking: [],
     contributionRanking: [],
     eventFlg: false,
+    checkFlg: false,
   }),
   watch: {
     eventFlg() {
@@ -181,6 +197,14 @@ export default {
   },
   mounted() {
     this.developer = constants.developer
+    // 解除判定
+    if (
+      localStorage.lift === '1' ||
+      Number(localStorage.register) >
+        Math.floor(new Date().getTime() / 1000) - 259200
+    ) {
+      this.checkFlg = true
+    }
     this.reloadRanking()
   },
   methods: {
@@ -188,39 +212,43 @@ export default {
       this.$refs.profile.getUserData(id)
     },
     reloadRanking() {
-      if (localStorage.room_id) {
-        this.summaryRanking = []
-        // 累計ランキング
-        axios
-          .post(constants.url.showroom_api, {
-            category: 'live',
-            type: 'summary_ranking',
-            key: localStorage.room_id,
-          })
-          .then((res) => {
-            this.summaryRanking = res.data.ranking
-          })
-          .catch((e) => {
-            console.log(e)
-          })
+      if (this.checkFlg) {
+        if (localStorage.room_id) {
+          this.summaryRanking = []
+          // 累計ランキング
+          axios
+            .post(constants.url.showroom_api, {
+              category: 'live',
+              type: 'summary_ranking',
+              key: localStorage.room_id,
+            })
+            .then((res) => {
+              this.summaryRanking = res.data.ranking
+            })
+            .catch((e) => {
+              console.log(e)
+            })
+        }
       }
     },
     reloadEventRanking() {
-      if (localStorage.room_id) {
-        this.contributionRanking = []
-        // 貢献ランキング
-        axios
-          .post(constants.url.showroom_api, {
-            category: 'event',
-            type: 'contribution_ranking',
-            key: localStorage.room_id,
-          })
-          .then((res) => {
-            this.contributionRanking = res.data.ranking
-          })
-          .catch((e) => {
-            console.log(e)
-          })
+      if (this.checkFlg) {
+        if (localStorage.room_id) {
+          this.contributionRanking = []
+          // 貢献ランキング
+          axios
+            .post(constants.url.showroom_api, {
+              category: 'event',
+              type: 'contribution_ranking',
+              key: localStorage.room_id,
+            })
+            .then((res) => {
+              this.contributionRanking = res.data.ranking
+            })
+            .catch((e) => {
+              console.log(e)
+            })
+        }
       }
     },
   },

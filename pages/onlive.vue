@@ -110,6 +110,7 @@ export default {
     allThrowList: [],
     roomStatus: null,
     eventData: null,
+    checkFlg: false,
   }),
   head() {
     return {
@@ -121,6 +122,15 @@ export default {
       this.errorDialog = true
       this.$router.push('/')
       return
+    }
+
+    // 解除判定
+    if (
+      localStorage.lift === '1' ||
+      Number(localStorage.register) >
+        Math.floor(new Date().getTime() / 1000) - 259200
+    ) {
+      this.checkFlg = true
     }
 
     this.roomStatus = JSON.parse(sessionStorage.room_status)
@@ -137,44 +147,47 @@ export default {
 
     this.setTimer(JSON.parse(sessionStorage.room_status).started_at)
 
-    // コメント
-    axios
-      .post(constants.url.showroom_api, {
-        category: 'live',
-        type: 'comment_log',
-        key: localStorage.room_id,
-      })
-      .then((res) => {
-        for (let i = res.data.comment_log.length - 1; i >= 0; i--) {
-          const commentObj = {
-            ac: res.data.comment_log[i].name,
-            av: res.data.comment_log[i].avatar_id,
-            cm: res.data.comment_log[i].comment,
-            created_at: res.data.comment_log[i].created_at,
-            u: res.data.comment_log[i].user_id,
-            ua: res.data.comment_log[i].ua,
-          }
-          if (!this.blockCheck(commentObj.u)) {
-            if (commentCountCheck(commentObj)) {
-              // コメント
-              this.commentObj.push(comment(commentObj))
-              if (
-                this.$vuetify.breakpoint.name === 'xs' ||
-                this.$vuetify.breakpoint.name === 'sm' ||
-                this.$vuetify.breakpoint.name === 'md'
-              ) {
-                this.commentObjUn.unshift(comment(commentObj))
+    if (this.checkFlg) {
+      // コメント
+      axios
+        .post(constants.url.showroom_api, {
+          category: 'live',
+          type: 'comment_log',
+          key: localStorage.room_id,
+        })
+        .then((res) => {
+          for (let i = res.data.comment_log.length - 1; i >= 0; i--) {
+            const commentObj = {
+              ac: res.data.comment_log[i].name,
+              av: res.data.comment_log[i].avatar_id,
+              cm: res.data.comment_log[i].comment,
+              created_at: res.data.comment_log[i].created_at,
+              u: res.data.comment_log[i].user_id,
+              ua: res.data.comment_log[i].ua,
+            }
+            if (!this.blockCheck(commentObj.u)) {
+              if (commentCountCheck(commentObj)) {
+                // コメント
+                this.commentObj.push(comment(commentObj))
+                if (
+                  this.$vuetify.breakpoint.name === 'xs' ||
+                  this.$vuetify.breakpoint.name === 'sm' ||
+                  this.$vuetify.breakpoint.name === 'md'
+                ) {
+                  this.commentObjUn.unshift(comment(commentObj))
+                }
+              } else {
+                // カウント
+                this.deduplicationCount(count(commentObj))
               }
-            } else {
-              // カウント
-              this.deduplicationCount(count(commentObj))
             }
           }
-        }
-      })
-      .catch((e) => {
-        location.reload()
-      })
+        })
+        .catch((e) => {
+          location.reload()
+        })
+    }
+
     ;(async () => {
       // 利用可能ギフト
       await axios
@@ -192,90 +205,94 @@ export default {
           location.reload()
         })
 
-      // 有料ギフト
-      await axios
+      if (this.checkFlg) {
+        // 有料ギフト
+        await axios
+          .post(constants.url.showroom_api, {
+            category: 'live',
+            type: 'gift_log',
+            key: localStorage.room_id,
+          })
+          .then((res) => {
+            for (const giftObjsRaw of res.data.gift_log) {
+              const giftObj = {
+                u: giftObjsRaw.user_id,
+                ac: giftObjsRaw.name,
+                g: giftObjsRaw.gift_id,
+                n: giftObjsRaw.num,
+                ua: giftObjsRaw.ua,
+                av: giftObjsRaw.avatar_id,
+              }
+              const giftNum = Math.floor(giftObjsRaw.num / 10)
+              const giftNumRemainder = giftObjsRaw.num % 10
+              if (giftNum === 0) {
+                this.deduplicationPreGift(preGift(giftObj))
+              } else {
+                for (let i = 0; i < giftNum; i++) {
+                  giftObj.n = 10
+                  this.deduplicationPreGift(preGift(giftObj))
+                }
+                if (giftNumRemainder !== 0) {
+                  giftObj.n = giftNumRemainder
+                  this.deduplicationPreGift(preGift(giftObj))
+                }
+              }
+            }
+          })
+          .catch((e) => {
+            location.reload()
+          })
+
+        // 来場者
+        await axios
+          .post(constants.url.showroom_api, {
+            category: 'room',
+            type: 'profile',
+            key: localStorage.room_id,
+          })
+          .then((res) => {
+            this.infoObj.startView = res.data.view_num
+            this.infoObj.view = res.data.view_num
+            this.infoObj.startFollwer = res.data.follower_num
+            this.infoObj.follwer = res.data.follower_num
+          })
+          .catch((e) => {
+            location.reload()
+          })
+      }
+    })()
+
+    if (this.checkFlg) {
+      // イベント
+      axios
         .post(constants.url.showroom_api, {
-          category: 'live',
-          type: 'gift_log',
+          category: 'room',
+          type: 'event_and_support',
           key: localStorage.room_id,
         })
         .then((res) => {
-          for (const giftObjsRaw of res.data.gift_log) {
-            const giftObj = {
-              u: giftObjsRaw.user_id,
-              ac: giftObjsRaw.name,
-              g: giftObjsRaw.gift_id,
-              n: giftObjsRaw.num,
-              ua: giftObjsRaw.ua,
-              av: giftObjsRaw.avatar_id,
-            }
-            const giftNum = Math.floor(giftObjsRaw.num / 10)
-            const giftNumRemainder = giftObjsRaw.num % 10
-            if (giftNum === 0) {
-              this.deduplicationPreGift(preGift(giftObj))
-            } else {
-              for (let i = 0; i < giftNum; i++) {
-                giftObj.n = 10
-                this.deduplicationPreGift(preGift(giftObj))
-              }
-              if (giftNumRemainder !== 0) {
-                giftObj.n = giftNumRemainder
-                this.deduplicationPreGift(preGift(giftObj))
-              }
-            }
+          if (res.data.event) {
+            this.$refs.event.eventFlg = true
           }
         })
         .catch((e) => {
           location.reload()
         })
 
-      // 来場者
-      await axios
+      // ランキング
+      axios
         .post(constants.url.showroom_api, {
-          category: 'room',
-          type: 'profile',
+          category: 'live',
+          type: 'stage_user_list',
           key: localStorage.room_id,
         })
         .then((res) => {
-          this.infoObj.startView = res.data.view_num
-          this.infoObj.view = res.data.view_num
-          this.infoObj.startFollwer = res.data.follower_num
-          this.infoObj.follwer = res.data.follower_num
+          this.rankingObj = res.data.stage_user_list
         })
         .catch((e) => {
           location.reload()
         })
-    })()
-
-    // イベント
-    axios
-      .post(constants.url.showroom_api, {
-        category: 'room',
-        type: 'event_and_support',
-        key: localStorage.room_id,
-      })
-      .then((res) => {
-        if (res.data.event) {
-          this.$refs.event.eventFlg = true
-        }
-      })
-      .catch((e) => {
-        location.reload()
-      })
-
-    // ランキング
-    axios
-      .post(constants.url.showroom_api, {
-        category: 'live',
-        type: 'stage_user_list',
-        key: localStorage.room_id,
-      })
-      .then((res) => {
-        this.rankingObj = res.data.stage_user_list
-      })
-      .catch((e) => {
-        location.reload()
-      })
+    }
 
     // アナライズ
     axios
@@ -558,27 +575,29 @@ export default {
     async update() {
       // 配列初期化
       this.allThrowList = []
-      // インフォメーション
-      await axios
-        .post(constants.url.showroom_api, {
-          category: 'room',
-          type: 'profile',
-          key: localStorage.room_id,
-        })
-        .then((res) => {
-          this.infoObj.view = res.data.view_num
-          this.infoObj.follwer = res.data.follower_num
-        })
-      // ランキング取得
-      await axios
-        .post(constants.url.showroom_api, {
-          category: 'live',
-          type: 'stage_user_list',
-          key: localStorage.room_id,
-        })
-        .then((res) => {
-          this.rankingObj = res.data.stage_user_list
-        })
+      if (this.checkFlg) {
+        // インフォメーション
+        await axios
+          .post(constants.url.showroom_api, {
+            category: 'room',
+            type: 'profile',
+            key: localStorage.room_id,
+          })
+          .then((res) => {
+            this.infoObj.view = res.data.view_num
+            this.infoObj.follwer = res.data.follower_num
+          })
+        // ランキング取得
+        await axios
+          .post(constants.url.showroom_api, {
+            category: 'live',
+            type: 'stage_user_list',
+            key: localStorage.room_id,
+          })
+          .then((res) => {
+            this.rankingObj = res.data.stage_user_list
+          })
+      }
     },
     blockCheck(id) {
       let list = []
