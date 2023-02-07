@@ -230,7 +230,13 @@ export default {
         type: 'status',
         key: localStorage.room_url_key,
       })
-      .then((req) => req.data)
+      .then((res) => res.data)
+      .catch((e) => e.message)
+
+    if (typeof status === 'string' && status.includes('403')) {
+      redirect('/forbidden')
+      return
+    }
 
     if ('errors' in status) {
       if ('redirect_url' in status.errors[0]) {
