@@ -268,6 +268,7 @@ export default {
     eventData: null,
     pointHistoryFlg: false,
     uuid: null,
+    checkFlg: false,
   }),
   head() {
     return {
@@ -341,39 +342,51 @@ export default {
           }
         }
       })
-    ;(async () => {
-      // ルーム情報取得
-      await axios
-        .post(constants.url.showroom_api, {
-          category: 'room',
-          type: 'profile',
-          key: localStorage.room_id,
-        })
-        .then((res) => {
-          this.roomProfile = res.data
-        })
-      if (this.roomProfile !== null) {
+
+    // 解除判定
+    if (
+      localStorage.lift === '1' ||
+      Number(localStorage.register) >
+        Math.floor(new Date().getTime() / 1000) - 259200
+    ) {
+      this.checkFlg = true
+    }
+
+    if (this.checkFlg) {
+      ;(async () => {
+        // ルーム情報取得
         await axios
           .post(constants.url.showroom_api, {
             category: 'room',
-            type: 'event_and_support',
+            type: 'profile',
             key: localStorage.room_id,
           })
           .then((res) => {
-            this.eventData = res.data.event
+            this.roomProfile = res.data
           })
-        if (this.eventData) {
+        if (this.roomProfile !== null) {
           await axios
-            .post(constants.url.pointhistory_api, {
-              event_id: this.eventData.event_id,
-              room_id: localStorage.room_id,
+            .post(constants.url.showroom_api, {
+              category: 'room',
+              type: 'event_and_support',
+              key: localStorage.room_id,
             })
             .then((res) => {
-              this.pointHistoryFlg = res.data
+              this.eventData = res.data.event
             })
+          if (this.eventData) {
+            await axios
+              .post(constants.url.pointhistory_api, {
+                event_id: this.eventData.event_id,
+                room_id: localStorage.room_id,
+              })
+              .then((res) => {
+                this.pointHistoryFlg = res.data
+              })
+          }
         }
-      }
-    })()
+      })()
+    }
   },
   methods: {
     srConnect() {
