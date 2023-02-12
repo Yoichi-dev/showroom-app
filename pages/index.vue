@@ -117,6 +117,14 @@
           </v-simple-table>
         </v-col>
       </v-row>
+
+      <v-row v-if="minecraft" class="mt-5" justify="center">
+        <v-alert icon="mdi-minecraft" prominent text type="info">
+          配信者向けマインクラフトサーバーβ版公開中！<br />
+          詳細は<nuxt-link to="/minecraft"> こちら </nuxt-link>
+        </v-alert>
+      </v-row>
+
       <v-row v-if="infoData.length !== 0">
         <v-col cols="12">
           <v-card class="mb-10">
@@ -269,6 +277,7 @@ export default {
     pointHistoryFlg: false,
     uuid: null,
     checkFlg: false,
+    minecraft: false,
   }),
   head() {
     return {
@@ -350,6 +359,23 @@ export default {
         Math.floor(new Date().getTime() / 1000) - 259200
     ) {
       this.checkFlg = true
+    }
+
+    // 特別情報
+    if (localStorage.lift === '1') {
+      client
+        .getEntries({
+          content_type: 'special',
+        })
+        .then((res) => {
+          const uuidlist = res.items[0].fields.uuid
+          for (const uuid of uuidlist.uuid) {
+            if (uuid === localStorage.uuid) {
+              this.minecraft = true
+              break
+            }
+          }
+        })
     }
 
     if (this.checkFlg) {
