@@ -192,7 +192,7 @@ export default {
     },
     registerCheck(room) {
       this.error = ''
-      if (this.block[0].fields.roomId.includes(room.id)) {
+      if (this.block[0].fields.roomId.includes(Number(room.id))) {
         this.error = 'このルームは登録できません'
         return
       }
