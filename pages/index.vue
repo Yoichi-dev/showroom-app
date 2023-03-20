@@ -335,7 +335,7 @@ export default {
     client
       .getEntries({
         content_type: 'lift',
-        limit: 200,
+        limit: 300,
       })
       .then((res) => {
         const lift = res.items[0].fields
