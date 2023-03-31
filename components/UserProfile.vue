@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-dialog
-      v-if="userDataJson !== null"
-      v-model="dialog"
-      :max-width="dialogWidth"
-    >
+    <v-dialog v-if="userDataJson !== null" v-model="dialog" :max-width="dialogWidth">
       <v-card>
         <v-tabs v-model="tab" color="deep-purple accent-4">
           <v-tab>リスナー情報</v-tab>
@@ -19,12 +15,7 @@
                     <v-img max-width="50" :src="userDataJson.avatar_url" />
                     <div v-if="userDataJson.sns_list !== null" class="mt-3">
                       <div>SNS</div>
-                      <a
-                        v-for="(item, i) in userDataJson.sns_list"
-                        :key="i"
-                        :href="item.url"
-                        target="_blank"
-                      >
+                      <a v-for="(item, i) in userDataJson.sns_list" :key="i" :href="item.url" target="_blank">
                         <img :src="item.icon" width="40" height="40" />
                       </a>
                     </div>
@@ -37,10 +28,8 @@
                     </div>
                     <div>リスナーレベル：{{ userDataJson.fan_level }}</div>
                     <p class="text-h5 text--primary">
-                      <img
-                        v-if="userDataJson.is_sms_authenticated"
-                        :src="require('@/assets/svg/sms.svg')"
-                      />{{ userDataJson.name }}
+                      <img v-if="userDataJson.is_sms_authenticated" :src="require('@/assets/svg/sms.svg')" />{{
+                        userDataJson.name }}
                     </p>
                     <div v-if="developer === userId">
                       <v-btn class="ma-2" outlined color="error" disabled>
@@ -48,30 +37,15 @@
                       </v-btn>
                     </div>
                     <div v-else>
-                      <v-btn
-                        v-if="!blockFlg"
-                        class="ma-2"
-                        outlined
-                        color="error"
-                        @click="userBlock()"
-                      >
+                      <v-btn v-if="!blockFlg" class="ma-2" outlined color="error" @click="userBlock()">
                         ブロック
                       </v-btn>
-                      <v-btn
-                        v-else
-                        class="ma-2"
-                        outlined
-                        color="green"
-                        @click="userUnblock(userId)"
-                      >
+                      <v-btn v-else class="ma-2" outlined color="green" @click="userUnblock(userId)">
                         ブロック解除
                       </v-btn>
                     </div>
 
-                    <div
-                      class="text--primary"
-                      style="white-space: pre-wrap; word-wrap: break-word"
-                    >
+                    <div class="text--primary" style="white-space: pre-wrap; word-wrap: break-word">
                       {{
                         '\r\n' +
                         userDataJson.description.replace(
@@ -86,11 +60,7 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="deep-purple accent-4"
-                  text
-                  @click="dialog = false"
-                >
+                <v-btn color="deep-purple accent-4" text @click="dialog = false">
                   Close
                 </v-btn>
               </v-card-actions>
@@ -104,40 +74,20 @@
                     <v-img :src="userDataJson.room_profile.image" />
                     <div v-if="userDataJson.sns_list !== null" class="mt-3">
                       <div>SNS</div>
-                      <a
-                        v-for="(item, i) in userDataJson.sns_list"
-                        :key="i"
-                        :href="item.url"
-                        target="_blank"
-                      >
+                      <a v-for="(item, i) in userDataJson.sns_list" :key="i" :href="item.url" target="_blank">
                         <img :src="item.icon" width="40" height="40" />
                       </a>
                     </div>
 
-                    <div
-                      v-if="userDataJson.room_profile.avatar !== null"
-                      class="mt-3"
-                    >
+                    <div v-if="userDataJson.room_profile.avatar !== null" class="mt-3">
                       <div>配布中のアバター</div>
-                      <img
-                        v-for="(item, i) in userDataJson.room_profile.avatar
-                          .list"
-                        :key="i"
-                        :src="item"
-                        width="50"
-                        height="50"
-                      />
+                      <img v-for="(item, i) in userDataJson.room_profile.avatar.list" :key="i" :src="item" width="50"
+                        height="50" />
                     </div>
                   </v-col>
                   <v-col cols="7">
                     <div v-if="userDataJson.room_profile.is_onlive">
-                      <v-alert
-                        text
-                        dense
-                        color="teal"
-                        icon="mdi-access-point"
-                        border="left"
-                      >
+                      <v-alert text dense color="teal" icon="mdi-access-point" border="left">
                         現在配信中
                       </v-alert>
                     </div>
@@ -149,18 +99,12 @@
                     <p class="text-h5 text--primary">
                       {{ userDataJson.room_profile.room_name }}
                     </p>
-                    <a
-                      :href="userDataJson.room_profile.share_url_live"
-                      target="_blank"
-                    >
+                    <a :href="userDataJson.room_profile.share_url_live" target="_blank">
                       <v-btn class="ma-2" outlined color="deep-purple">
                         配信ルーム
                       </v-btn>
                     </a>
-                    <a
-                      :href="userDataJson.room_profile.share_url"
-                      target="_blank"
-                    >
+                    <a :href="userDataJson.room_profile.share_url" target="_blank">
                       <v-btn class="ma-2" outlined color="deep-purple">
                         プロフィール
                       </v-btn>
@@ -170,9 +114,7 @@
                         <v-expansion-panel-header>
                           ルーム情報
                         </v-expansion-panel-header>
-                        <v-expansion-panel-content
-                          style="white-space: pre-wrap; word-wrap: break-word"
-                        >
+                        <v-expansion-panel-content style="white-space: pre-wrap; word-wrap: break-word">
                           {{ '\r\n' + userDataJson.room_profile.description }}
                         </v-expansion-panel-content>
                       </v-expansion-panel>
@@ -183,11 +125,7 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="deep-purple accent-4"
-                  text
-                  @click="dialog = false"
-                >
+                <v-btn color="deep-purple accent-4" text @click="dialog = false">
                   Close
                 </v-btn>
               </v-card-actions>
@@ -253,8 +191,13 @@ export default {
           key: id,
         })
         .then((response) => {
-          this.userDataJson = response.data
-          this.dialog = true
+          if ('errors' in response.data) {
+            this.errorText = 'このリスナーは退会済みです'
+            this.snackbar = true
+          } else {
+            this.userDataJson = response.data
+            this.dialog = true
+          }
         })
         .catch((error) => {
           if (error.response.status === 404) {
