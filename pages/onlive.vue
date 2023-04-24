@@ -3,16 +3,12 @@
     <v-container fluid>
       <OnliveInfo :info-data="infoObj" />
       <v-row class="mt-0">
-        <CommentTable
-          :telop-data="telop"
-          :comment-data="
-            $vuetify.breakpoint.name === 'xs' ||
+        <CommentTable :telop-data="telop" :comment-data="$vuetify.breakpoint.name === 'xs' ||
             $vuetify.breakpoint.name === 'sm' ||
             $vuetify.breakpoint.name === 'md'
-              ? commentObjUn
-              : commentObj
-          "
-        />
+            ? commentObjUn
+            : commentObj
+          " />
         <v-col>
           <v-row>
             <GiftTable :gitf-data="freeGiftObj" :gift-flg="false" />
@@ -128,7 +124,7 @@ export default {
     if (
       localStorage.lift === '1' ||
       Number(localStorage.register) >
-        Math.floor(new Date().getTime() / 1000) - 259200
+      Math.floor(new Date().getTime() / 1000) - 259200
     ) {
       this.checkFlg = true
     }
@@ -188,7 +184,7 @@ export default {
         })
     }
 
-    ;(async () => {
+    ; (async () => {
       // 利用可能ギフト
       await axios
         .post(constants.url.showroom_api, {
@@ -346,8 +342,10 @@ export default {
         // JSON変換
         const msgJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1])
 
+        console.log(msgJson)
+
         switch (msgJson.t) {
-          case '1':
+          case 1:
             if (!this.blockCheck(msgJson.u)) {
               if (commentCountCheck(msgJson)) {
                 // コメント
@@ -365,7 +363,7 @@ export default {
               }
             }
             break
-          case '2':
+          case 2:
             if (!this.blockCheck(msgJson.u)) {
               // ギフト
               if (giftCheck(msgJson)) {
@@ -481,8 +479,8 @@ export default {
           } else {
             this.infoObj.free += Math.floor(
               msgJson.n *
-                constants.bonusPoint[constants.bonusPoint.length - 1] *
-                5
+              constants.bonusPoint[constants.bonusPoint.length - 1] *
+              5
             )
           }
         } else {
@@ -531,9 +529,9 @@ export default {
       if (useGiftPoint !== undefined) {
         this.infoObj.pre += Math.floor(
           useGiftPoint.point *
-            msgJson.n *
-            constants.bonusPoint[msgJson.n - 1] *
-            constants.giftBonus
+          msgJson.n *
+          constants.bonusPoint[msgJson.n - 1] *
+          constants.giftBonus
         )
       }
       // 既に存在するか確認

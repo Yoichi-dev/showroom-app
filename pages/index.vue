@@ -1,26 +1,15 @@
 <template>
   <div>
-    <v-parallax
-      v-if="roomStatus && $vuetify.breakpoint.name !== 'xs'"
-      height="300"
-      :src="
-        roomStatus.image_s
-          .replace('_s.png', '_l.png')
-          .replace('_s.jpeg', '_l.jpeg')
-      "
-    >
+    <v-parallax v-if="roomStatus && $vuetify.breakpoint.name !== 'xs'" height="300" :src="roomStatus.image_s
+        .replace('_s.png', '_l.png')
+        .replace('_s.jpeg', '_l.jpeg')
+      ">
       <v-row align="center">
         <v-col cols="3">
-          <v-img
-            max-height="170"
-            max-width="300"
-            class="deep-purple lighten-4"
-            :src="
-              roomStatus.image_s
-                .replace('_s.png', '_l.png')
-                .replace('_s.jpeg', '_l.jpeg')
-            "
-          ></v-img>
+          <v-img max-height="170" max-width="300" class="deep-purple lighten-4" :src="roomStatus.image_s
+              .replace('_s.png', '_l.png')
+              .replace('_s.jpeg', '_l.jpeg')
+            "></v-img>
         </v-col>
         <v-col cols="9">
           <span class="ma-auto text-h4 font-weight-thin">
@@ -30,15 +19,10 @@
       </v-row>
     </v-parallax>
     <v-card v-if="roomStatus && $vuetify.breakpoint.name === 'xs'">
-      <v-img
-        class="white--text align-end"
-        height="200px"
-        :src="
-          roomStatus.image_s
-            .replace('_s.png', '_l.png')
-            .replace('_s.jpeg', '_l.jpeg')
-        "
-      >
+      <v-img class="white--text align-end" height="200px" :src="roomStatus.image_s
+          .replace('_s.png', '_l.png')
+          .replace('_s.jpeg', '_l.jpeg')
+        ">
         <v-card-title class="top-img">{{ roomStatus.room_name }}</v-card-title>
       </v-img>
     </v-card>
@@ -54,24 +38,18 @@
       <v-row v-if="pointHistoryFlg" justify="center">
         <v-alert class="mt-5" outlined type="success" text>
           連携サイト、Point Historyで参加イベントの集計をしています<br />
-          <a
-            :href="`https://point-history.showroom-app.com/event/${eventData.event_id}`"
-            target="_blank"
-            >https://point-history.showroom-app.com/event/{{
+          <a :href="`https://point-history.showroom-app.com/event/${eventData.event_id}`"
+            target="_blank">https://point-history.showroom-app.com/event/{{
               eventData.event_id
-            }}</a
-          >
+            }}</a>
         </v-alert>
       </v-row>
       <v-row v-if="eventData">
         <v-col cols="12" sm="4">
-          <v-img
-            :src="
-              eventData.image
+          <v-img :src="eventData.image
                 .replace('_s.png', '_l.png')
                 .replace('_s.jpeg', '_l.jpeg')
-            "
-          ></v-img>
+              "></v-img>
         </v-col>
         <v-col cols="12" sm="8">
           <v-simple-table>
@@ -145,11 +123,7 @@
                   </v-list-item-content>
                 </v-list-item>
 
-                <v-divider
-                  v-if="infoData.length - 1 !== index"
-                  :key="`divider-${index}`"
-                  inset
-                ></v-divider>
+                <v-divider v-if="infoData.length - 1 !== index" :key="`divider-${index}`" inset></v-divider>
               </template>
             </v-list>
           </v-card>
@@ -164,34 +138,18 @@
           </v-card-title>
           <v-card-text>
             Watch Logを利用するためにはルームの登録が必要です<br />
-            また、本アプリケーションの<span
-              class="text-decoration-underline light-blue lighten-5"
-              style="white-space: nowrap"
-              >メインターゲットは配信者</span
-            >になります<br />
-            あくまでも<span
-              class="text-decoration-underline light-blue lighten-5"
-              style="white-space: nowrap"
-              >配信補助アプリ</span
-            >と言う位置付けです<br /><br />
-            このアプリケーションは<span
-              class="text-decoration-underline light-blue lighten-5"
-              style="white-space: nowrap"
-              >SHOWROOMとは関係ない個人で作ってるもの</span
-            >になります<br />
+            また、本アプリケーションの<span class="text-decoration-underline light-blue lighten-5"
+              style="white-space: nowrap">メインターゲットは配信者</span>になります<br />
+            あくまでも<span class="text-decoration-underline light-blue lighten-5"
+              style="white-space: nowrap">配信補助アプリ</span>と言う位置付けです<br /><br />
+            このアプリケーションは<span class="text-decoration-underline light-blue lighten-5"
+              style="white-space: nowrap">SHOWROOMとは関係ない個人で作ってるもの</span>になります<br />
             運用は開発者の裁量です<br />
-            <span class="white--text"
-              >訳:リソースの無駄なのでリスナーは使うな</span
-            >
+            <span class="white--text">訳:リソースの無駄なのでリスナーは使うな</span>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-              color="green darken-1"
-              outlined
-              text
-              @click="$router.push('/search')"
-            >
+            <v-btn color="green darken-1" outlined text @click="$router.push('/search')">
               理解した上で登録
             </v-btn>
           </v-card-actions>
@@ -356,7 +314,7 @@ export default {
     if (
       localStorage.lift === '1' ||
       Number(localStorage.register) >
-        Math.floor(new Date().getTime() / 1000) - 259200
+      Math.floor(new Date().getTime() / 1000) - 259200
     ) {
       this.checkFlg = true
     }
@@ -379,7 +337,7 @@ export default {
     }
 
     if (this.checkFlg) {
-      ;(async () => {
+      ; (async () => {
         // ルーム情報取得
         await axios
           .post(constants.url.showroom_api, {

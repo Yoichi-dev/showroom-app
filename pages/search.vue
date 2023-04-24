@@ -2,15 +2,8 @@
   <div>
     <v-container class="mt-10">
       <v-row>
-        <v-text-field
-          class="mx-3"
-          label="検索"
-          color="green"
-          placeholder="ルーム名を入力してEnterで検索"
-          prepend-inner-icon="mdi-magnify"
-          outlined
-          @keypress.enter="searchRoom"
-        ></v-text-field>
+        <v-text-field class="mx-3" label="検索" color="green" placeholder="ルーム名を入力してEnterで検索"
+          prepend-inner-icon="mdi-magnify" outlined @keypress.enter="searchRoom"></v-text-field>
       </v-row>
       <v-row>
         <v-col>
@@ -25,27 +18,12 @@
         </v-col>
       </v-row>
       <v-divider v-if="!searchFlg" class="my-10"></v-divider>
-      <v-progress-linear
-        v-if="searchFlg"
-        class="my-10"
-        indeterminate
-        color="green"
-      ></v-progress-linear>
+      <v-progress-linear v-if="searchFlg" class="my-10" indeterminate color="green"></v-progress-linear>
       <v-row>
-        <v-col
-          v-for="(item, index) in searchList"
-          :key="index"
-          cols="12"
-          sm="6"
-          lg="3"
-        >
+        <v-col v-for="(item, index) in searchList" :key="index" cols="12" sm="6" lg="3">
           <v-hover v-slot="{ hover }">
-            <v-card
-              :elevation="hover ? 16 : 2"
-              class="mx-auto"
-              :class="{ 'on-hover': hover }"
-              @click="registerCheck(item)"
-            >
+            <v-card :elevation="hover ? 16 : 2" class="mx-auto" :class="{ 'on-hover': hover }"
+              @click="registerCheck(item)">
               <v-img class="white--text align-end" :src="item.img"> </v-img>
               <v-card-text class="text--primary">
                 <div>{{ item.title }}</div>
