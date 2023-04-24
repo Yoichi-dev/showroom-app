@@ -342,8 +342,6 @@ export default {
         // JSON変換
         const msgJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1])
 
-        console.log(msgJson)
-
         switch (msgJson.t) {
           case 1:
             if (!this.blockCheck(msgJson.u)) {
