@@ -343,7 +343,7 @@ export default {
         const msgJson = JSON.parse(data.data.split(`MSG\t${bcsvrKey}`)[1])
 
         switch (msgJson.t) {
-          case 1:
+          case '1':
             if (!this.blockCheck(msgJson.u)) {
               if (commentCountCheck(msgJson)) {
                 // コメント
@@ -361,7 +361,7 @@ export default {
               }
             }
             break
-          case 2:
+          case '2':
             if (!this.blockCheck(msgJson.u)) {
               // ギフト
               if (giftCheck(msgJson)) {
