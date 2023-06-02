@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+import pkg from "./package.json";
 
 export default {
   ssr: false,

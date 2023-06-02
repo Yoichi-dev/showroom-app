@@ -1,6 +1,8 @@
 {
   "name": "showtube",
   "version": "1.0.0",
+  "description": "SHOWROOM配信をYouTubeみたいなUIで視聴できます",
+  "author": "TYoichiro",
   "private": true,
   "scripts": {
     "dev": "nuxt",
