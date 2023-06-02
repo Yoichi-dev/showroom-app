@@ -29,7 +29,13 @@ export default {
     return {
       genre: this.$route.query.genre_id | 0,
       onliveList: [],
-      viewList: []
+      viewList: [],
+      title: 'HOME'
+    }
+  },
+  head() {
+    return {
+      title: this.title,
     }
   },
   watch: {

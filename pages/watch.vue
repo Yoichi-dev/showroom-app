@@ -101,7 +101,13 @@ export default {
       streaming: null,
       select: null,
       commentList: [],
-      telop: ''
+      telop: '',
+      title: ''
+    }
+  },
+  head() {
+    return {
+      title: this.title,
     }
   },
   watch: {
@@ -208,6 +214,7 @@ export default {
 
     })()
     this.telop = this.room.telop
+    this.title = this.room.main_name
     for (const room of this.onliveList.onlives) {
       if (room.genre_id === this.room.genre_id) {
         this.otherList = room.lives
