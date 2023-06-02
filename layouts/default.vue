@@ -1,92 +1,58 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" :clipped="clipped" fixed app>
+    <v-navigation-drawer v-model="drawer" clipped fixed app>
       <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
+        <v-list-item v-for="(item, i) in menu" :key="i" :to="item.to" router exact
+          @click="$nuxt.$emit('updateGenre', item.id)">
           <v-list-item-content>
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" dense fixed app>
+    <v-app-bar dense clipped-left fixed flat app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title
-        style="cursor: pointer"
-        @click="$router.push('/')"
-        v-text="title"
-      />
+      <v-toolbar-title style="cursor: pointer" @click="$router.push('/')" v-text="title" />
       <v-spacer />
-      Ver.{{ version }}
     </v-app-bar>
     <v-main>
       <Nuxt />
     </v-main>
-    <v-footer :absolute="!fixed" app>
+    <v-footer app :absolute="!fixed">
       <span>&copy; {{ new Date().getFullYear() }} {{ author }}</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import pkg from '~/package.json'
-
 export default {
   name: 'DefaultLayout',
   data() {
     return {
-      clipped: true,
       drawer: null,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-home',
-          title: 'ホーム',
-          to: '/',
-        },
-        {
-          icon: 'mdi-math-log',
-          title: 'ログ一覧',
-          to: '/log',
-        },
-        // {
-        //   icon: 'mdi-account',
-        //   title: 'リスナー名変更',
-        //   to: '/name',
-        // },
-        {
-          icon: 'mdi-account-cancel',
-          title: 'ブロック一覧',
-          to: '/block',
-        },
-        {
-          icon: 'mdi-account',
-          title: 'ユーザー情報',
-          to: '/user',
-        },
-      ],
-      title: 'Watch Log',
+      inset: true,
+      menu: [],
+      title: 'ShowTube β版',
       author: 'T.Yoichiro',
-      version: pkg.version,
     }
   },
-  mounted() {
-    // if (localStorage.vuex) {
-    //   this.items.push({
-    //     icon: 'mdi-content-copy',
-    //     title: 'データ引継ぎ',
-    //     to: '/transfer',
-    //   })
-    // }
+  created() {
+    this.setListener()
   },
+  mounted() {
+    if (this.menu.length === 0 && localStorage.menu) {
+      this.menu = JSON.parse(localStorage.menu)
+    }
+  },
+  methods: {
+    setListener() {
+      this.$nuxt.$on('updateMenu', this.setMenu)
+    },
+    setMenu(menu) {
+      this.menu = menu
+      localStorage.menu = JSON.stringify(menu)
+    }
+  }
 }
 </script>
