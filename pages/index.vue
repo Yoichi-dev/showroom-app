@@ -1,14 +1,14 @@
 <template>
   <div>
     <v-parallax v-if="roomStatus && $vuetify.breakpoint.name !== 'xs'" height="300" :src="roomStatus.image_s
-        .replace('_s.png', '_l.png')
-        .replace('_s.jpeg', '_l.jpeg')
+      .replace('_s.png', '_l.png')
+      .replace('_s.jpeg', '_l.jpeg')
       ">
       <v-row align="center">
         <v-col cols="3">
           <v-img max-height="170" max-width="300" class="deep-purple lighten-4" :src="roomStatus.image_s
-              .replace('_s.png', '_l.png')
-              .replace('_s.jpeg', '_l.jpeg')
+            .replace('_s.png', '_l.png')
+            .replace('_s.jpeg', '_l.jpeg')
             "></v-img>
         </v-col>
         <v-col cols="9">
@@ -20,8 +20,8 @@
     </v-parallax>
     <v-card v-if="roomStatus && $vuetify.breakpoint.name === 'xs'">
       <v-img class="white--text align-end" height="200px" :src="roomStatus.image_s
-          .replace('_s.png', '_l.png')
-          .replace('_s.jpeg', '_l.jpeg')
+        .replace('_s.png', '_l.png')
+        .replace('_s.jpeg', '_l.jpeg')
         ">
         <v-card-title class="top-img">{{ roomStatus.room_name }}</v-card-title>
       </v-img>
@@ -47,9 +47,9 @@
       <v-row v-if="eventData">
         <v-col cols="12" sm="4">
           <v-img :src="eventData.image
-                .replace('_s.png', '_l.png')
-                .replace('_s.jpeg', '_l.jpeg')
-              "></v-img>
+            .replace('_s.png', '_l.png')
+            .replace('_s.jpeg', '_l.jpeg')
+            "></v-img>
         </v-col>
         <v-col cols="12" sm="8">
           <v-simple-table>
@@ -293,7 +293,7 @@ export default {
     client
       .getEntries({
         content_type: 'lift',
-        limit: 300,
+        limit: 400,
       })
       .then((res) => {
         const lift = res.items[0].fields
