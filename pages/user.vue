@@ -9,16 +9,16 @@
           <p>UUID：{{ uuid }}</p>
           <p v-if="!liftFlg" class="mt-10">
             Watch Logの制限解除申請は
-            <a
-              :href="`https://www.twitter.com/messages/compose?recipient_id=1278265302921342976&text=制限解除申請%0D%0Aroom_id:${room_id}%0D%0Aroom_url_key:${room_url_key}%0D%0Aid:${uuid}`"
-              target="_blank"
-            >
+            <a :href="`https://www.twitter.com/messages/compose?recipient_id=1278265302921342976&text=制限解除申請%0D%0Aroom_id:${room_id}%0D%0Aroom_url_key:${room_url_key}%0D%0Aid:${uuid}`"
+              target="_blank">
               こちら
             </a>
             （配信者のみ）
             <br />
             <br />
             配信者として確認できないアカウントからの申請は無視されます
+            <br />
+            （ルーム情報ページにTwitterアカウントの記載が無い場合も同様です）
           </p>
           <p v-else class="mt-10">配信者登録済み（制限解除済み）</p>
         </v-col>
