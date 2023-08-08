@@ -4,10 +4,10 @@
       <OnliveInfo :info-data="infoObj" />
       <v-row class="mt-0">
         <CommentTable :telop-data="telop" :comment-data="$vuetify.breakpoint.name === 'xs' ||
-            $vuetify.breakpoint.name === 'sm' ||
-            $vuetify.breakpoint.name === 'md'
-            ? commentObjUn
-            : commentObj
+          $vuetify.breakpoint.name === 'sm' ||
+          $vuetify.breakpoint.name === 'md'
+          ? commentObjUn
+          : commentObj
           " />
         <v-col>
           <v-row>
@@ -755,8 +755,6 @@ export default {
         telop: this.telop,
       }
 
-      localStorage.tmp_log = JSON.stringify(saveLog)
-
       axios
         .post(constants.url.watchlog.addlog, {
           uuid: localStorage.uuid,
@@ -764,9 +762,17 @@ export default {
           log_json: saveLog,
         })
         .then((res) => {
-          sessionStorage.removeItem('room_status')
-          this.$router.push('/')
+          console.log(res)
         })
+        .catch((error) => {
+          localStorage.setItem('axios_error', JSON.stringify(error));
+          alert('ログの保存に失敗しました');
+        })
+        .finally(() => {
+          localStorage.setItem('tmp_log', JSON.stringify(saveLog));
+          sessionStorage.removeItem('room_status');
+          this.$router.push('/')
+        });
     },
     errorReload() {
       location.reload()
