@@ -27,8 +27,7 @@ export default {
       showroom: null,
       comments: [],
       gifts: null,
-      width: 1920,
-      v: 97
+      width: 1920
     }
   },
   mounted() {
@@ -87,7 +86,7 @@ export default {
       this.comments.unshift({
         user_id: data.u,
         name: data.ac,
-        avatar_url: `https://static.showroom-live.com/image/avatar/${data.av}.png?v=${this.v}`,
+        avatar_url: `https://static.showroom-live.com/image/avatar/${data.av}.png?v=${showroomConfig.v}`,
         comment: data.cm
       });
     },
