@@ -155,6 +155,11 @@ body {
   background-image: url("~/assets/tsukumo999/img/bg.jpg");
 }
 
+@font-face {
+  font-family: 'jkmarugo';
+  src: url('~/assets/tsukumo999/font/JK-Maru-Gothic-M.otf') format("opentype");
+}
+
 #comment-area {
   position: absolute;
   top: 190px;
@@ -162,6 +167,7 @@ body {
   width: 713px;
   height: 660px;
   overflow: scroll;
+  font-family: 'jkmarugo';
 }
 
 #comment-area::-webkit-scrollbar {
