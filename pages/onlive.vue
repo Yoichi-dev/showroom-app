@@ -452,11 +452,11 @@ export default {
         this.countObj.unshift(msgJson)
       }
       // ポイント計算
-      let countPoint = 0
-      for (let i = 0; i < this.countObj.length; i++) {
-        countPoint += Number(this.countObj[i].num)
-      }
-      this.infoObj.count = countPoint
+      // let countPoint = 0
+      // for (let i = 0; i < this.countObj.length; i++) {
+      //   countPoint += Number(this.countObj[i].num)
+      // }
+      // this.infoObj.count = countPoint
     },
     deduplicationFreeGift(msgJson) {
       let throwPoint = 0

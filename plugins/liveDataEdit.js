@@ -54,7 +54,8 @@ function giftCheck(msgJson) {
       msgJson.g === 1502 ||
       msgJson.g === 1503 ||
       msgJson.g === 1504 ||
-      msgJson.g === 1505
+      msgJson.g === 1505 ||
+      msgJson.g === 3000421
     ) {
       // 無料
       return true;

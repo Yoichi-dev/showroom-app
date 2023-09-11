@@ -6,22 +6,14 @@
       </InfoCard>
     </v-col>
     <v-col cols="12" sm="6" lg="3" class="py-2">
-      <InfoCard
-        :info-card-data="
-          checkFlg ? createFollwer(infoData) : createNot('mdi-heart-outline')
-        "
-        >フォロワー</InfoCard
-      >
+      <InfoCard :info-card-data="checkFlg ? createFollwer(infoData) : createNot('mdi-heart-outline')
+        ">フォロワー</InfoCard>
     </v-col>
     <v-col cols="12" sm="6" lg="3" class="py-2">
-      <InfoCard
-        :info-card-data="
-          checkFlg
-            ? createView(infoData)
-            : createNot('mdi-account-multiple-outline')
-        "
-        >来場者</InfoCard
-      >
+      <InfoCard :info-card-data="checkFlg
+        ? createView(infoData)
+        : createNot('mdi-account-multiple-outline')
+        ">盛り上がり</InfoCard>
     </v-col>
     <v-col cols="12" sm="6" lg="3" class="py-2">
       <InfoCard :info-card-data="createTime(infoData)"> 配信開始時間 </InfoCard>
@@ -55,7 +47,7 @@ export default {
     if (
       localStorage.lift === '1' ||
       Number(localStorage.register) >
-        Math.floor(new Date().getTime() / 1000) - 259200
+      Math.floor(new Date().getTime() / 1000) - 259200
     ) {
       this.checkFlg = true
     }
@@ -64,13 +56,13 @@ export default {
     createPoint(infoObj) {
       return {
         main: `約 ${this.$numberFormat(
-          infoObj.free + infoObj.pre + infoObj.count
+          infoObj.free + infoObj.pre
         )}pt`,
         sub: `無料 ${this.$numberFormat(
           infoObj.free
         )}pt | 有料 ${this.$numberFormat(
           infoObj.pre
-        )}pt | カウント ${this.$numberFormat(infoObj.count)}pt`,
+        )}pt`,
         icon: infoObj.isOfficial ? 'mdi-star-outline' : 'mdi-sprout-outline',
       }
     },
@@ -91,10 +83,10 @@ export default {
     },
     createView(infoObj) {
       return {
-        main: `${this.$numberFormat(infoObj.view)}人`,
+        main: `${this.$numberFormat(infoObj.view)}`,
         sub: `1分前から +${this.$numberFormat(
           infoObj.view - infoObj.startView
-        )}人`,
+        )}`,
         icon: 'mdi-account-multiple-outline',
       }
     },
