@@ -3,7 +3,11 @@
     <div id="comment-area">
       <div v-for="(comment, idx) in comments" :key="idx" class="comment-box">
         <img class="avater" :src="comment.avatar_url">
-        <div>
+        <div v-if="comment.stamp">
+          <div class="name">{{ comment.name }}</div>
+          <img class="stamp" :src="comment.comment" :alt="comment.name">
+        </div>
+        <div v-else>
           <div class="name">{{ comment.name }}</div>
           <div class="comment">{{ comment.comment }}</div>
         </div>
@@ -55,15 +59,18 @@ export default {
       this.showroom = new Showroom(key, showroomConfig.ws);
 
       this.showroom.on("free", (data) => {
-        this.fallGift(data);
+        const img = tools.giftUrlCheck(data, this.gifts);
+        this.fallGift(data, img);
       });
 
       this.showroom.on("paid", (data) => {
-        this.fallGift(data);
+        const img = tools.giftUrlCheck(data, this.gifts);
+        this.fallGift(data, img);
       });
 
       this.showroom.on("enquete", (data) => {
-        this.fallGift(data);
+        const img = tools.giftUrlCheck(data, this.gifts);
+        this.fallGift(data, img);
       });
 
       this.showroom.on("comment", (data) => {
@@ -83,27 +90,57 @@ export default {
       this.showroom.connect();
     },
     addComment(data) {
-      this.comments.unshift({
+      const comment = {
         user_id: data.u,
         name: data.ac,
         avatar_url: `https://static.showroom-live.com/image/avatar/${data.av}.png?v=${showroomConfig.v}`,
-        comment: data.cm
-      });
+        comment: data.cm,
+        stamp: false
+      }
+
+      // スタンプ確認
+      const stamp = tsukumo999.stamp_key_word.some(elm => elm.key === data.cm);
+      if (stamp) {
+        const stampObj = tsukumo999.stamp_key_word.find(elm => elm.key === data.cm);
+        comment.comment = require(`@/assets/tsukumo999/img/stamp/${stampObj.img}`);
+        comment.stamp = true;
+      }
+      // エフェクト確認
+      const fall = tsukumo999.fall_key_word.some(elm => elm.key === data.cm);
+      if (fall) {
+        const fallObj = tsukumo999.fall_key_word.find(elm => elm.key === data.cm);
+        const src = require(`@/assets/tsukumo999/img/fall/${fallObj.img}`);
+        const fallData = {
+          n: 20,
+          g: 'original',
+          u: data.u,
+        };
+        this.fallGift(fallData, src);
+      }
+
+      this.comments.unshift(comment);
     },
     commentLog(commentLog) {
       for (let i = 0; i < commentLog.comment_log.length; i++) {
         if (tools.commentCountCheck(commentLog.comment_log[i])) {
-          this.comments.push({
+          const comment = {
             user_id: commentLog.comment_log[i].user_id,
             name: commentLog.comment_log[i].name,
             avatar_url: commentLog.comment_log[i].avatar_url,
-            comment: commentLog.comment_log[i].comment
-          });
+            comment: commentLog.comment_log[i].comment,
+            stamp: false
+          }
+          const stamp = tsukumo999.stamp_key_word.some(elm => elm.key === commentLog.comment_log[i].comment);
+          if (stamp) {
+            const stampObj = tsukumo999.stamp_key_word.find(elm => elm.key === commentLog.comment_log[i].comment);
+            comment.comment = require(`@/assets/tsukumo999/img/stamp/${stampObj.img}`);
+            comment.stamp = true;
+          }
+          this.comments.push(comment);
         }
       }
     },
-    fallGift(data) {
-      const img = tools.giftUrlCheck(data, this.gifts);
+    fallGift(data, img) {
       const elmId = Math.random().toString(32).substring(2);
       const count = data.n > 20 ? 10 : data.n;
       for (let i = 0; i < count; i++) {
@@ -151,7 +188,7 @@ body {
 #bg {
   width: 100vw;
   height: 100vh;
-  background-image: url("~/assets/tsukumo999/img/bg.jpg");
+  background-image: url("~/assets/tsukumo999/img/bg/bg.jpg");
 }
 
 @font-face {
@@ -185,6 +222,11 @@ body {
   display: flex;
   color: white;
   margin-bottom: 2em;
+}
+
+.stamp {
+  height: 150px;
+  width: 150px;
 }
 
 .avater {
