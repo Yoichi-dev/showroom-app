@@ -93,6 +93,10 @@ export default {
         location.reload();
       });
 
+      this.showroom.on('error', (data) => {
+        location.reload();
+      });
+
       this.showroom.connect();
     },
     addComment(data) {
