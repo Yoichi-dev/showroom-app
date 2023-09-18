@@ -64,31 +64,31 @@ export default {
 
       this.showroom = new Showroom(key, showroomConfig.ws);
 
-      this.showroom.on("free", (data) => {
+      this.showroom.on('free', (data) => {
         const img = tools.giftUrlCheck(data, this.gifts);
         this.fallGift(data, img);
       });
 
-      this.showroom.on("paid", (data) => {
+      this.showroom.on('paid', (data) => {
         const img = tools.giftUrlCheck(data, this.gifts);
         this.fallGift(data, img);
       });
 
-      this.showroom.on("enquete", (data) => {
+      this.showroom.on('enquete', (data) => {
         const img = tools.giftUrlCheck(data, this.gifts);
         this.fallGift(data, img);
       });
 
-      this.showroom.on("comment", (data) => {
+      this.showroom.on('comment', (data) => {
         this.addComment(data);
       });
 
-      this.showroom.on("start", (data) => {
+      this.showroom.on('start', (data) => {
         this.showroom.disconnect();
         location.reload();
       });
 
-      this.showroom.on("end", (data) => {
+      this.showroom.on('end', (data) => {
         this.showroom.disconnect();
         location.reload();
       });
@@ -194,12 +194,12 @@ body {
 #bg {
   width: 100vw;
   height: 100vh;
-  background-image: url("~/assets/tsukumo999/img/bg/bg.jpg");
+  background-image: url('~/assets/tsukumo999/img/bg/bg.jpg');
 }
 
 @font-face {
   font-family: 'jkmarugo';
-  src: url('~/assets/tsukumo999/font/JK-Maru-Gothic-M.otf') format("opentype");
+  src: url('~/assets/tsukumo999/font/JK-Maru-Gothic-M.otf') format('opentype');
 }
 
 #comment-area {
