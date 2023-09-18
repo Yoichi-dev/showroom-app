@@ -28,10 +28,16 @@ export default {
   name: 'DefaultPage',
   data() {
     return {
+      title: '胡蝶つくも',
       showroom: null,
       comments: [],
       gifts: null,
       width: 1920
+    }
+  },
+  head() {
+    return {
+      title: this.title,
     }
   },
   mounted() {
