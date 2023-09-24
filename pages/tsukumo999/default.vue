@@ -198,7 +198,7 @@ body {
 #bg {
   width: 100vw;
   height: 100vh;
-  background-image: url('~/assets/tsukumo999/img/bg/bg.jpg');
+  background-image: url('~/assets/tsukumo999/img/bg/default.jpg');
 }
 
 @font-face {
