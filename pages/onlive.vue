@@ -471,16 +471,17 @@ export default {
             val.created_at === msgJson.created_at
         )
         if (allThrowcount.length === 1) {
-          throwPoint = msgJson.n * 5
-          if (msgJson.n === 99) {
-            this.infoObj.free += 590
-          } else {
-            this.infoObj.free += Math.floor(
-              msgJson.n *
-              constants.bonusPoint[constants.bonusPoint.length - 1] *
-              5
-            )
-          }
+          throwPoint = msgJson.n
+          this.infoObj.free += msgJson.n
+          // if (msgJson.n === 99) {
+          //   this.infoObj.free += 590
+          // } else {
+          //   this.infoObj.free += Math.floor(
+          //     msgJson.n *
+          //     constants.bonusPoint[constants.bonusPoint.length - 1] *
+          //     5
+          //   )
+          // }
         } else {
           return
         }
