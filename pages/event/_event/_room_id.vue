@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-center">
+    <!-- <div class="text-center">
       <v-dialog v-model="dialog" persistent width="500">
         <v-card color="green" dark>
           <v-card-text>
@@ -41,32 +41,32 @@
       :followerChartData="allFollowerData"
       :rankChartData="allRankData"
       title="全期間"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import moment from "moment";
-import constants from "~/constants";
+// import constants from "~/constants";
 
 export default {
-  beforeRouteLeave(to, from, next) {
-    this.dialog = true;
-    next();
-  },
-  async asyncData({ params }) {
-    const allData = await axios.get(
-      `${constants.url.domain}${constants.url.all.user}${params.event}/${params.room_id}`
-    );
-    const resAllData = allData.data;
-    const userInfo = resAllData.profile;
-    const eventHistory = resAllData.userHistory;
-    const aggregateData = resAllData.eventAggregate;
-    const eventInfo = resAllData.eventInfo;
-    const endFlg = eventInfo.ended_at < Math.round(new Date().getTime() / 1000);
-    return { userInfo, eventHistory, aggregateData, endFlg };
-  },
+  // beforeRouteLeave(to, from, next) {
+  //   this.dialog = true;
+  //   next();
+  // },
+  // async asyncData({ params }) {
+  //   const allData = await axios.get(
+  //     `${constants.url.domain}${constants.url.all.user}${params.event}/${params.room_id}`
+  //   );
+  //   const resAllData = allData.data;
+  //   const userInfo = resAllData.profile;
+  //   const eventHistory = resAllData.userHistory;
+  //   const aggregateData = resAllData.eventAggregate;
+  //   const eventInfo = resAllData.eventInfo;
+  //   const endFlg = eventInfo.ended_at < Math.round(new Date().getTime() / 1000);
+  //   return { userInfo, eventHistory, aggregateData, endFlg };
+  // },
   data() {
     return {
       dialog: false,
@@ -82,74 +82,75 @@ export default {
       allRankData: {},
     };
   },
-  head() {
-    return {
-      title: this.userInfo.room_name + "の配信情報",
-      meta: [
-        {
-          hid: "description",
-          name: "description",
-          content: this.userInfo.room_name + "の配信情報",
-        },
-        {
-          hid: "og:title",
-          property: "og:title",
-          content: this.userInfo.room_name,
-        },
-        {
-          hid: "og:description",
-          property: "og:description",
-          content: this.userInfo.room_name + "の配信情報",
-        },
-        {
-          hid: "og:image",
-          property: "og:image",
-          content: this.userInfo.image
-            .replace("_m.png", "_l.png")
-            .replace("_m.jpeg", "_l.jpeg"),
-        },
-      ],
-    };
-  },
+  // head() {
+  //   return {
+  //     title: this.userInfo.room_name + "の配信情報",
+  //     meta: [
+  //       {
+  //         hid: "description",
+  //         name: "description",
+  //         content: this.userInfo.room_name + "の配信情報",
+  //       },
+  //       {
+  //         hid: "og:title",
+  //         property: "og:title",
+  //         content: this.userInfo.room_name,
+  //       },
+  //       {
+  //         hid: "og:description",
+  //         property: "og:description",
+  //         content: this.userInfo.room_name + "の配信情報",
+  //       },
+  //       {
+  //         hid: "og:image",
+  //         property: "og:image",
+  //         content: this.userInfo.image
+  //           .replace("_m.png", "_l.png")
+  //           .replace("_m.jpeg", "_l.jpeg"),
+  //       },
+  //     ],
+  //   };
+  // },
   mounted() {
+    this.$router.push('/')
     // 初期化
-    this.todayPointData = {
-      labels: [],
-      datasets: [],
-    };
-    this.todayFollowerData = {
-      labels: [],
-      datasets: [],
-    };
-    this.todayRankData = {
-      labels: [],
-      datasets: [],
-    };
-    this.dayPointData = {
-      labels: [],
-      datasets: [],
-    };
-    this.dayFollowerData = {
-      labels: [],
-      datasets: [],
-    };
-    this.dayRankData = {
-      labels: [],
-      datasets: [],
-    };
-    this.allPointData = {
-      labels: [],
-      datasets: [],
-    };
-    this.allFollowerData = {
-      labels: [],
-      datasets: [],
-    };
-    this.allRankData = {
-      labels: [],
-      datasets: [],
-    };
-    this.createChart();
+    // this.todayPointData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.todayFollowerData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.todayRankData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.dayPointData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.dayFollowerData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.dayRankData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.allPointData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.allFollowerData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.allRankData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.createChart();
   },
   methods: {
     createChart() {

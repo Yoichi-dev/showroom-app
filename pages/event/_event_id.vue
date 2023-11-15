@@ -1,54 +1,41 @@
 <template>
   <div>
-    <Info />
+    <!-- <Info />
     <EndInfo v-if="endFlg" />
     <EventInfo :eventInfo="eventInfo" />
     <EventData :eventInfo="eventInfo" :eventData="aggregateData" />
     <UserList :userList="userList" />
-    <ChartGroup
-      :pointChartData="todayPointData"
-      :followerChartData="todayFollowerData"
-      :rankChartData="todayRankData"
-      title="本日"
-      v-if="!endFlg"
-    />
-    <ChartGroup
-      :pointChartData="dayPointData"
-      :followerChartData="dayFollowerData"
-      :rankChartData="dayRankData"
-      title="日別"
-    />
-    <ChartGroup
-      :pointChartData="allPointData"
-      :followerChartData="allFollowerData"
-      :rankChartData="allRankData"
-      title="全期間"
-    />
+    <ChartGroup :pointChartData="todayPointData" :followerChartData="todayFollowerData" :rankChartData="todayRankData"
+      title="本日" v-if="!endFlg" />
+    <ChartGroup :pointChartData="dayPointData" :followerChartData="dayFollowerData" :rankChartData="dayRankData"
+      title="日別" />
+    <ChartGroup :pointChartData="allPointData" :followerChartData="allFollowerData" :rankChartData="allRankData"
+      title="全期間" /> -->
   </div>
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import moment from "moment";
-import constants from "~/constants";
+// import constants from "~/constants";
 
 export default {
-  beforeRouteLeave(to, from, next) {
-    this.dialog = true;
-    next();
-  },
-  async asyncData({ params }) {
-    const allData = await axios.get(
-      `${constants.url.domain}${constants.url.all.event}${params.event_id}`
-    );
-    const resAllData = allData.data;
-    const eventInfo = resAllData.eventInfo;
-    const userList = resAllData.eventUser;
-    const eventHistory = resAllData.eventHistory;
-    const aggregateData = resAllData.eventAggregate;
-    const endFlg = eventInfo.ended_at < Math.round(new Date().getTime() / 1000);
-    return { eventInfo, userList, eventHistory, aggregateData, endFlg };
-  },
+  // beforeRouteLeave(to, from, next) {
+  //   this.dialog = true;
+  //   next();
+  // },
+  // async asyncData({ params }) {
+  //   const allData = await axios.get(
+  //     `${constants.url.domain}${constants.url.all.event}${params.event_id}`
+  //   );
+  //   const resAllData = allData.data;
+  //   const eventInfo = resAllData.eventInfo;
+  //   const userList = resAllData.eventUser;
+  //   const eventHistory = resAllData.eventHistory;
+  //   const aggregateData = resAllData.eventAggregate;
+  //   const endFlg = eventInfo.ended_at < Math.round(new Date().getTime() / 1000);
+  //   return { eventInfo, userList, eventHistory, aggregateData, endFlg };
+  // },
   data() {
     return {
       dialog: false,
@@ -140,74 +127,75 @@ export default {
       ],
     };
   },
-  head() {
-    return {
-      title: this.eventInfo.event_name + "のイベント情報",
-      meta: [
-        {
-          hid: "description",
-          name: "description",
-          content: this.eventInfo.event_name + "のイベント情報",
-        },
-        {
-          hid: "og:title",
-          property: "og:title",
-          content: this.eventInfo.event_name + "のイベント情報",
-        },
-        {
-          hid: "og:description",
-          property: "og:description",
-          content: this.eventInfo.event_name + "のイベント情報",
-        },
-        {
-          hid: "og:image",
-          property: "og:image",
-          content: this.eventInfo.image
-            .replace("_s.png", "_l.png")
-            .replace("_s.jpeg", "_l.jpeg"),
-        },
-      ],
-    };
-  },
+  // head() {
+  //   return {
+  //     title: this.eventInfo.event_name + "のイベント情報",
+  //     meta: [
+  //       {
+  //         hid: "description",
+  //         name: "description",
+  //         content: this.eventInfo.event_name + "のイベント情報",
+  //       },
+  //       {
+  //         hid: "og:title",
+  //         property: "og:title",
+  //         content: this.eventInfo.event_name + "のイベント情報",
+  //       },
+  //       {
+  //         hid: "og:description",
+  //         property: "og:description",
+  //         content: this.eventInfo.event_name + "のイベント情報",
+  //       },
+  //       {
+  //         hid: "og:image",
+  //         property: "og:image",
+  //         content: this.eventInfo.image
+  //           .replace("_s.png", "_l.png")
+  //           .replace("_s.jpeg", "_l.jpeg"),
+  //       },
+  //     ],
+  //   };
+  // },
   mounted() {
+    this.$router.push('/')
     // 初期化
-    this.todayPointData = {
-      labels: [],
-      datasets: [],
-    };
-    this.todayFollowerData = {
-      labels: [],
-      datasets: [],
-    };
-    this.todayRankData = {
-      labels: [],
-      datasets: [],
-    };
-    this.dayPointData = {
-      labels: [],
-      datasets: [],
-    };
-    this.dayFollowerData = {
-      labels: [],
-      datasets: [],
-    };
-    this.dayRankData = {
-      labels: [],
-      datasets: [],
-    };
-    this.allPointData = {
-      labels: [],
-      datasets: [],
-    };
-    this.allFollowerData = {
-      labels: [],
-      datasets: [],
-    };
-    this.allRankData = {
-      labels: [],
-      datasets: [],
-    };
-    this.createChart();
+    // this.todayPointData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.todayFollowerData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.todayRankData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.dayPointData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.dayFollowerData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.dayRankData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.allPointData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.allFollowerData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.allRankData = {
+    //   labels: [],
+    //   datasets: [],
+    // };
+    // this.createChart();
   },
   methods: {
     createChart() {
