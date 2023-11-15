@@ -358,16 +358,16 @@ export default {
             .then((res) => {
               this.eventData = res.data.event
             })
-          if (this.eventData) {
-            await axios
-              .post(constants.url.pointhistory_api, {
-                event_id: this.eventData.event_id,
-                room_id: localStorage.room_id,
-              })
-              .then((res) => {
-                this.pointHistoryFlg = res.data
-              })
-          }
+          // if (this.eventData) {
+          //   await axios
+          //     .post(constants.url.pointhistory_api, {
+          //       event_id: this.eventData.event_id,
+          //       room_id: localStorage.room_id,
+          //     })
+          //     .then((res) => {
+          //       this.pointHistoryFlg = res.data
+          //     })
+          // }
         }
       })()
     }
