@@ -13,37 +13,18 @@
             <tbody>
               <tr v-for="(log, index) in logList" :key="index">
                 <td class="pr-0" style="width: 10px">
-                  <v-btn
-                    class="ma-2"
-                    outlined
-                    fab
-                    color="pink lighten-3"
-                    x-small
-                    @click="favorite(log.log_id)"
-                  >
-                    <v-icon v-if="favoriteLog.includes(log.log_id)"
-                      >mdi-cards-heart</v-icon
-                    >
+                  <v-btn class="ma-2" outlined fab color="pink lighten-3" x-small @click="favorite(log.log_id)">
+                    <v-icon v-if="favoriteLog.includes(log.log_id)">mdi-cards-heart</v-icon>
                     <v-icon v-else>mdi-cards-heart-outline</v-icon>
                   </v-btn>
                 </td>
                 <td>{{ timeFormat(log.log_id) }}のログ</td>
                 <td class="text-right">
-                  <v-btn
-                    class="ma-2"
-                    outlined
-                    color="indigo"
-                    @click="$router.push('/history?id=' + log.log_id)"
-                  >
+                  <v-btn class="ma-2" outlined color="indigo" @click="$router.push('/history?id=' + log.log_id)">
                     確認
                   </v-btn>
-                  <v-btn
-                    class="ma-2"
-                    outlined
-                    color="red"
-                    :disabled="favoriteLog.includes(log.log_id)"
-                    @click="deleteLog(log.log_id)"
-                  >
+                  <v-btn class="ma-2" outlined color="red" :disabled="favoriteLog.includes(log.log_id)"
+                    @click="deleteLog(log.log_id)">
                     削除
                   </v-btn>
                 </td>
@@ -116,24 +97,25 @@ export default {
     }
   },
   mounted() {
-    this.liftFlg = Number(localStorage.lift)
-    axios
-      .post(constants.url.watchlog.getloglist, {
-        uuid: localStorage.uuid,
-      })
-      .then((res) => {
-        if (this.liftFlg) {
-          this.logList = res.data
-        } else {
-          this.logList = res.data.slice(0, 3)
-        }
-      })
-    this.room_id = localStorage.room_id
-    this.room_url_key = localStorage.room_url_key
-    this.uuid = localStorage.uuid
-    if (localStorage.favorite_log) {
-      this.favoriteLog = localStorage.favorite_log
-    }
+    this.$router.push('/')
+    // this.liftFlg = Number(localStorage.lift)
+    // axios
+    //   .post(constants.url.watchlog.getloglist, {
+    //     uuid: localStorage.uuid,
+    //   })
+    //   .then((res) => {
+    //     if (this.liftFlg) {
+    //       this.logList = res.data
+    //     } else {
+    //       this.logList = res.data.slice(0, 3)
+    //     }
+    //   })
+    // this.room_id = localStorage.room_id
+    // this.room_url_key = localStorage.room_url_key
+    // this.uuid = localStorage.uuid
+    // if (localStorage.favorite_log) {
+    //   this.favoriteLog = localStorage.favorite_log
+    // }
   },
   methods: {
     timeFormat(time) {
@@ -144,7 +126,7 @@ export default {
       this.dialog = true
     },
     deleteDb() {
-      ;(async () => {
+      ; (async () => {
         await axios.post(constants.url.watchlog.delete, {
           uuid: localStorage.uuid,
           log_id: this.deleteId,
