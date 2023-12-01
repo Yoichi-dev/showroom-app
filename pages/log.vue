@@ -97,25 +97,24 @@ export default {
     }
   },
   mounted() {
-    this.$router.push('/')
-    // this.liftFlg = Number(localStorage.lift)
-    // axios
-    //   .post(constants.url.watchlog.getloglist, {
-    //     uuid: localStorage.uuid,
-    //   })
-    //   .then((res) => {
-    //     if (this.liftFlg) {
-    //       this.logList = res.data
-    //     } else {
-    //       this.logList = res.data.slice(0, 3)
-    //     }
-    //   })
-    // this.room_id = localStorage.room_id
-    // this.room_url_key = localStorage.room_url_key
-    // this.uuid = localStorage.uuid
-    // if (localStorage.favorite_log) {
-    //   this.favoriteLog = localStorage.favorite_log
-    // }
+    this.liftFlg = Number(localStorage.lift)
+    axios
+      .post(constants.url.watchlog.getloglist, {
+        uuid: localStorage.uuid,
+      })
+      .then((res) => {
+        if (this.liftFlg) {
+          this.logList = res.data
+        } else {
+          this.logList = res.data.slice(0, 3)
+        }
+      })
+    this.room_id = localStorage.room_id
+    this.room_url_key = localStorage.room_url_key
+    this.uuid = localStorage.uuid
+    if (localStorage.favorite_log) {
+      this.favoriteLog = localStorage.favorite_log
+    }
   },
   methods: {
     timeFormat(time) {
