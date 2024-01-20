@@ -2,12 +2,17 @@
   <div>
     <v-container>
       <v-row class="mt-5">
-        Java版、BE版（統合版）両方からアクセスできるマインクラフトサーバー公開中<br />
-        ロビーワールドから配信者向けワールド、参加型ワールドに移動できるようになってます
-        <br /><br />
-        夜中の3時にサーバーの再起動が掛かります
+        ネットワークの問題で長らく停止していたマインクラフトサーバーを公開します！<br /><br />
+        配信コメントをゲーム内のチャットに表示したり、各別ワールドに行き来できたりプラグインなど希望があれば対応します<br />
+        また自分のワールドを持ってきたい場合も対応します<br /><br />
+        参加型等での利用もOKです（専用ワールドを起動します）<br /><br />
+        利用は<a
+          :href="`https://www.twitter.com/messages/compose?recipient_id=1278265302921342976&text=マイクラサーバー利用希望%0D%0Aこのまま送信`"
+          target="_blank">
+          こちら
+        </a>から
       </v-row>
-      <v-row class="mt-15">
+      <!-- <v-row class="mt-15">
         <v-col>
           <v-img max-width="500" :src="require('/assets/img/java.png')"></v-img>
         </v-col>
@@ -25,7 +30,7 @@
           <p class="mt-5">サーバーアドレス<br />minecraft.showroom-app.com</p>
           <p class="mt-2">ポート<br />19132（デフォルト）</p>
         </v-col>
-      </v-row>
+      </v-row> -->
     </v-container>
   </div>
 </template>
