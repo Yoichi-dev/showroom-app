@@ -1,6 +1,6 @@
 <template>
   <div id="bg">
-    <img :src="require('/assets/ac6937031783/img/bg/default.png')" class="overlay" />
+    <!-- <img :src="require('/assets/ac6937031783/img/bg/default.png')" class="overlay" /> -->
     <div id="comment-area">
       <div v-for="(comment, idx) in comments" :key="idx" class="comment-box">
         <img class="avater" :src="comment.avatar_url">
@@ -368,7 +368,7 @@ body {
 #bg {
   width: 100vw;
   height: 100vh;
-  background-image: url('~/assets/ac6937031783/img/bg/default.jpg');
+  /* background-image: url('~/assets/ac6937031783/img/bg/default.jpg'); */
 }
 
 .overlay {
