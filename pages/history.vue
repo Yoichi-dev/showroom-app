@@ -60,11 +60,13 @@ export default {
       redirect('/log')
       return
     }
-    const res = await axios.post(constants.url.watchlog.getlog, {
-      uuid: localStorage.uuid,
-      log_id: query.id,
-    })
-    if (res.data.length !== 1) {
+    // const res = await axios.post(constants.url.watchlog.getlog, {
+    //   uuid: localStorage.uuid,
+    //   log_id: query.id,
+    // })
+    const res = 0
+    // if (res.data.length !== 1) {
+    if (res === 0) {
       redirect('/log')
       return
     }

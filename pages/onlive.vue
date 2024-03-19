@@ -756,24 +756,27 @@ export default {
         telop: this.telop,
       }
 
-      axios
-        .post(constants.url.watchlog.addlog, {
-          uuid: localStorage.uuid,
-          log_id: endTime,
-          log_json: saveLog,
-        })
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((error) => {
-          localStorage.setItem('axios_error', JSON.stringify(error));
-          alert('ログの保存に失敗しました');
-        })
-        .finally(() => {
-          localStorage.setItem('tmp_log', JSON.stringify(saveLog));
-          sessionStorage.removeItem('room_status');
-          this.$router.push('/')
-        });
+      localStorage.setItem('tmp_log', JSON.stringify(saveLog));
+      sessionStorage.removeItem('room_status');
+      this.$router.push('/');
+      // axios
+      //   .post(constants.url.watchlog.addlog, {
+      //     uuid: localStorage.uuid,
+      //     log_id: endTime,
+      //     log_json: saveLog,
+      //   })
+      //   .then((res) => {
+      //     console.log(res)
+      //   })
+      //   .catch((error) => {
+      //     localStorage.setItem('axios_error', JSON.stringify(error));
+      //     alert('ログの保存に失敗しました');
+      //   })
+      //   .finally(() => {
+      //     localStorage.setItem('tmp_log', JSON.stringify(saveLog));
+      //     sessionStorage.removeItem('room_status');
+      //     this.$router.push('/')
+      //   });
     },
     errorReload() {
       location.reload()
