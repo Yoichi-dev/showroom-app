@@ -4,7 +4,7 @@
       <v-row class="mt-5">
         <v-col>
           <p class="text-h5">配信ログ</p>
-          <p v-if="!liftFlg">
+          <!-- <p v-if="!liftFlg">
             配信者登録されていません、登録されていない場合ログは3件までしか表示できません<br />
             配信者登録（制限解除）は<nuxt-link to="/user">こちら</nuxt-link>
           </p>
@@ -30,7 +30,7 @@
                 </td>
               </tr>
             </tbody>
-          </v-simple-table>
+          </v-simple-table> -->
         </v-col>
       </v-row>
     </v-container>
@@ -98,17 +98,17 @@ export default {
   },
   mounted() {
     this.liftFlg = Number(localStorage.lift)
-    axios
-      .post(constants.url.watchlog.getloglist, {
-        uuid: localStorage.uuid,
-      })
-      .then((res) => {
-        if (this.liftFlg) {
-          this.logList = res.data
-        } else {
-          this.logList = res.data.slice(0, 3)
-        }
-      })
+    // axios
+    //   .post(constants.url.watchlog.getloglist, {
+    //     uuid: localStorage.uuid,
+    //   })
+    //   .then((res) => {
+    //     if (this.liftFlg) {
+    //       this.logList = res.data
+    //     } else {
+    //       this.logList = res.data.slice(0, 3)
+    //     }
+    //   })
     this.room_id = localStorage.room_id
     this.room_url_key = localStorage.room_url_key
     this.uuid = localStorage.uuid

@@ -96,6 +96,21 @@
         </v-col>
       </v-row>
 
+      <v-row v-if="logFlg" class="mt-5" justify="center">
+        <v-alert icon="mdi-math-log" prominent text type="info">
+          過去1回分の配信ログをダウンロードする事ができます（JSON形式）<br /><br />
+          ダウンロードは<a href="#" @click="download()">こちら</a><br /><br />
+          今後ログ閲覧機能が復活した際、このファイルが必要になりますので各自保存しておいてください
+        </v-alert>
+      </v-row>
+
+      <v-row class="mt-5" justify="center">
+        <v-alert icon="mdi-key-outline" prominent text type="success">
+          また、現在保存されているログのキー（{{uuid}}）はスクショなどで必ず保存しておいてください<br />
+          今後ログ閲覧機能が復活した際、このキーを元に現在保存されているログを復元します
+        </v-alert>
+      </v-row>
+
       <v-row v-if="minecraft" class="mt-5" justify="center">
         <v-alert icon="mdi-minecraft" prominent text type="info">
           マインクラフトサーバーβ版公開お知らせ<br />
@@ -236,6 +251,7 @@ export default {
     uuid: null,
     checkFlg: false,
     minecraft: false,
+    logFlg: false,
   }),
   head() {
     return {
@@ -257,6 +273,11 @@ export default {
     // 登録日付
     if (!localStorage.register) {
       localStorage.register = Math.floor(new Date().getTime() / 1000)
+    }
+
+    // 前回ログ
+    if (localStorage.tmp_log) {
+      this.logFlg = true
     }
 
     this.srConnect()
@@ -423,6 +444,29 @@ export default {
     timeFormat(time) {
       return moment(time).format('llll')
     },
+    download() {
+      const jsonRaw = localStorage.getItem('tmp_log')
+      const json = JSON.parse(jsonRaw)
+      const blob = new Blob([jsonRaw], { type: 'application/json' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${json.id}.json`)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      // アナライズ
+      axios
+        .get(
+          `/?room_id=${localStorage.room_id}&room_url_key=${localStorage.room_url_key}&uuid=${localStorage.uuid}&download`
+        )
+        .then((res) => {
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
   },
 }
 </script>

@@ -43,11 +43,11 @@ export default {
           title: 'ホーム',
           to: '/',
         },
-        {
-          icon: 'mdi-math-log',
-          title: 'ログ一覧',
-          to: '/log',
-        },
+        // {
+        //   icon: 'mdi-math-log',
+        //   title: 'ログ一覧',
+        //   to: '/log',
+        // },
         // {
         //   icon: 'mdi-account',
         //   title: 'リスナー名変更',
