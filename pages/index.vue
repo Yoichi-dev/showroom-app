@@ -7,9 +7,9 @@
       <v-row align="center">
         <v-col cols="3">
           <v-img max-height="170" max-width="300" class="deep-purple lighten-4" :src="roomStatus.image_s
-            .replace('_s.png', '_l.png')
-            .replace('_s.jpeg', '_l.jpeg')
-            "></v-img>
+      .replace('_s.png', '_l.png')
+      .replace('_s.jpeg', '_l.jpeg')
+      "></v-img>
         </v-col>
         <v-col cols="9">
           <span class="ma-auto text-h4 font-weight-thin">
@@ -20,9 +20,9 @@
     </v-parallax>
     <v-card v-if="roomStatus && $vuetify.breakpoint.name === 'xs'">
       <v-img class="white--text align-end" height="200px" :src="roomStatus.image_s
-        .replace('_s.png', '_l.png')
-        .replace('_s.jpeg', '_l.jpeg')
-        ">
+      .replace('_s.png', '_l.png')
+      .replace('_s.jpeg', '_l.jpeg')
+      ">
         <v-card-title class="top-img">{{ roomStatus.room_name }}</v-card-title>
       </v-img>
     </v-card>
@@ -40,16 +40,16 @@
           連携サイト、Point Historyで参加イベントの集計をしています<br />
           <a :href="`https://point-history.showroom-app.com/event/${eventData.event_id}`"
             target="_blank">https://point-history.showroom-app.com/event/{{
-              eventData.event_id
-            }}</a>
+      eventData.event_id
+    }}</a>
         </v-alert>
       </v-row>
       <v-row v-if="eventData">
         <v-col cols="12" sm="4">
           <v-img :src="eventData.image
-            .replace('_s.png', '_l.png')
-            .replace('_s.jpeg', '_l.jpeg')
-            "></v-img>
+      .replace('_s.png', '_l.png')
+      .replace('_s.jpeg', '_l.jpeg')
+      "></v-img>
         </v-col>
         <v-col cols="12" sm="8">
           <v-simple-table>
@@ -73,16 +73,16 @@
                 <td>現在のポイント（順位）</td>
                 <td>
                   {{ $numberFormat(eventData.ranking.point) }}pt（{{
-                    eventData.ranking.rank
-                  }}位）
+      eventData.ranking.rank
+    }}位）
                 </td>
               </tr>
               <tr v-else-if="eventData.quest !== undefined">
                 <td>現在のポイント（Lv）</td>
                 <td>
                   {{
-                    $numberFormat(eventData.quest.support.current_point)
-                  }}pt（Lv{{ eventData.quest.quest_level }}）
+      $numberFormat(eventData.quest.support.current_point)
+    }}pt（Lv{{ eventData.quest.quest_level }}）
                 </td>
               </tr>
               <tr v-else>
@@ -100,14 +100,14 @@
         <v-alert icon="mdi-math-log" prominent text type="info">
           過去1回分の配信ログをダウンロードする事ができます（JSON形式）<br /><br />
           ダウンロードは<a href="#" @click="download()">こちら</a><br /><br />
-          今後ログ閲覧機能が復活した際、このファイルが必要になりますので各自保存しておいてください
+          <!-- 今後ログ閲覧機能が復活した際、このファイルが必要になりますので各自保存しておいてください -->
         </v-alert>
       </v-row>
 
       <v-row class="mt-5" justify="center">
         <v-alert icon="mdi-key-outline" prominent text type="success">
-          また、現在保存されているログのキー（{{uuid}}）はスクショなどで必ず保存しておいてください<br />
-          今後ログ閲覧機能が復活した際、このキーを元に現在保存されているログを復元します
+          現在保存されているログのキー（{{ uuid }}）はスクショなどで必ず保存しておいてください<br />
+          <!-- 今後ログ閲覧機能が復活した際、このキーを元に現在保存されているログを復元します -->
         </v-alert>
       </v-row>
 
@@ -129,8 +129,8 @@
 
                   <v-list-item-content>
                     <v-list-item-title>{{
-                      timeFormat(info.sys.updatedAt)
-                    }}</v-list-item-title>
+      timeFormat(info.sys.updatedAt)
+    }}</v-list-item-title>
                     <!-- eslint-disable vue/no-v-html -->
                     <v-list-item-subtitle v-html="info.fields.info">
                       <!-- eslint-enable -->

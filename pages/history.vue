@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import axios from '~/plugins/axios'
+// import axios from '~/plugins/axios'
 import OnliveInfo from '~/components/OnliveInfo'
 import CommentTable from '~/components/CommentTable'
 import GiftTable from '~/components/GiftTable'
 import CountTable from '~/components/CountTable'
 import RankingTable from '~/components/RankingTable'
-import constants from '~/constants'
+// import constants from '~/constants'
 import client from '~/plugins/contentful'
 
 export default {
@@ -56,21 +56,22 @@ export default {
       return
     }
 
-    if (query.id === undefined || query.id === null) {
-      redirect('/log')
-      return
-    }
+    // if (query.id === undefined || query.id === null) {
+    //   redirect('/log')
+    //   return
+    // }
+
     // const res = await axios.post(constants.url.watchlog.getlog, {
     //   uuid: localStorage.uuid,
     //   log_id: query.id,
     // })
-    const res = 0
+    // const res = 0
     // if (res.data.length !== 1) {
-    if (res === 0) {
-      redirect('/log')
-      return
-    }
-    return { logData: res.data[0] }
+    // if (res === 0) {
+    //   redirect('/log')
+    //   return
+    // }
+    return { logData: JSON.parse(localStorage.add_log) }
   },
   data: () => ({
     title: '過去ログ',
@@ -101,7 +102,7 @@ export default {
     if (localStorage.use_gifts !== null) {
       this.$refs.prGift.useGiftList = JSON.parse(localStorage.use_gifts)
     }
-    const dbLog = this.logData.log_json
+    const dbLog = this.logData
 
     this.telop = dbLog.telop
 

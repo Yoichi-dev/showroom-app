@@ -4,6 +4,15 @@
       <v-row class="mt-5">
         <v-col>
           <p class="text-h5">配信ログ</p>
+          <p class="text-h6">ダウンロードしたログファイルをアップロードしたらログを閲覧できます</p>
+          <input type="file" accept="application/json" @change="onFileChange">
+          <v-btn :disabled="disabled" color="blue-grey" class="ma-2 white--text" @click="uploadFile">
+            Upload
+            <v-icon right dark>
+              mdi-cloud-upload
+            </v-icon>
+          </v-btn>
+          {{ message }}
           <!-- <p v-if="!liftFlg">
             配信者登録されていません、登録されていない場合ログは3件までしか表示できません<br />
             配信者登録（制限解除）は<nuxt-link to="/user">こちら</nuxt-link>
@@ -51,9 +60,9 @@
 </template>
 
 <script>
-import moment from 'moment'
-import axios from '~/plugins/axios'
-import constants from '~/constants'
+// import moment from 'moment'
+// import axios from '~/plugins/axios'
+// import constants from '~/constants'
 import client from '~/plugins/contentful'
 
 export default {
@@ -90,6 +99,9 @@ export default {
     dialog: false,
     deleteId: null,
     liftFlg: false,
+    disabled: true,
+    selectedFile: null,
+    message: ''
   }),
   head() {
     return {
@@ -97,7 +109,7 @@ export default {
     }
   },
   mounted() {
-    this.liftFlg = Number(localStorage.lift)
+    // this.liftFlg = Number(localStorage.lift)
     // axios
     //   .post(constants.url.watchlog.getloglist, {
     //     uuid: localStorage.uuid,
@@ -112,52 +124,90 @@ export default {
     this.room_id = localStorage.room_id
     this.room_url_key = localStorage.room_url_key
     this.uuid = localStorage.uuid
-    if (localStorage.favorite_log) {
-      this.favoriteLog = localStorage.favorite_log
-    }
+    // if (localStorage.favorite_log) {
+    //   this.favoriteLog = localStorage.favorite_log
+    // }
   },
   methods: {
-    timeFormat(time) {
-      return moment(time * 1000).format('llll')
-    },
-    deleteLog(logId) {
-      this.deleteId = logId
-      this.dialog = true
-    },
-    deleteDb() {
-      ; (async () => {
-        await axios.post(constants.url.watchlog.delete, {
-          uuid: localStorage.uuid,
-          log_id: this.deleteId,
-        })
-        await axios
-          .post(constants.url.watchlog.getloglist, {
-            uuid: localStorage.uuid,
-          })
-          .then((res) => {
-            this.logList = res.data
-          })
-        this.deleteId = null
-        this.dialog = false
-      })()
-    },
-    favorite(logId) {
-      let favoriteList = []
-
-      if (localStorage.favorite_log) {
-        favoriteList = JSON.parse(localStorage.favorite_log)
-      }
-
-      if (favoriteList.includes(logId)) {
-        favoriteList = favoriteList.filter((id) => id !== logId)
+    onFileChange(event) {
+      this.selectedFile = event.target.files[0];
+      if (this.selectedFile && this.selectedFile.type === 'application/json') {
+        this.disabled = false
+        this.message = ''
       } else {
-        favoriteList.push(logId)
+        this.message = '指定されたファイルではありません'
+        this.selectedFile = null
+        this.disabled = true
       }
-
-      this.favoriteLog = favoriteList
-
-      localStorage.favorite_log = JSON.stringify(favoriteList)
     },
+    uploadFile() {
+      if (!this.selectedFile) {
+        this.message = 'アップロードするファイルを選択してください'
+      } else {
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const json = JSON.parse(e.target.result);
+            if ('id' in json & 'comment' in json & 'count' in json & 'free' in json & 'info' in json & 'listener' in json & 'pre' in json & 'ranking' in json & 'telop' in json) {
+              this.addLocalstorage(json)
+            } else {
+              throw new Error('No')
+            }
+          } catch (error) {
+            this.message = '読み込みに失敗しました'
+            this.disabled = true
+          }
+        };
+
+        reader.readAsText(this.selectedFile);
+      }
+    },
+    addLocalstorage(json) {
+      localStorage.setItem('add_log', JSON.stringify(json))
+      this.$router.push('/history')
+    }
+    // timeFormat(time) {
+    //   return moment(time * 1000).format('llll')
+    // },
+    // deleteLog(logId) {
+    //   this.deleteId = logId
+    //   this.dialog = true
+    // },
+    // deleteDb() {
+    //   ; (async () => {
+    //     await axios.post(constants.url.watchlog.delete, {
+    //       uuid: localStorage.uuid,
+    //       log_id: this.deleteId,
+    //     })
+    //     await axios
+    //       .post(constants.url.watchlog.getloglist, {
+    //         uuid: localStorage.uuid,
+    //       })
+    //       .then((res) => {
+    //         this.logList = res.data
+    //       })
+    //     this.deleteId = null
+    //     this.dialog = false
+    //   })()
+    // },
+    // favorite(logId) {
+    //   let favoriteList = []
+
+    //   if (localStorage.favorite_log) {
+    //     favoriteList = JSON.parse(localStorage.favorite_log)
+    //   }
+
+    //   if (favoriteList.includes(logId)) {
+    //     favoriteList = favoriteList.filter((id) => id !== logId)
+    //   } else {
+    //     favoriteList.push(logId)
+    //   }
+
+    //   this.favoriteLog = favoriteList
+
+    //   localStorage.favorite_log = JSON.stringify(favoriteList)
+    // },
   },
 }
 </script>
