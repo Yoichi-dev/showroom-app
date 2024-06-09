@@ -18,7 +18,7 @@
 </template>
 
 <script>
-// import axios from '~/plugins/axios'
+import axios from '~/plugins/axios'
 import OnliveInfo from '~/components/OnliveInfo'
 import CommentTable from '~/components/CommentTable'
 import GiftTable from '~/components/GiftTable'
@@ -182,7 +182,7 @@ export default {
         user: {
           user_id: listener.id,
           name: listener.name,
-          avatar_url: `https://image.showroom-cdn.com/showroom-prod/image/avatar/${listener.av}.png?v=92`,
+          avatar_url: `https://image.showroom-cdn.com/showroom-prod/image/avatar/${listener.av}.png`,
         },
       })
     })
@@ -192,6 +192,18 @@ export default {
     }
     dbLog.info.startView = dbLog.info.view
     this.infoObj = dbLog.info
+
+    // アナライズ
+    axios
+      .get(
+        `/?room_id=${localStorage.room_id}&room_url_key=${localStorage.room_url_key}&uuid=${localStorage.uuid}&log=${dbLog.id}`
+      )
+      .then((res) => {
+        // sessionStorage.removeItem('room_status')
+      })
+      .catch((e) => {
+        console.log(e)
+      })
   },
   methods: {
     blockCheck(id) {

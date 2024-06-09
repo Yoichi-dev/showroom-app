@@ -3,22 +3,12 @@
     <v-card elevation="10">
       <v-simple-table height="40vh">
         <tbody>
-          <tr
-            v-for="(item, i) in countData"
-            :key="i"
-            class="pointer"
-            @click="openProfile(item.id)"
-          >
+          <tr v-for="(item, i) in countData" :key="i" class="pointer" @click="openProfile(item.id)">
             <td class="mx-0 pl-2 pr-2" style="width: 10px">
-              <v-img
-                max-height="25"
-                max-width="25"
-                :src="
-                  'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
-                  item.av +
-                  '.png?v=85'
-                "
-              />
+              <v-img max-height="25" max-width="25" :src="'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
+            item.av +
+            '.png'
+            " />
             </td>
             <td class="mx-0 px-0">
               <span v-if="item.id === developer">

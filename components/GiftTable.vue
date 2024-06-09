@@ -6,9 +6,9 @@
           <tr v-for="(item, i) in gitfData" :key="i" class="pointer" @click="openProfile(item.id)">
             <td class="mx-0 pl-2 pr-2" style="width: 10px">
               <v-img max-height="25" max-width="25" :src="'https://image.showroom-cdn.com/showroom-prod/image/avatar/' +
-                item.av +
-                '.png?v=92'
-                " />
+            item.av +
+            '.png'
+            " />
             </td>
             <td class="mx-0 px-0">
               <span v-if="item.id === developer">
@@ -44,9 +44,9 @@
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <img width="25" height="25" :src="'https://image.showroom-cdn.com/showroom-prod/assets/img/gift/' +
-                      item.gid +
-                      '_s.png'
-                      " v-bind="attrs" v-on="on" @error="onImgError" />
+            item.gid +
+            '_s.png'
+            " v-bind="attrs" v-on="on" @error="onImgError" />
                   </template>
                   <span> {{ $numberFormat(getGiftPoint(item.gid)) }}G </span>
                 </v-tooltip>
@@ -54,9 +54,9 @@
 
               <span v-else>
                 <img width="25" height="25" :src="'https://image.showroom-cdn.com/showroom-prod/image/gift/' +
-                  item.gid +
-                  '_s.png'
-                  " @error="onImgError" />
+            item.gid +
+            '_s.png'
+            " @error="onImgError" />
               </span>
             </td>
             <td class="ml-1 pl-1 text-nowrap" style="width: 20px">
