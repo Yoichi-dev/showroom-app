@@ -269,6 +269,7 @@ export default {
         .then((res) => {
           if (res.data.event) {
             this.$refs.event.eventFlg = true
+            this.$refs.event.eventId = res.data.event.event_id
           }
         })
         .catch((e) => {

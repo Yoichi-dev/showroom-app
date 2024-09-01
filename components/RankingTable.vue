@@ -188,6 +188,7 @@ export default {
     summaryRanking: [],
     contributionRanking: [],
     eventFlg: false,
+    eventId: '',
     checkFlg: false,
   }),
   watch: {
@@ -241,6 +242,7 @@ export default {
               category: 'event',
               type: 'contribution_ranking',
               key: localStorage.room_id,
+              key2: this.eventId,
             })
             .then((res) => {
               this.contributionRanking = res.data.ranking
