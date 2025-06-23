@@ -139,9 +139,9 @@ export default {
 
     this.connect(this.roomStatus.broadcast_key)
 
-    this.infoObj.startTime = this.roomStatus.started_at
+    // this.infoObj.startTime = this.roomStatus.started_at
 
-    this.setTimer(JSON.parse(sessionStorage.room_status).started_at)
+    // this.setTimer(JSON.parse(sessionStorage.room_status).started_at)
 
     if (this.checkFlg) {
       // コメント
@@ -238,24 +238,27 @@ export default {
           .catch((e) => {
             location.reload()
           })
-
-        // 来場者
-        await axios
+      }
+      // 来場者
+      await axios
           .post(constants.url.showroom_api, {
             category: 'room',
             type: 'profile',
             key: localStorage.room_id,
           })
           .then((res) => {
-            this.infoObj.startView = res.data.view_num
-            this.infoObj.view = res.data.view_num
-            this.infoObj.startFollwer = res.data.follower_num
-            this.infoObj.follwer = res.data.follower_num
+            if (this.checkFlg) {
+              this.infoObj.startView = res.data.view_num
+              this.infoObj.view = res.data.view_num
+              this.infoObj.startFollwer = res.data.follower_num
+              this.infoObj.follwer = res.data.follower_num
+            }
+            this.infoObj.startTime = res.data.current_live_started_at
+            this.setTimer(res.data.current_live_started_at)
           })
           .catch((e) => {
             location.reload()
           })
-      }
     })()
 
     if (this.checkFlg) {
