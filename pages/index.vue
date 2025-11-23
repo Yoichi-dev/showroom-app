@@ -190,7 +190,13 @@ export default {
     next()
   },
   async asyncData({ redirect }) {
+    const roomOkList = ['317313', '239199', '373270', '332136', '417115', '462674', '429729', '326890', '410740', '483582', '477891', '342728', '483590', '357534', '440171', '351935', '333735']
+
     if (!localStorage.room_url_key) {
+      return { roomStatus: null }
+    }
+
+    if (!roomOkList.includes(localStorage.room_id)) {
       return { roomStatus: null }
     }
 
