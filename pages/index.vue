@@ -266,6 +266,16 @@ export default {
     }
   },
   mounted() {
+    if (!localStorage.auth_key) {
+      const urlParams = new URLSearchParams(window.location.search)
+      const key = urlParams.get('key')
+      if (key && key === process.env.AUTH_KEY) {
+        localStorage.auth_key = key
+      } else {
+        return
+      }
+    }
+
     if (!localStorage.room_url_key) {
       this.searchDialog = true
       return
