@@ -1,6 +1,6 @@
-# SHOWROOM APP
+# Watch Log
 
-本アプリケーションは個人製作アプリになります
+配信のコメント・ギフトを確認できるWebアプリケーション
 
 ## Build Setup
 
