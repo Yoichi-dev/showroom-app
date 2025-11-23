@@ -28,13 +28,13 @@
     </v-card>
 
     <v-container>
-      <v-row v-if="uuid && !roomStatus" justify="center">
+      <!-- <v-row v-if="uuid && !roomStatus" justify="center">
         <v-alert class="mt-5" outlined type="error" text>
           ルームが削除されている可能性があります<br />
           <nuxt-link :to="`/search?u=${uuid}`"> こちら </nuxt-link>
           から再登録してください
         </v-alert>
-      </v-row>
+      </v-row> -->
       <v-row v-if="pointHistoryFlg" justify="center">
         <v-alert class="mt-5" outlined type="success" text>
           連携サイト、Point Historyで参加イベントの集計をしています<br />
