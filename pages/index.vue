@@ -303,6 +303,8 @@ export default {
       return
     }
 
+    localStorage.lift = 1
+
     this.srConnect()
 
     // 利用可能ギフト取得
