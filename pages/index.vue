@@ -269,7 +269,7 @@ export default {
 
     const urlParams = new URLSearchParams(window.location.search)
     const key = urlParams.get('key')
-    if (key && key === process.env.AUTH_KEY) {
+    if (key && key === this.roomList[0]) {
       localStorage.auth_key = key
     }
 
