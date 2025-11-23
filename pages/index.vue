@@ -252,6 +252,7 @@ export default {
     checkFlg: false,
     minecraft: false,
     logFlg: false,
+    roomList: ['317313', '239199', '373270', '332136', '417115', '462674', '429729', '326890', '410740', '483582', '477891', '342728', '483590', '357534', '440171', '351935', '333735'],
   }),
   head() {
     return {
@@ -278,6 +279,11 @@ export default {
     // 前回ログ
     if (localStorage.tmp_log) {
       this.logFlg = true
+    }
+
+    // 使えるユーザーのみ使えるようにする
+    if (!this.roomList.includes(localStorage.room_id)) {
+      return
     }
 
     this.srConnect()
