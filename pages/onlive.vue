@@ -107,6 +107,7 @@ export default {
     roomStatus: null,
     eventData: null,
     checkFlg: false,
+    roomList: ['317313', '239199', '373270', '332136', '417115', '462674', '429729', '326890', '410740', '483582', '477891', '342728', '483590', '357534', '440171', '351935', '333735'],
   }),
   head() {
     return {
@@ -116,6 +117,12 @@ export default {
   mounted() {
     if (!sessionStorage.room_status) {
       this.errorDialog = true
+      this.$router.push('/')
+      return
+    }
+
+    // 使えるユーザーのみ使えるようにする
+    if (!this.roomList.includes(localStorage.room_id)) {
       this.$router.push('/')
       return
     }
